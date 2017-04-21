@@ -1,5 +1,6 @@
 .App {
   text-align: center;
+  display: flex;
 }
 
 .App-logo {
@@ -21,4 +22,27 @@
 @keyframes App-logo-spin {
   from { transform: rotate(0deg); }
   to { transform: rotate(360deg); }
+}
+
+.top {
+  flex-grow: 3;
+}
+
+.bot {
+  flex-grow: 9;
+}
+
+.boards-container {
+  position: fixed;
+  left: 0;
+  top: 0;
+  height: 100%;
+  width: 100%;
+  display: flex;
+}
+
+.feedback {
+  right: 26px;
+  bottom: 29px;
+  position: fixed;
 }
