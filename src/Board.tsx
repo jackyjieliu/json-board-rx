@@ -1,18 +1,13 @@
 import * as React from 'react';
 import './Board.css';
 import * as Rx from 'rxjs';
-import { js_beautify as jsBeautify } from 'js-beautify';
-import * as jsonlint from 'json-lint';
-import * as minify from 'jsonminify';
+import tranlsate from './translation';
+import BoardViewData, {State, ACTION_TYPES, BUTTON_TYPES} from './BoardViewData';
+
 
 const PRIMARY_COLOR = 'indigo';
 const SECONDARY_COLOR = 'cyan';
 const ERROR_COLOR = 'pink';
-
-interface State {
-  text: string;
-  error?: string;
-}
 
 const INITIAL_STATE: State = {
   text: '',
@@ -22,168 +17,85 @@ const INITIAL_STATE: State = {
 const BUTTON_CLASS = SECONDARY_COLOR + ' waves-effect waves-light btn';
 
 class Board extends React.Component<{}, State> {
-  private state$: Rx.Observable<State>;
-  private action$: Rx.Subject<{ type: string, value?: any }>;
-  private buttonClick$: Rx.Subject<{ type: string; state: State; }>;
-  private subscription: Rx.Subscription;
+  private subscriptions: Rx.Subscription[];
+  private viewData: BoardViewData;
 
   constructor(props: any) {
     super(props);
-
-    this.action$ = new Rx.Subject();
-    this.buttonClick$ = new Rx.Subject();
-    this.state$ = this.action$
-      .scan((state, action) => {
-        switch (action.type) {
-          case 'SYSTEM_TEXT_CHANGED':
-            state.text = action.value.text;
-
-            // Setting undefined will not clear, setting empty string will clear
-            if (action.value.error !== undefined) {
-              state.error = action.value.error || undefined;
-            }
-
-            break;
-          case 'TEXT_CHANGED':
-            state.text = action.value;
-
-            break;
-          default:
-            break;
-        }
-        return state;
-      }, INITIAL_STATE);
-
     this.state = INITIAL_STATE;
+    this.viewData = new BoardViewData(INITIAL_STATE);
+    this.subscriptions = [];
 
-    this.buttonClick$
-      .filter(({ type }) => type === 'FORMAT')
-      .map(({ state }) => {
-        return state.text;
-      })
-      .filter((text) => !!text)
-      .map((text) => {
-        return jsBeautify(removeNewLines(text), {
-          'indent_size': 2,
-          'indent_char': ' ',
-          'indent_with_tabs': false
-        });
-      })
-      .map(text => {
-        const jsonLintResult: {
-          json: string;
-          error?: string;
-          evidence?: string;
-        } = jsonlint(text);
-        return jsonLintResult;
-      })
-      .subscribe((jsonlintObj) => {
-        this.action$.next({
-          type: 'SYSTEM_TEXT_CHANGED',
+    const urlEncodeSub = this.viewData
+      .getUrlEncode$()
+      .subscribe(this.systemTextChanged);
+    this.subscriptions.push(urlEncodeSub);
+
+    const urlDecodeSub = this.viewData
+      .getUrlDecode$()
+      .subscribe(this.systemTextChanged);
+    this.subscriptions.push(urlDecodeSub);
+
+    const escapeSub = this.viewData
+      .getEscape$()
+      .subscribe(this.systemTextChanged);
+    this.subscriptions.push(escapeSub);
+
+    const unescapeSub = this.viewData
+      .getUnescape$()
+      .subscribe(this.systemTextChanged);
+    this.subscriptions.push(unescapeSub);
+
+    const minimizeSub = this.viewData
+      .getMinimize$()
+      .subscribe(this.systemTextChanged);
+    this.subscriptions.push(minimizeSub);
+
+    const linkSub = this.viewData
+      .getLink$()
+      .subscribe((linted) => {
+        this.viewData.nextAction({
+          type: ACTION_TYPES.SYSTEM_TEXT_CHANGED,
           value: {
-            text: jsonlintObj.json,
-            error: jsonlintObj.error || ''
+            text: linted.json,
+            error: linted.error || ''
           }
         });
       });
-
-    this.buttonClick$
-      .filter(({ type }) => type === 'MINIMIZE')
-      .map(({ state }) => {
-        return state.text;
-      })
-      .filter((text) => !!text)
-      .map((text) => minify(text))
-      .subscribe((text) => {
-        this.action$.next({
-          type: 'SYSTEM_TEXT_CHANGED',
-          value: { text }
-        });
-      });
-
-
-    this.buttonClick$
-      .filter(({ type }) => type === 'UNESCAPE')
-      .map(({ state }) => {
-        return state.text;
-      })
-      .filter((text) => !!text)
-      .map((text) => unescape(text))
-      .subscribe((text) => {
-        this.action$.next({
-          type: 'SYSTEM_TEXT_CHANGED',
-          value: { text }
-        });
-      });
-
-
-    this.buttonClick$
-      .filter(({ type }) => type === 'ESCAPE')
-      .map(({ state }) => {
-        return state.text;
-      })
-      .filter((text) => !!text)
-      .map((text) => escape(text))
-      .subscribe((text) => {
-        this.action$.next({
-          type: 'SYSTEM_TEXT_CHANGED',
-          value: { text }
-        });
-      });
-
-
-    this.buttonClick$
-      .filter(({ type }) => type === 'URL_DECODE')
-      .map(({ state }) => {
-        return state.text;
-      })
-      .filter((text) => !!text)
-      .map((text) => urlDecode(text))
-      .subscribe((text) => {
-        this.action$.next({
-          type: 'SYSTEM_TEXT_CHANGED',
-          value: { text }
-        });
-      });
-
-    this.buttonClick$
-      .filter(({ type }) => type === 'URL_ENCODE')
-      .map(({ state }) => {
-        return state.text;
-      })
-      .filter((text) => !!text)
-      .map((text) => urlEncode(text))
-      .subscribe((text) => {
-        this.action$.next({
-          type: 'SYSTEM_TEXT_CHANGED',
-          value: { text }
-        });
-      });
+    this.subscriptions.push(linkSub);
   }
 
+  systemTextChanged(text: string) {
+    this.viewData.nextAction({
+      type: ACTION_TYPES.SYSTEM_TEXT_CHANGED,
+      value: { text }
+    });
+  }
 
   textChange(e: any) {
     const text = e.target.value;
-    this.action$.next({
-      type: 'TEXT_CHANGED',
+    this.viewData.nextAction({
+      type: ACTION_TYPES.TEXT_CHANGED,
       value: text
     });
   }
 
   componentDidMount() {
-    this.subscription = this.state$
+    const stateSub = this.viewData.state$
       .subscribe(newState => {
         this.setState(newState);
       });
+    this.subscriptions.push(stateSub);
   }
 
   componentWillUnmount() {
-    this.subscription.unsubscribe();
+    this.subscriptions.forEach((sub) => {
+      sub.unsubscribe();
+    });
   }
 
-
   buttonClicked(type: string) {
-    this.buttonClick$.next({ type, state: this.state });
+    this.viewData.buttonClicked(type, this.state);
   }
 
   render() {
@@ -196,32 +108,25 @@ class Board extends React.Component<{}, State> {
       );
     }
 
+    const buttons = [
+      BUTTON_TYPES.FORMAT,
+      BUTTON_TYPES.MINIMIZE,
+      BUTTON_TYPES.UNESCAPE,
+      BUTTON_TYPES.URL_DECODE,
+      BUTTON_TYPES.ESCAPE,
+      BUTTON_TYPES.URL_ENCODE
+    ].map((buttonType) => {
+      return (
+        <a className={BUTTON_CLASS} onClick={this.buttonClicked.bind(this, buttonType)} key={buttonType}>
+          {tranlsate(buttonType)}
+        </a>
+      );
+    });
+
     return (
       <div className="board">
         <div className="vert-nav full-column">
-          <a className={BUTTON_CLASS} onClick={this.buttonClicked.bind(this, 'FORMAT')}>
-            Format
-          </a>
-
-          <a className={BUTTON_CLASS} onClick={this.buttonClicked.bind(this, 'MINIMIZE')}>
-            Minimize
-          </a>
-
-          <a className={BUTTON_CLASS} onClick={this.buttonClicked.bind(this, 'UNESCAPE')}>
-            Unescape
-          </a>
-
-          <a className={BUTTON_CLASS} onClick={this.buttonClicked.bind(this, 'URL_DECODE')}>
-            Url Decode
-          </a>
-
-          <a className={BUTTON_CLASS} onClick={this.buttonClicked.bind(this, 'ESCAPE')}>
-            Escape
-          </a>
-
-          <a className={BUTTON_CLASS} onClick={this.buttonClicked.bind(this, 'URL_ENCODE')}>
-            Url Encode
-          </a>
+          {buttons}
         </div>
 
         <div className="card-container full-row">
@@ -239,60 +144,5 @@ class Board extends React.Component<{}, State> {
   }
 }
 
-function removeNewLines(str: string) {
-  return (str).replace(/\r?\n|\r/g, '');
-}
-
-function escape (str: string) {
-  return ('' + str).replace(/["'\\\n\r\u2028\u2029]/g, (character: string) => {
-    switch (character) {
-      case '"':
-      case '\'':
-      case '\\':
-        return '\\' + character;
-      case '\n':
-        return '\\n';
-      case '\r':
-        return '\\r';
-      case '\u2028':
-        return '\\u2028';
-      case '\u2029':
-        return '\\u2029';
-      default:
-        return '';
-    }
-  });
-}
-
-function unescape (str: string) {
-  return ('' + str).replace(/\\./g, (character: string) => {
-    switch (character) {
-      case '\\"':
-        return '"';
-      case '\\\'':
-        return '\'';
-      case '\\\\':
-        return '\\';
-      case '\\n':
-        return '\n';
-      case '\\r':
-        return '\r';
-      case '\\u2028':
-        return '\u2028';
-      case '\\u2029':
-        return '\u2029';
-      default:
-        return '';
-    }
-  });
-}
-
-function urlEncode(str: string) {
-  return encodeURIComponent(str).replace(/'/g, '%27').replace(/"/g, '%22');
-}
-
-function urlDecode(str: string) {
-  return decodeURIComponent(str.replace(/\+/g,  ' '));
-}
 
 export default Board;
