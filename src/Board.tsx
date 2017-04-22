@@ -3,28 +3,23 @@ import './Board.css';
 import * as Rx from 'rxjs';
 import tranlsate from './translation';
 import BoardViewData, {State, ACTION_TYPES, BUTTON_TYPES} from './BoardViewData';
-
-
-const PRIMARY_COLOR = 'indigo';
-const SECONDARY_COLOR = 'cyan';
-const ERROR_COLOR = 'pink';
+import * as _ from 'lodash';
+import {Color} from './settings';
+import RxBaseComponent from './RxBaseComponent';
 
 const INITIAL_STATE: State = {
   text: '',
   error: undefined
 };
 
-const BUTTON_CLASS = SECONDARY_COLOR + ' waves-effect waves-light btn';
-
-class Board extends React.Component<{}, State> {
+class Board extends RxBaseComponent<{ color: Color }, State, BoardViewData> {
   private subscriptions: Rx.Subscription[];
-  private viewData: BoardViewData;
 
   constructor(props: any) {
-    super(props);
-    this.state = INITIAL_STATE;
-    this.viewData = new BoardViewData(INITIAL_STATE);
+    super(BoardViewData, INITIAL_STATE, props);
     this.subscriptions = [];
+
+    _.bindAll(this, ['systemTextChanged']);
 
     const urlEncodeSub = this.viewData
       .getUrlEncode$()
@@ -72,7 +67,7 @@ class Board extends React.Component<{}, State> {
     });
   }
 
-  textChange(e: any) {
+  textChanged(e: any) {
     const text = e.target.value;
     this.viewData.nextAction({
       type: ACTION_TYPES.TEXT_CHANGED,
@@ -80,29 +75,29 @@ class Board extends React.Component<{}, State> {
     });
   }
 
-  componentDidMount() {
-    const stateSub = this.viewData.state$
-      .subscribe(newState => {
-        this.setState(newState);
-      });
-    this.subscriptions.push(stateSub);
-  }
-
   componentWillUnmount() {
+    super.componentWillUnmount();
     this.subscriptions.forEach((sub) => {
       sub.unsubscribe();
     });
   }
 
   buttonClicked(type: string) {
-    this.viewData.buttonClicked(type, this.state);
+    this.viewData.buttonClicked(type);
   }
 
   render() {
+    const primary = this.props.color.primary;
+    const lighten5 = this.props.color.lighten5;
+    const errorColor = this.props.color.errorColor;
+    // const secondaryColor = this.props.color.secondaryColor;
+
+    const BUTTON_CLASS = primary + ' waves-effect waves-light btn';
+
     let errorDiv;
     if (this.state.error) {
       errorDiv = (
-        <div className={ERROR_COLOR + ' flex-row word-wrap lighten-4 error-container'}>
+        <div className={errorColor + ' flex-row word-wrap error-container'}>
           {this.state.error || ''}
         </div>
       );
@@ -131,9 +126,9 @@ class Board extends React.Component<{}, State> {
 
         <div className="card-container full-row">
           <div className="card-textarea row full-row">
-            <div className={PRIMARY_COLOR + ' lighten-5 card-panel full-column z-depth-4'}>
+            <div className={lighten5 + ' card-panel full-column z-depth-4'}>
               <div className="full-column textarea-container">
-                <textarea className="full-row" onChange={this.textChange.bind(this)} value={this.state.text}/>
+                <textarea className="full-row" onChange={this.textChanged.bind(this)} value={this.state.text}/>
               </div>
               {errorDiv}
             </div>

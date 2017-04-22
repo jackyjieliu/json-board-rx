@@ -1,9 +1,9 @@
 import * as jsonUtil from './json-util';
 import * as Rx from 'rxjs';
+import RxBaseViewData, {Action} from './RxBaseViewData';
 
-export interface Action {
+export interface ButtonClick {
   type: string;
-  value?: any;
 }
 
 export interface State {
@@ -25,33 +25,21 @@ export const ACTION_TYPES = {
   TEXT_CHANGED: 'TEXT_CHANGED'
 };
 
-export default class BoardViewData {
-  public state$: Rx.Observable<State>;
-  private action$: Rx.Subject<Action>;
-  private buttonClick$: Rx.Subject<{ type: string; state: State; }>;
+export default class BoardViewData extends RxBaseViewData<State> {
+  private buttonClick$: Rx.Subject<ButtonClick>;
 
   constructor(initialState: State) {
-
-    this.action$ = new Rx.Subject();
+    super(initialState);
     this.buttonClick$ = new Rx.Subject();
-    this.state$ = this.setupState(initialState);
   }
 
-  nextAction(arg: any) {
-    this.action$.next(arg);
-  }
-
-  buttonClicked(type: string, state: State) {
-    this.buttonClick$.next({ type, state });
+  buttonClicked(type: string) {
+    this.buttonClick$.next({ type });
   }
 
   getLink$() {
     return this.buttonClick$
-      .filter(({ type }) => type === BUTTON_TYPES.FORMAT)
-      .map(({ state }) => {
-        return state.text;
-      })
-      .filter((text) => !!text)
+      .let(this.filterButtonActionAndMapText(BUTTON_TYPES.FORMAT))
       .map((text) => {
         const trimmedText = jsonUtil.removeNewLines(text);
         const beautified = jsonUtil.beautify(trimmedText, {
@@ -66,75 +54,67 @@ export default class BoardViewData {
 
   getMinimize$() {
     return this.buttonClick$
-      .filter(({ type }) => type === BUTTON_TYPES.MINIMIZE)
-      .map(({ state }) => {
-        return state.text;
-      })
-      .filter((text) => !!text)
+      .let(this.filterButtonActionAndMapText(BUTTON_TYPES.MINIMIZE))
       .map((text) => jsonUtil.minify(text));
   }
 
   getUnescape$() {
     return this.buttonClick$
-      .filter(({ type }) => type === BUTTON_TYPES.UNESCAPE)
-      .map(({ state }) => {
-        return state.text;
-      })
-      .filter((text) => !!text)
+      .let(this.filterButtonActionAndMapText(BUTTON_TYPES.UNESCAPE))
       .map((text) => jsonUtil.unescape(text));
   }
 
   getEscape$() {
     return this.buttonClick$
-      .filter(({ type }) => type === BUTTON_TYPES.ESCAPE)
-      .map(({ state }) => {
-        return state.text;
-      })
-      .filter((text) => !!text)
+      .let(this.filterButtonActionAndMapText(BUTTON_TYPES.ESCAPE))
       .map((text) => jsonUtil.escape(text));
   }
 
   getUrlDecode$() {
     return this.buttonClick$
-      .filter(({ type }) => type === BUTTON_TYPES.URL_DECODE)
-      .map(({ state }) => {
-        return state.text;
-      })
-      .filter((text) => !!text)
+    .let(this.filterButtonActionAndMapText(BUTTON_TYPES.URL_DECODE))
       .map((text) => jsonUtil.urlDecode(text));
   }
 
   getUrlEncode$() {
     return this.buttonClick$
-      .filter(({ type }) => type === BUTTON_TYPES.URL_ENCODE)
-      .map(({ state }) => {
-        return state.text;
-      })
-      .filter((text) => !!text)
+    .let(this.filterButtonActionAndMapText(BUTTON_TYPES.URL_ENCODE))
       .map((text) => jsonUtil.urlEncode(text));
   }
 
-  private setupState(initialState: State) {
-    return this.action$
-      .scan((state, action) => {
-        switch (action.type) {
-          case ACTION_TYPES.SYSTEM_TEXT_CHANGED:
-            state.text = action.value.text;
+  reducer(state: State, action: Action) {
 
-            // Setting undefined will not clear, setting empty string will clear
-            if (action.value.error !== undefined) {
-              state.error = action.value.error || undefined;
-            }
+    switch (action.type) {
+      case ACTION_TYPES.SYSTEM_TEXT_CHANGED:
+        state.text = action.value.text;
 
-            break;
-          case ACTION_TYPES.TEXT_CHANGED:
-            state.text = action.value;
-
-            break;
-          default:
-            break;
+        // Setting undefined will not clear, setting empty string will clear
+        if (action.value.error !== undefined) {
+          state.error = action.value.error || undefined;
         }
-        return state;
-      }, initialState);
+
+        break;
+      case ACTION_TYPES.TEXT_CHANGED:
+        state.text = action.value;
+
+        break;
+      default:
+        break;
+    }
+    return state;
   }
+
+  private filterButtonActionAndMapText(filterType: string) {
+    return (obs$: Rx.Observable<ButtonClick>) => {
+      return obs$.filter(({ type }) => type === filterType)
+        .switchMap(() => {
+          return this.state$.take(1);
+        })
+        .map(({ text }) => {
+          return text;
+        })
+        .filter((text) => !!text);
+    };
+  }
+
 }

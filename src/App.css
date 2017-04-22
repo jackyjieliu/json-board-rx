@@ -41,6 +41,19 @@
   display: flex;
 }
 
+.right-bot-buttons-container {
+  /*position: absolute;*/
+  /*right: 0;*/
+}
+
+.right-bot-buttons {
+  /*position: relative;*/
+}
+
+.fixed-action-btn {
+  position: absolute !important;
+}
+
 .feedback {
   right: 26px;
   bottom: 29px;
