@@ -42,16 +42,25 @@
 }
 
 .right-bot-buttons-container {
-  /*position: absolute;*/
-  /*right: 0;*/
+  /*position: absolute;
+  right: 0;*/
 }
 
 .right-bot-buttons {
+  position: absolute;
+  right: 0;
+  bottom: 0;
   /*position: relative;*/
 }
 
-.fixed-action-btn {
-  position: absolute !important;
+.right-bot-buttons > .btn-floating,
+.right-bot-buttons > .fixed-action-btn {
+  position: relative !important;
+  right: 23px;
+}
+.right-bot-buttons > .btn-floating {
+  margin-left: 15px;
+  bottom: 23px;
 }
 
 .feedback {

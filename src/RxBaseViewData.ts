@@ -1,4 +1,5 @@
 import * as Rx from 'rxjs';
+import * as _ from 'lodash';
 
 export interface Action {
   type: string;
@@ -23,7 +24,7 @@ abstract class RxBaseViewData<S> {
   private setupState(initialState: S) {
     return this.action$
       .scan((state, action) => {
-        return this.reducer(state, action);
+        return this.reducer(_.cloneDeep(state), action);
       }, initialState);
   }
 }

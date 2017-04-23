@@ -38,6 +38,20 @@
 .textarea-container,
 .error-container {
   padding: 12px;
+  transition: box-shadow .25s;
+  border-radius: 2px;
+}
+
+.textarea-container textarea {
+  white-space: pre;
+  overflow-wrap: normal;
+  overflow-x: scroll;
+}
+
+.diff-button {
+  position: absolute;
+  left: -28px;
+  bottom: 32px;
 }
 
 .card-textarea textarea {

@@ -5,14 +5,14 @@ import tranlsate from './translation';
 import BoardViewData, {State, ACTION_TYPES, BUTTON_TYPES} from './BoardViewData';
 import * as _ from 'lodash';
 import {Color} from './settings';
-import RxBaseComponent from './RxBaseComponent';
+import {RxBaseViewDataComponent} from './RxBaseComponent';
 
 const INITIAL_STATE: State = {
   text: '',
   error: undefined
 };
 
-class Board extends RxBaseComponent<{ color: Color }, State, BoardViewData> {
+class Board extends RxBaseViewDataComponent<{ color: Color; fontSize: number; idx: number }, State, BoardViewData> {
   private subscriptions: Rx.Subscription[];
 
   constructor(props: any) {
@@ -87,17 +87,18 @@ class Board extends RxBaseComponent<{ color: Color }, State, BoardViewData> {
   }
 
   render() {
-    const primary = this.props.color.primary;
-    const lighten5 = this.props.color.lighten5;
-    const errorColor = this.props.color.errorColor;
+    const actionBtn = this.props.color.actionBtn;
+    const textBack = this.props.color.textBack;
+    const error = this.props.color.error;
+    const textColor = this.props.color.textColor;
     // const secondaryColor = this.props.color.secondaryColor;
 
-    const BUTTON_CLASS = primary + ' waves-effect waves-light btn';
+    const BUTTON_CLASS = actionBtn + ' waves-effect waves-light btn';
 
     let errorDiv;
     if (this.state.error) {
       errorDiv = (
-        <div className={errorColor + ' flex-row word-wrap error-container'}>
+        <div className={error + ' flex-row word-wrap error-container z-depth-3'}>
           {this.state.error || ''}
         </div>
       );
@@ -118,6 +119,15 @@ class Board extends RxBaseComponent<{ color: Color }, State, BoardViewData> {
       );
     });
 
+    let diffButton;
+    if (this.props.idx !== 0) {
+      diffButton = (
+        <a className={actionBtn + ' btn-floating btn-large waves-effect waves-light diff-button'}>
+          <i className="material-icons">compare_arrows</i>
+        </a>
+      );
+    }
+
     return (
       <div className="board">
         <div className="vert-nav full-column">
@@ -126,14 +136,20 @@ class Board extends RxBaseComponent<{ color: Color }, State, BoardViewData> {
 
         <div className="card-container full-row">
           <div className="card-textarea row full-row">
-            <div className={lighten5 + ' card-panel full-column z-depth-4'}>
+            <div className={textBack + ' card-panel full-column z-depth-4'}>
               <div className="full-column textarea-container">
-                <textarea className="full-row" onChange={this.textChanged.bind(this)} value={this.state.text}/>
+                <textarea
+                  style={{color: textColor, fontSize: this.props.fontSize}}
+                  className="full-row"
+                  onChange={this.textChanged.bind(this)}
+                  value={this.state.text}
+                />
               </div>
               {errorDiv}
             </div>
           </div>
         </div>
+        {diffButton}
       </div>
     );
   }

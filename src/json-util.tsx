@@ -1,6 +1,5 @@
 import { js_beautify as jsBeautify } from 'js-beautify';
 import * as jsonlint from 'json-lint';
-import * as jsonminify from 'jsonminify';
 
 export function lint(str: string): {
   json: string;
@@ -15,7 +14,7 @@ export function beautify(str: string, conf: any): string {
 }
 
 export function minify(str: string): string {
-  return jsonminify(str);
+  return minifyLib(str);
 }
 
 export function removeNewLines(str: string) {
@@ -73,3 +72,14 @@ export  function urlEncode(str: string) {
 export  function urlDecode(str: string) {
   return decodeURIComponent(str.replace(/\+/g,  ' '));
 }
+
+function minifyLib (json: string): string {
+  return json.replace(/([^"]+)|("[^"]+")/g, function($0, $1, $2) {
+      if ($1) {
+          return $1.replace(/\s/g, '');
+      } else {
+          return $2;
+      }
+  });
+};
+

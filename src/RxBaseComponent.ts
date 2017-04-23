@@ -1,19 +1,16 @@
 import * as React from 'react';
 import RxBaseViewData from './RxBaseViewData';
 import * as Rx from 'rxjs';
+import * as _ from 'lodash';
 
 
-export interface RxBaseViewDataConstructor<S> {
-  new(n: S): RxBaseViewData<S>;
-}
-
-abstract class RxBaseComponent<P, S, V extends RxBaseViewData<S>> extends React.Component<P, S> {
+export abstract class RxBaseComponent<P, S, V extends RxBaseViewData<S>> extends React.Component<P, S> {
   protected viewData: V;
   private stateSub: Rx.Subscription;
-  constructor(ViewData: { new(n: S): V }, initialState: any, prop: any) {
+  constructor(viewData: V, initialState: any, prop: any) {
     super(prop);
-    this.state = initialState;
-    this.viewData = new ViewData(initialState);
+    this.state = _.cloneDeep(initialState);
+    this.viewData = viewData;
   }
 
   componentDidMount() {
@@ -28,4 +25,9 @@ abstract class RxBaseComponent<P, S, V extends RxBaseViewData<S>> extends React.
   }
 }
 
-export default RxBaseComponent;
+
+export abstract class RxBaseViewDataComponent<P, S, V extends RxBaseViewData<S>> extends RxBaseComponent<P, S, V> {
+  constructor(ViewData: { new(n: S): V }, initialState: any, prop: any) {
+    super(new ViewData(initialState), initialState, prop);
+  }
+}

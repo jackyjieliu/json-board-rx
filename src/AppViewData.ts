@@ -3,6 +3,8 @@ import {Color} from './settings';
 
 export interface State {
   color: Color;
+  fontSize: number;
+  boards: number;
 }
 
 export default class AppViewData extends RxBaseViewData<State> {
@@ -15,6 +17,12 @@ export default class AppViewData extends RxBaseViewData<State> {
     switch (action.type) {
       case 'COLOR':
         state.color = action.value;
+        break;
+      case 'FONT_SIZE':
+        state.fontSize = action.value;
+        break;
+      case 'BOARDS':
+        state.boards = action.value;
         break;
       default:
         break;
