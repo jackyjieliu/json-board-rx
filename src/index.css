@@ -31,4 +31,25 @@ html {
 
 .word-wrap {
   white-space: pre-wrap;
+  word-wrap: break-word;
+  word-break: break-all;
+}
+/*
+.CodeMirror-empty .CodeMirror-scroll pre {
+  color: #777;
+}
+
+.CodeMirror-scroll {
+  background-color: #eee;
+}
+
+.CodeMirror-gutters {
+  background-color: #fafafa;
+}*/
+
+.grey.lighten-3 .CodeMirror {
+  background-color: #eee !important;
+}
+.grey.lighten-3 .CodeMirror-gutters {
+  background-color: #eee !important;
 }

@@ -1,0 +1,27 @@
+
+.action-buttons {
+  position: absolute;
+  right: 0;
+  bottom: 0;
+  /*position: relative;*/
+}
+
+.action-buttons > a,
+.action-buttons > div {
+  margin-bottom: 5px;
+}
+
+.action-buttons > a {
+  z-index: 998;
+  display: block;
+}
+
+.action-buttons > .btn-floating,
+.action-buttons > .fixed-action-btn {
+  position: relative !important;
+  right: 23px;
+}
+.action-buttons > .btn-floating {
+  margin-left: 15px;
+  bottom: 23px;
+}

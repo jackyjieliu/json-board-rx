@@ -1,6 +1,6 @@
-import * as jsonUtil from './json-util';
+import * as jsonUtil from '../util/json-util';
 import * as Rx from 'rxjs';
-import RxBaseViewData, {Action} from './RxBaseViewData';
+import RxBaseViewData, {Action} from '../_base/RxBaseViewData';
 
 export interface ButtonClick {
   type: string;
@@ -48,38 +48,52 @@ export default class BoardViewData extends RxBaseViewData<State> {
           'indent_with_tabs': false
         });
         const linted = jsonUtil.lint(beautified);
-        return linted;
+
+        return {
+          text: linted.json,
+          error: linted.error || ''
+        };
       });
   }
 
   getMinimize$() {
     return this.buttonClick$
       .let(this.filterButtonActionAndMapText(BUTTON_TYPES.MINIMIZE))
-      .map((text) => jsonUtil.minify(text));
+      .map((text) => {
+        return { text: jsonUtil.minify(text) };
+      });
   }
 
   getUnescape$() {
     return this.buttonClick$
       .let(this.filterButtonActionAndMapText(BUTTON_TYPES.UNESCAPE))
-      .map((text) => jsonUtil.unescape(text));
+      .map((text) => {
+        return { text: jsonUtil.unescape(text) };
+      });
   }
 
   getEscape$() {
     return this.buttonClick$
       .let(this.filterButtonActionAndMapText(BUTTON_TYPES.ESCAPE))
-      .map((text) => jsonUtil.escape(text));
+      .map((text) => {
+        return { text: jsonUtil.escape(text) };
+      });
   }
 
   getUrlDecode$() {
     return this.buttonClick$
-    .let(this.filterButtonActionAndMapText(BUTTON_TYPES.URL_DECODE))
-      .map((text) => jsonUtil.urlDecode(text));
+      .let(this.filterButtonActionAndMapText(BUTTON_TYPES.URL_DECODE))
+      .map((text) => {
+        return { text: jsonUtil.urlDecode(text) };
+      });
   }
 
   getUrlEncode$() {
     return this.buttonClick$
-    .let(this.filterButtonActionAndMapText(BUTTON_TYPES.URL_ENCODE))
-      .map((text) => jsonUtil.urlEncode(text));
+      .let(this.filterButtonActionAndMapText(BUTTON_TYPES.URL_ENCODE))
+      .map((text) => {
+        return { text: jsonUtil.urlEncode(text) };
+      });
   }
 
   reducer(state: State, action: Action) {

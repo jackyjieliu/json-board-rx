@@ -25,7 +25,6 @@ export abstract class RxBaseComponent<P, S, V extends RxBaseViewData<S>> extends
   }
 }
 
-
 export abstract class RxBaseViewDataComponent<P, S, V extends RxBaseViewData<S>> extends RxBaseComponent<P, S, V> {
   constructor(ViewData: { new(n: S): V }, initialState: any, prop: any) {
     super(new ViewData(initialState), initialState, prop);

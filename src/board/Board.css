@@ -1,5 +1,4 @@
 .board {
-  position: relative;
   display: flex;
   flex-grow: 1;
 }
@@ -14,14 +13,24 @@
   position: absolute;
   height: 100%;
   padding-top: 60px;
-  padding-left: 6px;
+  padding-left: 25px;
 }
 
 .vert-nav .btn {
   margin-bottom: 12px;
-  padding: 0 5px;
-  height: 40px;
-  line-height: 40px;
+  padding: 0 9px;
+  height: 44px;
+  line-height: 44px;
+}
+
+.slash {
+  position: relative;
+  left: 1px;
+}
+
+.slash-quote {
+  position: relative;
+  right: 1px;
 }
 
 .card-textarea {
@@ -32,7 +41,7 @@
 }
 
 .card-textarea .card-panel {
-  padding: 32px 12px 12px 96px;
+  padding: 12px 12px 12px 42px;
 }
 
 .textarea-container,
@@ -45,13 +54,6 @@
 .textarea-container textarea {
   white-space: pre;
   overflow-wrap: normal;
-  overflow-x: scroll;
-}
-
-.diff-button {
-  position: absolute;
-  left: -28px;
-  bottom: 32px;
 }
 
 .card-textarea textarea {

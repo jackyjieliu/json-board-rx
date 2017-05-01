@@ -1,0 +1,64 @@
+
+.diff-modal.scroll{
+  overflow: auto;
+  /*height: 80%;*/
+  height: 100%;
+  width: 100%;
+  /*overflow: auto;*/
+}
+
+.diff-modal .line {
+  margin: 0;
+}
+
+.diff-modal td {
+  padding: 1px;
+  vertical-align: top;
+
+}
+.diff-modal .line {
+  width: 50%;
+}
+
+.diff-modal .left-panel,
+.diff-modal .right-panel {
+  padding: 0px;
+  margin-bottom: 12px;
+
+  overflow-y: auto;
+/*
+  overflow-x: auto;*/
+  /*border-radius: 2px;
+  border: 1px #999 solid;*/
+}
+.diff-modal .left-panel {
+  margin-right: 12px;
+}
+.diff-modal .right-panel {
+  margin-left: 12px;
+}
+
+.diff-modal .left-panel > div,
+.diff-modal .right-panel > div {
+  display: flex;
+}
+
+
+.diff-modal .light .removed {
+  background-color: #fcd8d9;
+}
+
+.diff-modal .light .added {
+  background-color: #e0fcd0;
+}
+
+
+.diff-modal .dark .removed {
+  background-color: #c2185b;
+}
+
+.diff-modal .dark .added {
+  background-color: #2e7d32;
+}
+
+
