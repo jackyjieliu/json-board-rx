@@ -12,6 +12,10 @@ app.use(function(req, res, next) {
 
 app.use(bodyParser.json());
 
+app.get('/health', function(req, res) {
+  res.status(200).send({ healthy: true });
+});
+
 app.post('/', accepts('application/json'), function (req, res) {
   var feedback = req.body.feedback;
   var email = req.body.email;
