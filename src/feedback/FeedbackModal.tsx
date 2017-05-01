@@ -1,10 +1,12 @@
 import * as React from 'react';
-import * as Rx from 'rxjs';
+import { Observable } from 'rxjs/Observable';
+import 'rxjs/add/observable/dom/ajax';
 import {Color} from '../settings';
 import Modal from '../modal/Modal';
 import './FeedbackModal.css';
 import {RxBaseViewDataComponent} from '../_base/RxBaseComponent';
 import FeedbackModalViewData, {State} from './FeedbackModalViewData';
+import toast from '../util/toast';
 interface Prop {
   color: Color;
   fontSize: number;
@@ -24,31 +26,31 @@ export default class FeedbackModal extends RxBaseViewDataComponent<Prop, State, 
     //   `entry.1342041182=${this.state.email}`
     // ].join('&');
     const data = {
-      'entry.1597674574': this.state.feedback,
-      'entry.1342041182': this.state.email
+      feedback: this.state.feedback,
+      email: this.state.email
     };
-    const url = 'https://docs.google.com/forms/d/1P_8XAplponW7wZUviOnUjkLxmG3uZKsdh_er3vozSKg';
-
+    // Observable.ajax()
+    //   .POST('http://localhost:3010', data, {'Content-type': 'application/json'})
     // var xhr = new XMLHttpRequest();
     // xhr.open('POST', url + '/formResponse', true);
     // xhr.setRequestHeader('Accept', 'application/xml, text/xml, */*; q=0.01');
     // xhr.setRequestHeader('Content-type', 'application/x-www-form-urlencoded; charset=UTF-8');
     // xhr.send(data2);
-    Rx.Observable.ajax({
-      url: url + '/formResponse',
-      crossDomain: true,
+    Observable.ajax({
+      url: 'http://localhost:3010',
+      // crossDomain: true,
       headers: {
-        'Accept': 'application/xml, text/xml, */*; q=0.01',
-        'Content-type': 'application/x-www-form-urlencoded; charset=UTF-8'
+        'Content-Type': 'application/json'
       },
       method: 'POST',
-      body: data,
-      createXHR: function () {
-        return new XMLHttpRequest();
-      }
+      body: JSON.stringify(data)
     })
-    .catch(err => Rx.Observable.of(err))
+    // Observable.ajax('http://localhost:3010', data, { 'Content-type': 'application/json' })
     .subscribe(() => {
+      toast('Thank you for your feedback!');
+      this.props.onClose();
+    }, () => {
+      toast('An error occurred. Please try again later.');
       this.props.onClose();
     });
     // .subscribe({
