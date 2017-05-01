@@ -66,7 +66,12 @@ export default class App extends RxBaseViewDataComponent<null, State, AppViewDat
         {feedback}
         <div className={topBack + ' top'}/>
         <div className={botBack + ' bot'}/>
-        <BoardContainer color={this.state.color} fontSize={this.state.fontSize} boardCount={this.state.boards}/>
+        <BoardContainer
+          color={this.state.color}
+          fontSize={this.state.fontSize}
+          boardCount={this.state.boards}
+          backdrop={this.state.backdrop}
+        />
         <ActionBar
           color={this.state.color}
           fontSize={this.state.fontSize}

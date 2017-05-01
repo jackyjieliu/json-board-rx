@@ -67,7 +67,7 @@ export default class ActionBar extends React.Component<Prop, null> {
     if (!this.props.feedbackOpened) {
       feedbackBtn = (
         <a
-          className={actionBtn + ' btn-floating btn-large waves-effect waves-light tooltipped'}
+          className={actionBtn + ' btn-floating btn-large waves-effect waves-light'}
           onClick={this.openFeedback.bind(this)}
         >
           <i className="material-icons">feedback</i>

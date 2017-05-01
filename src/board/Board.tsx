@@ -90,7 +90,7 @@ export default class Board extends RxBaseComponent<Prop, State, BoardViewData> {
       [BUTTON_TYPES.URL_DECODE]: (<span>&</span>), // &
       [BUTTON_TYPES.ESCAPE]: (
         <span>
-          <span className="material-icons slash">\</span><i className="material-icons">format_quote</i>
+          <span className="material-icons slash">\</span><i className="material-icons slash-quote">format_quote</i>
         </span>
       ), // \"
       [BUTTON_TYPES.URL_ENCODE]: (<span>%</span>) // %

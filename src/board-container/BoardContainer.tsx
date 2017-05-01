@@ -12,7 +12,7 @@ import {Color} from '../settings';
 import {RxBaseViewDataComponent} from '../_base/RxBaseComponent';
 
 interface Prop {
-  color: Color; fontSize: number; boardCount: number;
+  color: Color; fontSize: number; boardCount: number; backdrop: boolean;
 }
 
 export default class BoardContainer extends RxBaseViewDataComponent<Prop, State, BoardContainerViewData> {
@@ -51,6 +51,14 @@ export default class BoardContainer extends RxBaseViewDataComponent<Prop, State,
         .map(() => {
           this.childViewData.push(new BoardViewData(INITIAL_BOARD_STATE));
         });
+    }
+  }
+
+  componentDidUpdate() {
+    if (this.props.backdrop) {
+      $('.board textarea').attr('tabindex', -1);
+    } else {
+      $('.board textarea').attr('tabindex', 0);
     }
   }
 
