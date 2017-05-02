@@ -12,7 +12,7 @@ import {Color} from '../settings';
 import {RxBaseViewDataComponent} from '../_base/RxBaseComponent';
 
 interface Prop {
-  color: Color; fontSize: number; boardCount: number; backdrop: boolean;
+  color: Color; fontSize: number; boardCount: number; backdrop: boolean; setBoardCount: (n: number) => void;
 }
 
 export default class BoardContainer extends RxBaseViewDataComponent<Prop, State, BoardContainerViewData> {
@@ -30,10 +30,9 @@ export default class BoardContainer extends RxBaseViewDataComponent<Prop, State,
 
     this.viewData.getDiff$()
       .subscribe((diff) => {
-        console.log(diff);
+        // console.log(diff);
         this.viewData.showDiff(diff);
       });
-
   }
 
   diffButtonClicked(i: number) {
@@ -53,13 +52,22 @@ export default class BoardContainer extends RxBaseViewDataComponent<Prop, State,
         });
     }
   }
-
+  componentWillUpdate() {
+    $('.tooltipped').tooltip('remove');
+  }
   componentDidUpdate() {
     if (this.props.backdrop) {
       $('.board textarea').attr('tabindex', -1);
     } else {
       $('.board textarea').attr('tabindex', 0);
     }
+    $('.tooltipped').tooltip();
+  }
+
+  onBoardClose(idx: number) {
+    const removedBoard = this.childViewData.splice(idx, 1);
+    this.childViewData = this.childViewData.concat(removedBoard);
+    this.props.setBoardCount(this.props.boardCount - 1);
   }
 
   hideDiff() {
@@ -67,7 +75,7 @@ export default class BoardContainer extends RxBaseViewDataComponent<Prop, State,
   }
 
   render() {
-    const actionBtn = this.props.color.actionBtn;
+    // const actionBtn = this.props.color.actionBtn;
     let modal;
     if (this.state.diff) {
       modal = (
@@ -86,7 +94,7 @@ export default class BoardContainer extends RxBaseViewDataComponent<Prop, State,
           _.range(this.props.boardCount)
             .map((i) => {
               let diffButton;
-              if (i !== 0) {
+              {/*if (i !== 0) {
                 diffButton = (
                   <a
                     className={actionBtn + ' btn-floating btn-large waves-effect waves-light diff-button'}
@@ -95,7 +103,7 @@ export default class BoardContainer extends RxBaseViewDataComponent<Prop, State,
                     <i className="material-icons">compare_arrows</i>
                   </a>
                 );
-              }
+              }*/}
 
               return (
                 <div className="board-wrapper" key={i}>
@@ -103,6 +111,7 @@ export default class BoardContainer extends RxBaseViewDataComponent<Prop, State,
                     color={this.props.color}
                     viewData={this.childViewData[i]}
                     fontSize={this.props.fontSize}
+                    onClose={this.props.boardCount > 1 ? this.onBoardClose.bind(this, i) : undefined}
                   />
                   {diffButton}
                 </div>

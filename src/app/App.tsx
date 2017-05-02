@@ -70,6 +70,7 @@ export default class App extends RxBaseViewDataComponent<null, State, AppViewDat
           color={this.state.color}
           fontSize={this.state.fontSize}
           boardCount={this.state.boards}
+          setBoardCount={this.setBoardCount.bind(this)}
           backdrop={this.state.backdrop}
         />
         <ActionBar
