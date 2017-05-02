@@ -1,0 +1,1 @@
+git commit -m "release" && git push heroku master && heroku logs --tail
