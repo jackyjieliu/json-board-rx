@@ -3,7 +3,7 @@ var request = require('request');
 var bodyParser = require('body-parser');
 var accepts = require('express-accepts');
 var app = express();
-
+var port = process.env.PORT || 5000;
 app.use(function(req, res, next) {
   res.header("Access-Control-Allow-Origin", "*");
   res.header("Access-Control-Allow-Headers", "Origin, X-Requested-With, Content-Type, Accept");
@@ -45,6 +45,6 @@ app.post('/feedback', accepts('application/json'), function (req, res) {
   });
 });
 
-app.listen(3010, function () {
-  console.log('App listening on port 3010')
+app.listen(port, function () {
+  console.log('App listening on port ' + port)
 });
