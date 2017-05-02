@@ -38,7 +38,7 @@ export default class Modal extends React.Component<Prop, null> {
       )
       : undefined;
 
-    const fullClass = this.props.full ? 'full' : '';
+    const fullClass = this.props.full ? 'full' : 'small';
 
     return (
       <div className={fullClass + ' my-modal'}>

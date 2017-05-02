@@ -66,8 +66,6 @@ export default class BoardContainerViewData extends RxBaseViewData<State> {
       });
   }
 
-
-
   protected reducer(state: State, action: Action) {
 
     switch (action.type) {

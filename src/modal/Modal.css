@@ -8,6 +8,10 @@
   overflow: visible;
 }
 
+.my-modal.small .modal {
+  max-width: 760px;
+}
+
 .my-modal.full .modal {
   height: 95%;
   width: 95%;

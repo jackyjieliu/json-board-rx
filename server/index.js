@@ -9,17 +9,16 @@ app.use(function(req, res, next) {
   res.header("Access-Control-Allow-Headers", "Origin, X-Requested-With, Content-Type, Accept");
   next();
 });
-
+app.use(express.static('public'));
 app.use(bodyParser.json());
 
 app.get('/health', function(req, res) {
   res.status(200).send({ healthy: true });
 });
 
-app.post('/', accepts('application/json'), function (req, res) {
+app.post('/feedback', accepts('application/json'), function (req, res) {
   var feedback = req.body.feedback;
   var email = req.body.email;
-  console.log('Got request ', req.body);
   console.log('Got request ' + email);
   console.log('Got request ' + feedback);
 

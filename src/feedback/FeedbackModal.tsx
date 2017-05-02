@@ -37,7 +37,8 @@ export default class FeedbackModal extends RxBaseViewDataComponent<Prop, State, 
     // xhr.setRequestHeader('Content-type', 'application/x-www-form-urlencoded; charset=UTF-8');
     // xhr.send(data2);
     Observable.ajax({
-      url: 'http://localhost:3010',
+      // url: 'http://localhost:3010',
+      url: '/feedback',
       // crossDomain: true,
       headers: {
         'Content-Type': 'application/json'
