@@ -5,7 +5,8 @@ const translations = {
   ESCAPE: 'Escape',
   URL_DECODE: 'Url Decode',
   URL_ENCODE: 'Url Encode',
-  FEEDBACK: 'Feedback'
+  FEEDBACK: 'Feedback',
+  CLOSE: 'Close Tab'
 };
 
 export default function translate(key: string, lan?: string): string {

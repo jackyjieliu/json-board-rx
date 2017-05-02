@@ -37,30 +37,19 @@ export default class ActionBar extends React.Component<Prop, null> {
 
     // const disp = this.props.color.disp;
     const actionBtn = this.props.color.actionBtn;
-    /*let addBoardButton;
-    let rmBoardButton;
+    let addBoardButton;
     if (!this.props.backdropShown) {
-      if (this.props.boardCount > 1) {
-        rmBoardButton = (
-          <a
-            className={fontButton + ' btn-floating btn-large waves-effect waves-light'}
-            onClick={this.setBoardCount.bind(this, this.props.boardCount - 1)}
-          >
-            <i className="material-icons">remove</i>
-          </a>
-        );
-      }
       if (this.props.boardCount < this.props.maxBoardCount) {
         addBoardButton = (
           <a
-            className={fontButton + ' btn-floating btn-large waves-effect waves-light'}
+            className={actionBtn + ' btn-floating btn-large waves-effect waves-light'}
             onClick={this.setBoardCount.bind(this, this.props.boardCount + 1)}
           >
             <i className="material-icons">add</i>
           </a>
         );
       }
-    }*/
+    }
 
 
     let feedbackBtn;
@@ -77,8 +66,8 @@ export default class ActionBar extends React.Component<Prop, null> {
 
     return (
        <div className="action-buttons">
-          {/*{addBoardButton}
-          {rmBoardButton}*/}
+          {addBoardButton}
+          {/*{rmBoardButton}*/}
 
           {/*<div className="fixed-action-btn horizontal">
             <a className={fontButton + ' btn-floating btn-large'}>

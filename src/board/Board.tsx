@@ -13,7 +13,7 @@ export const INITIAL_BOARD_STATE: State = {
 };
 
 interface Prop {
-  color: Color; fontSize: number; viewData: BoardViewData;
+  color: Color; fontSize: number; viewData: BoardViewData; onClose?: () => void;
 }
 
 export default class Board extends RxBaseComponent<Prop, State, BoardViewData> {
@@ -56,7 +56,11 @@ export default class Board extends RxBaseComponent<Prop, State, BoardViewData> {
     this.viewData.buttonClicked(type);
   }
 
-
+  closeBoard() {
+    if (this.props.onClose) {
+      this.props.onClose();
+    }
+  }
 
   calculateHeight(dom: any) {
     // if (this.refs.errorBoxRef) {
@@ -93,18 +97,20 @@ export default class Board extends RxBaseComponent<Prop, State, BoardViewData> {
           <span className="material-icons slash">\</span><i className="material-icons slash-quote">format_quote</i>
         </span>
       ), // \"
-      [BUTTON_TYPES.URL_ENCODE]: (<span>%</span>) // %
+      [BUTTON_TYPES.URL_ENCODE]: (<span>%</span>), // %
+      'CLOSE': (<i className="material-icons">close</i>) // x
     };
 
-
-    const buttons = [
+    const buttonConfig = [
       BUTTON_TYPES.FORMAT, // check
       BUTTON_TYPES.MINIMIZE, // min
       BUTTON_TYPES.UNESCAPE, // "
       BUTTON_TYPES.URL_DECODE, // &
       BUTTON_TYPES.ESCAPE, // \"
       BUTTON_TYPES.URL_ENCODE // %
-    ].map((buttonType) => {
+    ];
+
+    const buttons = buttonConfig.map((buttonType) => {
       return (
         <a
           className={BUTTON_CLASS}
@@ -118,6 +124,22 @@ export default class Board extends RxBaseComponent<Prop, State, BoardViewData> {
         </a>
       );
     });
+
+    // push close button
+    if (this.props.onClose !== undefined) {
+      buttons.push((
+        <a
+          className={BUTTON_CLASS}
+          onClick={this.closeBoard.bind(this)}
+          key="close"
+          data-position="right"
+          data-delay="5"
+          data-tooltip={tranlsate('CLOSE')}
+        >
+          {BUTTON_MAP['CLOSE']}
+        </a>
+      ));
+    }
 
     return (
       <div className="board">
