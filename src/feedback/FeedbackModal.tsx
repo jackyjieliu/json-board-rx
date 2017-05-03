@@ -119,7 +119,7 @@ export default class FeedbackModal extends RxBaseViewDataComponent<Prop, State, 
                 onChange={this.textChanged.bind(this, 'FEEDBACK')}
                 value={this.state.feedback}
               />
-              <label htmlFor="textarea1">Feedback or Freature Requests</label>
+              <label htmlFor="textarea1">Feedback or Feature Requests</label>
             </div>
           </form>
         </div>

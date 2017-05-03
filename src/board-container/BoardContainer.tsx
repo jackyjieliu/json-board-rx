@@ -111,7 +111,7 @@ export default class BoardContainer extends RxBaseViewDataComponent<Prop, State,
                     color={this.props.color}
                     viewData={this.childViewData[i]}
                     fontSize={this.props.fontSize}
-                    onClose={this.props.boardCount > 1 ? this.onBoardClose.bind(this, i) : undefined}
+                    onClose={this.props.boardCount > 1 && i > 0 ? this.onBoardClose.bind(this, i) : undefined}
                   />
                   {diffButton}
                 </div>
