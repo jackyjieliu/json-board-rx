@@ -13,7 +13,7 @@
   position: absolute;
   height: 100%;
   padding-top: 60px;
-  padding-left: 25px;
+  padding-left: 28px;
 }
 
 .vert-nav .btn {
@@ -41,12 +41,19 @@
 }
 
 .card-textarea .card-panel {
-  padding: 12px 12px 12px 42px;
+  padding: 12px 12px 12px 52px;
+}
+
+.textarea-container {
+  padding: 12px 12px 12px 0;
+}
+
+.error-container {
+  padding: 12px;
 }
 
 .textarea-container,
 .error-container {
-  padding: 12px;
   transition: box-shadow .25s;
   border-radius: 2px;
 }

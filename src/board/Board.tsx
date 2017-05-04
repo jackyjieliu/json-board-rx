@@ -66,7 +66,7 @@ export default class Board extends RxBaseComponent<Prop, State, BoardViewData> {
     // if (this.refs.errorBoxRef) {
     //   return dom.clientHeight - this.refs.errorBoxRef.clientHeight;
     // }
-    return dom.parentElement.clientHeight;
+    return dom.clientHeight;
   }
 
   render() {

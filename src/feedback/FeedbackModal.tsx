@@ -108,7 +108,7 @@ export default class FeedbackModal extends RxBaseViewDataComponent<Prop, State, 
                 onChange={this.textChanged.bind(this, 'EMAIL')}
                 autoFocus={true}
               />
-              <label htmlFor="email">Email</label>
+              <label htmlFor="email">Email (optional)</label>
             </div>
             <div className="input-field">
               <textarea
