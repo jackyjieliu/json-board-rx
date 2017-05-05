@@ -38,7 +38,7 @@ export default class FeedbackModal extends RxBaseViewDataComponent<Prop, State, 
     // xhr.send(data2);
     Observable.ajax({
       // url: 'http://localhost:3010',
-      url: '/feedback',
+      url: 'https://json-board.herokuapp.com/feedback',
       // crossDomain: true,
       headers: {
         'Content-Type': 'application/json'
