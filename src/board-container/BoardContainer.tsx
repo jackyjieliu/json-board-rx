@@ -18,14 +18,17 @@ interface Prop {
 export default class BoardContainer extends RxBaseViewDataComponent<Prop, State, BoardContainerViewData> {
   private subscriptions: Rx.Subscription[];
   private childViewData: BoardViewData[];
+  private childViewOrder: number[];
 
   constructor(props: any) {
     super(BoardContainerViewData, { diffOpened: false }, props);
     this.subscriptions = [];
     this.childViewData = [];
+    this.childViewOrder = [];
     this.viewData.setChildViewData(this.childViewData);
     _.range(this.props.boardCount).forEach((i) => {
       this.childViewData.push(new BoardViewData(INITIAL_BOARD_STATE));
+      this.childViewOrder.push(i);
     });
 
     this.viewData.getDiff$()
@@ -49,6 +52,7 @@ export default class BoardContainer extends RxBaseViewDataComponent<Prop, State,
       _.range(nextProps.boardCount - this.childViewData.length)
         .map(() => {
           this.childViewData.push(new BoardViewData(INITIAL_BOARD_STATE));
+          this.childViewOrder.push(this.childViewData.length - 1);
         });
     }
   }
@@ -65,8 +69,8 @@ export default class BoardContainer extends RxBaseViewDataComponent<Prop, State,
   }
 
   onBoardClose(idx: number) {
-    const removedBoard = this.childViewData.splice(idx, 1);
-    this.childViewData = this.childViewData.concat(removedBoard);
+    const removedIdx = this.childViewOrder.splice(idx, 1);
+    this.childViewOrder = this.childViewOrder.concat(removedIdx);
     this.props.setBoardCount(this.props.boardCount - 1);
   }
 
@@ -106,12 +110,12 @@ export default class BoardContainer extends RxBaseViewDataComponent<Prop, State,
               }*/}
 
               return (
-                <div className="board-wrapper" key={i}>
+                <div className="board-wrapper" key={this.childViewOrder[i]}>
                   <Board
                     color={this.props.color}
-                    viewData={this.childViewData[i]}
+                    viewData={this.childViewData[this.childViewOrder[i]]}
                     fontSize={this.props.fontSize}
-                    onClose={this.props.boardCount > 1 && i > 0 ? this.onBoardClose.bind(this, i) : undefined}
+                    onClose={this.onBoardClose.bind(this, i)}
                   />
                   {diffButton}
                 </div>

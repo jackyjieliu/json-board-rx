@@ -47,6 +47,11 @@ html {
   background-color: #fafafa;
 }*/
 
+.ReactCodeMirror {
+  min-width: 100%;
+  width: 0;
+}
+
 .grey.lighten-3 .CodeMirror {
   background-color: #eee !important;
 }
