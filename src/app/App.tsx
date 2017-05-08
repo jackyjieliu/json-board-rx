@@ -2,6 +2,7 @@ import * as React from 'react';
 import './App.css';
 import BoardContainer from '../board-container/BoardContainer';
 import ActionBar from '../action/ActionBar';
+import FeedbackModal from '../feedback/FeedbackModal';
 import { connect } from 'react-redux';
 import { State } from '../redux/store';
 
@@ -19,26 +20,21 @@ class App extends React.Component<StateProps & DispatchProps, {}> {
     const botBack = this.props.color.botBack;
     // const alertColor = this.props.color.alertColor;
 
-    let feedback;
+    let overlay;
     if (this.props.feedback) {
-      /*feedback = (
-        <div className="feedback-container">
-          <FeedbackModal
-            fontSize={this.props.fontSize}
-            color={this.props.color}
-            onClose={this.closeFeedback.bind(this)}
-          />
-        </div>
-      );*/
+      overlay = (
+        <div className="modal-overlay"/>
+      );
     }
 
     return (
       <div className="full-column">
-        {feedback}
+        {overlay}
         <div className={topBack + ' top'}/>
         <div className={botBack + ' bot'}/>
         <BoardContainer/>
         <ActionBar/>
+        <FeedbackModal/>
       </div>
     );
   }

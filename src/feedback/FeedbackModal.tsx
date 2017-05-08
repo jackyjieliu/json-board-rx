@@ -4,6 +4,7 @@ import 'rxjs/add/observable/dom/ajax';
 import {Color} from '../settings';
 // import Modal from '../modal/Modal';
 import './FeedbackModal.css';
+import '../modal/Modal.css';
 import toast from '../util/toast';
 import { State } from '../redux/store';
 import { connect } from 'react-redux';
@@ -16,6 +17,7 @@ interface OwnState {
 interface StateProps {
   color: Color;
   fontSize: number;
+  feedback: boolean;
 }
 
 interface DispatchProps {
@@ -24,6 +26,14 @@ interface DispatchProps {
 
 class FeedbackModal extends React.Component<StateProps & DispatchProps, OwnState> {
   private feedbackInput: any;
+
+  constructor(props: any) {
+    super(props);
+    this.state = {
+      email: '',
+      feedback: ''
+    };
+  }
 
   submitAction() {
     // const data2 = [
@@ -121,11 +131,11 @@ class FeedbackModal extends React.Component<StateProps & DispatchProps, OwnState
         Submit
       </a>
     );
+
+    const openClass = (this.props.feedback) ? 'open full-column' : '';
+
     return (
-
-
-      <div className={fullClass + ' my-modal'}>
-        <div className={backColor + ' modal full-column'}>
+        <div className={backColor + ' ' + fullClass + ' ' + openClass + ' modal'}>
           <div className={textBack + ' feedback-modal card-panel'}>
             <form>
               <div className="input-field">
@@ -162,8 +172,6 @@ class FeedbackModal extends React.Component<StateProps & DispatchProps, OwnState
             {submitBtn}
           </div>
         </div>
-        <div className="modal-overlay"/>;
-      </div>
     );
   }
 }
@@ -172,7 +180,8 @@ class FeedbackModal extends React.Component<StateProps & DispatchProps, OwnState
 function mapStateToProps(store: State): StateProps {
   return {
     color: store.setting.color,
-    fontSize: store.setting.fontSize
+    fontSize: store.setting.fontSize,
+    feedback: store.feedback
   };
 }
 

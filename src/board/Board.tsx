@@ -16,6 +16,7 @@ interface StateProps {
   fontSize: number;
   text: string;
   error?: string;
+  boardCount: number;
 }
 
 interface DispatchProps {
@@ -89,9 +90,12 @@ class Board extends React.Component<StateProps & DispatchProps & OwnProps, {}> {
       BUTTON_TYPES.UNESCAPE, // "
       BUTTON_TYPES.URL_DECODE, // &
       BUTTON_TYPES.ESCAPE, // \"
-      BUTTON_TYPES.URL_ENCODE, // %
-      BUTTON_TYPES.CLOSE
+      BUTTON_TYPES.URL_ENCODE // %
     ];
+
+    if (this.props.boardCount > 1) {
+      buttonConfig.push(BUTTON_TYPES.CLOSE);
+    }
 
     const buttons = buttonConfig.map((buttonType) => {
       return (
@@ -141,7 +145,8 @@ function mapStateToProps(store: State, ownProps: OwnProps): StateProps {
     color: store.setting.color,
     fontSize: store.setting.fontSize,
     text: store.board.byId[ownProps.index].text,
-    error: store.board.byId[ownProps.index].error
+    error: store.board.byId[ownProps.index].error,
+    boardCount: store.board.order.length
   };
 }
 
