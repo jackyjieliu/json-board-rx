@@ -33,6 +33,32 @@ class FeedbackModal extends React.Component<StateProps & DispatchProps, OwnState
       email: '',
       feedback: ''
     };
+
+    if (this.props.feedback) {
+      this.healthCheck();
+    }
+  }
+
+  componentWillReceiveProps(nextProps: StateProps) {
+    if (nextProps.feedback) {
+      this.healthCheck();
+    }
+  }
+
+  healthCheck() {
+    Observable.ajax({
+      // url: 'http://localhost:3010',
+      url: 'https://json-board.herokuapp.com/health',
+      // crossDomain: true,
+      headers: {
+        'Content-Type': 'application/json'
+      },
+      method: 'GET'
+    })
+    // Observable.ajax('http://localhost:3010', data, { 'Content-type': 'application/json' })
+    .subscribe(() => {
+      ;
+    });
   }
 
   submitAction() {
