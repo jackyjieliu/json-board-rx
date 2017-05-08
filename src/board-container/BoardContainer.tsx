@@ -1,64 +1,29 @@
 import './BoardContainer.css';
 import * as React from 'react';
-import * as Rx from 'rxjs';
-import * as _ from 'lodash';
+import Board from '../board/Board';
+import { State } from '../redux/store';
+import { connect } from 'react-redux';
 
-import BoardContainerViewData, {State} from './BoardContainerViewData';
-
-import Board, {INITIAL_BOARD_STATE} from '../board/Board';
-import BoardViewData from '../board/BoardViewData';
-import DiffModal from '../diff/DiffModal';
-import {Color} from '../settings';
-import {RxBaseViewDataComponent} from '../_base/RxBaseComponent';
-
-interface Prop {
-  color: Color; fontSize: number; boardCount: number; backdrop: boolean; setBoardCount: (n: number) => void;
+interface StateProps {
+  color: Color;
+  fontSize: number;
+  boardOrder: number[];
+  backdrop: boolean;
 }
 
-export default class BoardContainer extends RxBaseViewDataComponent<Prop, State, BoardContainerViewData> {
-  private subscriptions: Rx.Subscription[];
-  private childViewData: BoardViewData[];
-  private childViewOrder: number[];
+interface DispatchProps {}
 
-  constructor(props: any) {
-    super(BoardContainerViewData, { diffOpened: false }, props);
-    this.subscriptions = [];
-    this.childViewData = [];
-    this.childViewOrder = [];
-    this.viewData.setChildViewData(this.childViewData);
-    _.range(this.props.boardCount).forEach((i) => {
-      this.childViewData.push(new BoardViewData(INITIAL_BOARD_STATE));
-      this.childViewOrder.push(i);
-    });
 
-    this.viewData.getDiff$()
-      .subscribe((diff) => {
-        // console.log(diff);
-        this.viewData.showDiff(diff);
-      });
-  }
-
-  diffButtonClicked(i: number) {
-    // Show diff between i and i - 1
-    this.viewData.diffButtonClicked(i);
-  }
+class BoardContainer extends React.Component<StateProps & DispatchProps, {}> {
 
   componentDidMount() {
     $('.board textarea').last().focus();
   }
 
-  componentWillReceiveProps(nextProps: Prop) {
-    if (nextProps.boardCount > this.props.boardCount) {
-      _.range(nextProps.boardCount - this.childViewData.length)
-        .map(() => {
-          this.childViewData.push(new BoardViewData(INITIAL_BOARD_STATE));
-          this.childViewOrder.push(this.childViewData.length - 1);
-        });
-    }
-  }
   componentWillUpdate() {
     $('.tooltipped').tooltip('remove');
   }
+
   componentDidUpdate() {
     if (this.props.backdrop) {
       $('.board textarea').attr('tabindex', -1);
@@ -68,19 +33,9 @@ export default class BoardContainer extends RxBaseViewDataComponent<Prop, State,
     $('.tooltipped').tooltip();
   }
 
-  onBoardClose(idx: number) {
-    const removedIdx = this.childViewOrder.splice(idx, 1);
-    this.childViewOrder = this.childViewOrder.concat(removedIdx);
-    this.props.setBoardCount(this.props.boardCount - 1);
-  }
-
-  hideDiff() {
-    this.viewData.hideDiff();
-  }
-
   render() {
     // const actionBtn = this.props.color.actionBtn;
-    let modal;
+    /*let modal;
     if (this.state.diff) {
       modal = (
         <DiffModal
@@ -90,12 +45,12 @@ export default class BoardContainer extends RxBaseViewDataComponent<Prop, State,
           diffObject={this.state.diff}
         />
       );
-    }
+    }*/
 
     return (
       <div className="boards-container" >
         {
-          _.range(this.props.boardCount)
+          this.props.boardOrder
             .map((i) => {
               let diffButton;
               {/*if (i !== 0) {
@@ -110,19 +65,16 @@ export default class BoardContainer extends RxBaseViewDataComponent<Prop, State,
               }*/}
 
               return (
-                <div className="board-wrapper" key={this.childViewOrder[i]}>
+                <div className="board-wrapper" key={i}>
                   <Board
-                    color={this.props.color}
-                    viewData={this.childViewData[this.childViewOrder[i]]}
-                    fontSize={this.props.fontSize}
-                    onClose={this.onBoardClose.bind(this, i)}
+                    index={i}
                   />
                   {diffButton}
                 </div>
               );
             })
         }
-        {modal}
+        {/*{modal}*/}
 {/*
           <a className="waves-effect waves-light btn" href="#modal1">Modal</a>
 
@@ -140,4 +92,20 @@ export default class BoardContainer extends RxBaseViewDataComponent<Prop, State,
     );
   }
 }
+
+function mapStateToProps(store: State): StateProps {
+  return {
+    color: store.setting.color,
+    fontSize: store.setting.fontSize,
+    boardOrder: store.board.order,
+    backdrop: store.feedback
+  };
+}
+
+function mapDispatchToProps(): DispatchProps {
+  return {};
+}
+
+export default connect(mapStateToProps, mapDispatchToProps)(BoardContainer);
+
 

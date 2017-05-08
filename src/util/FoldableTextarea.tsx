@@ -3,7 +3,7 @@ import * as ReactDOM from 'react-dom';
 import * as _ from 'lodash';
 import * as Codemirror from 'react-codemirror';
 import {Color} from '../settings';
-
+import * as resizeDetectorMaker from 'element-resize-detector';
 import 'codemirror/mode/javascript/javascript';
 import 'codemirror/lib/codemirror.css';
 import 'codemirror/addon/fold/foldgutter.css';
@@ -21,7 +21,6 @@ export interface Props {
   color: Color;
   code: string;
   onCodeChange?: Function;
-  heightCalculation?: Function;
 
   // From the react-dimensions decorator
   containerWidth?: number;
@@ -32,7 +31,9 @@ const options = {
   // Reference: https://codemirror.net/doc/manual.html#api
   mode: 'javascript',
   lineNumbers: true,
-  extraKeys: {'Ctrl-Q': function(cm: any){ cm.foldCode(cm.getCursor()); }},
+  extraKeys: null,
+  // keyMap: 'basic',
+  keyMap: 'default',
   foldGutter: true,
   gutters: ['CodeMirror-linenumbers', 'CodeMirror-foldgutter'],
   indentationUnit: 2,
@@ -43,12 +44,37 @@ const options = {
   lineWrapping: true, // Wrap instead of scroll when line is too long
 };
 
+// Indent Wrap https://codemirror.net/demo/indentwrap.html
+// function countColumn(string: any, end: any, tabSize: any, startIndex?: any, startValue?: any) {
+//   if (end == null) {
+//     end = string.search(/[^\s\u00a0]/)
+//     if (end == -1) { end = string.length }
+//   }
+//   for (var i = startIndex || 0, n = startValue || 0;;) {
+//     var nextTab = string.indexOf("\t", i)
+//     if (nextTab < 0 || nextTab >= end)
+//       { return n + (end - i) }
+//     n += nextTab - i
+//     n += tabSize - (n % tabSize)
+//     i = nextTab + 1
+//   }
+// }
+
 export default class FoldableTextarea extends React.Component<Props, null> {
   codeMirrorRef: any;
   codeMirror: any;
-  domElem: Element;
+  domElem: any;
   currentHeight: number;
+  currentWidth: number;
   debouncedResize: any;
+  private resizeDetector: any;
+  private parentEl: HTMLElement;
+
+  constructor(props: any) {
+    super(props);
+    this.resizeDetector = resizeDetectorMaker();
+  }
+
 
   updateCode(newCode: string) {
     if (_.isFunction(this.props.onCodeChange)) {
@@ -56,31 +82,38 @@ export default class FoldableTextarea extends React.Component<Props, null> {
     }
   }
 
-  setCodeMirrorScrollerHeight(codeMirror: any, height: number) {
-    this.currentHeight = height;
-    codeMirror.display.scroller.style.height = height + 'px';
-    codeMirror.display.wrapper.style.height = height + 'px';
-  }
-
-  // Set height of scrollable component otherwise the div will keep expanding
-  updateDimension() {
-    let newHeight;
-    if (_.isFunction(this.props.heightCalculation)) {
-      newHeight = this.props.heightCalculation(this.domElem);
-    } else {
-      newHeight = this.domElem.clientHeight;
-    }
-    if (newHeight !== this.currentHeight) {
-      this.setCodeMirrorScrollerHeight(this.codeMirror, newHeight);
-    }
-  }
-
   componentDidMount() {
     this.domElem = ReactDOM.findDOMNode(this);
     this.codeMirror = this.codeMirrorRef.getCodeMirror();
-    this.debouncedResize = _.debounce(this.updateDimension.bind(this), 100);
-    window.addEventListener('resize', this.debouncedResize);
-    this.updateDimension();
+    // this.debouncedResize = _.debounce(this.updateDimension.bind(this), 100);
+    // window.addEventListener('resize', this.debouncedResize);
+    // this.updateDimension();
+
+    this.parentEl = this.domElem.parentElement;
+    this.resizeDetector.listenTo(this.parentEl, (element: HTMLElement) => {
+      var width = element.offsetWidth;
+      var height = element.offsetHeight;
+
+      if (this.currentHeight !== height || this.currentWidth !== width) {
+        this.currentHeight = height;
+        this.currentWidth = width;
+        this.codeMirror.setSize(width, height);
+      }
+    });
+
+    this.currentWidth = this.parentEl.offsetWidth;
+    this.currentHeight = this.parentEl.offsetHeight;
+    this.codeMirror.setSize(this.currentWidth, this.currentHeight);
+
+    // Indent Wrap https://codemirror.net/demo/indentwrap.html
+    // var charWidth = this.codeMirror.defaultCharWidth(), basePadding = 4;
+    // this.codeMirror.on("renderLine", (cm: any, line: any, elt: any) => {
+    //   var off = countColumn(line.text, null, cm.getOption("tabSize")) * charWidth;
+    //   elt.style.textIndent = "-" + off + "px";
+    //   elt.style.paddingLeft = (basePadding + off) + "px";
+    // });
+    // this.codeMirror.refresh();
+
   }
 
   // componentDidUpdate() {
@@ -88,7 +121,9 @@ export default class FoldableTextarea extends React.Component<Props, null> {
   // }
 
   componentWillUnmount () {
-    window.removeEventListener('resize', this.debouncedResize);
+    // window.removeEventListener('resize', this.debouncedResize);
+
+    this.resizeDetector.removeAllListeners(this.parentEl);
   }
 
   render() {
@@ -104,3 +139,4 @@ export default class FoldableTextarea extends React.Component<Props, null> {
     );
   }
 }
+

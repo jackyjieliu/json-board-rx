@@ -20,7 +20,31 @@ declare module 'js-beautify' {
   export { js_beautify };
 }
 
+declare module 'element-resize-detector' {
+  export = anyType
+}
+
 declare function $(el: any): any;
 declare var Materialize: {
   toast: (s: string, n: number) => null;
+}
+
+
+
+type Dispatch = (a: Action) => void;
+
+interface Action {
+  type: string;
+  payload: any;
+}
+
+interface Color {
+  actionBtn: string;
+  disp: string;
+  topBack: string;
+  botBack: string;
+  textBack: string;
+  error: string;
+  textColor: string;
+  theme: string;
 }
