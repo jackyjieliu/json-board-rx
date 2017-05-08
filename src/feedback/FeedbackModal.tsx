@@ -94,6 +94,11 @@ class FeedbackModal extends React.Component<StateProps & DispatchProps, OwnState
     }, () => {
       toast('An error occurred. Please try again later.');
       this.props.closeFeedback();
+    }, () => {
+      this.setState({
+        email: '',
+        feedback: ''
+      });
     });
     // .subscribe({
     //   complete: () => {
@@ -117,6 +122,10 @@ class FeedbackModal extends React.Component<StateProps & DispatchProps, OwnState
       });
     }
 
+  }
+
+  shouldComponentUpdate(nextProps: StateProps) {
+    return this.props.feedback || !(this.props.feedback === nextProps.feedback);
   }
 
   // TODO: auto grow
