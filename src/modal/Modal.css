@@ -1,4 +1,5 @@
-.my-modal .modal {
+.modal.open {
+  transform: scaleX(1);
   z-index: 1003;
   opacity: 1;
   max-height: 100%;
@@ -8,30 +9,30 @@
   overflow: visible;
 }
 
-.my-modal.small .modal {
+.small.modal {
   max-width: 760px;
 }
 
-.my-modal.full .modal {
+.full.modal {
   height: 95%;
   width: 95%;
   top: 2%;
 }
 
-.my-modal .modal-overlay {
+.modal-overlay {
   z-index: 1002;
   display: block;
   opacity: 0.5;
 }
 
 
-.my-modal .modal .close {
+.modal .close {
   position: absolute;
   right: 0;
   top: 0;
 }
 
-.my-modal .btn-row {
+.modal .btn-row {
   display: flex;
   justify-content: center;
 }

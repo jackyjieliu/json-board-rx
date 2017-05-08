@@ -1,73 +1,46 @@
 import * as React from 'react';
 import './Board.css';
-import * as Rx from 'rxjs';
 import tranlsate from '../util/translation';
-import BoardViewData, {State, ACTION_TYPES, BUTTON_TYPES} from './BoardViewData';
 import {Color} from '../settings';
-import {RxBaseComponent} from '../_base/RxBaseComponent';
 import FoldableTextarea from '../util/FoldableTextarea';
+import { connect } from 'react-redux';
+import { State } from '../redux/store';
+import * as BoardAction from '../redux/action/board-action';
 
-export const INITIAL_BOARD_STATE: State = {
-  text: '',
-  error: undefined
-};
-
-interface Prop {
-  color: Color; fontSize: number; viewData: BoardViewData; onClose?: () => void;
+interface OwnProps {
+  index: number;
 }
 
-export default class Board extends RxBaseComponent<Prop, State, BoardViewData> {
-  private subscription: Rx.Subscription;
+interface StateProps {
+  color: Color;
+  fontSize: number;
+  text: string;
+  error?: string;
+  boardCount: number;
+}
 
-  constructor(props: any) {
-    super(props.viewData, INITIAL_BOARD_STATE, props);
-    this.subscription = Rx.Observable.merge(
-      this.viewData.getUrlEncode$(),
-      this.viewData.getUrlDecode$(),
-      this.viewData.getEscape$(),
-      this.viewData.getUnescape$(),
-      this.viewData.getMinimize$(),
-      this.viewData.getLink$()
-    ).subscribe(this.systemTextChanged.bind(this));
-  }
+interface DispatchProps {
+  closeBoard: () =>  void;
+  updateText: (text: string) =>  void;
+  format: () => void;
+  minify: () => void;
+  unescape: () => void;
+  escape: () => void;
+  decode: () => void;
+  encode: () => void;
+}
 
-  systemTextChanged({ text, error }: { text: string; error?: string }) {
-    this.viewData.nextAction({
-      type: ACTION_TYPES.SYSTEM_TEXT_CHANGED,
-      value: { text, error }
-    });
-  }
+const BUTTON_TYPES = {
+  FORMAT: 'FORMAT',
+  MINIMIZE: 'MINIMIZE',
+  UNESCAPE: 'UNESCAPE',
+  ESCAPE: 'ESCAPE',
+  URL_DECODE: 'URL_DECODE',
+  URL_ENCODE: 'URL_ENCODE',
+  CLOSE: 'CLOSE'
+};
 
-  // textChanged(e: any) {
-    // const text = e.target.value;
-  textChanged(text: string) {
-    this.viewData.nextAction({
-      type: ACTION_TYPES.TEXT_CHANGED,
-      value: text
-    });
-  }
-
-  componentWillUnmount() {
-    super.componentWillUnmount();
-    this.subscription.unsubscribe();
-  }
-
-  buttonClicked(type: string) {
-    this.viewData.buttonClicked(type);
-  }
-
-  closeBoard() {
-    if (this.props.onClose) {
-      this.props.onClose();
-    }
-  }
-
-  calculateHeight(dom: any) {
-    // if (this.refs.errorBoxRef) {
-    //   return dom.clientHeight - this.refs.errorBoxRef.clientHeight;
-    // }
-    return dom.clientHeight;
-  }
+class Board extends React.Component<StateProps & DispatchProps & OwnProps, {}> {
 
   render() {
     const actionBtn = this.props.color.actionBtn;
@@ -79,10 +52,10 @@ export default class Board extends RxBaseComponent<Prop, State, BoardViewData> {
     const BUTTON_CLASS = actionBtn + ' waves-effect waves-light btn tooltipped';
 
     let errorDiv;
-    if (this.state.error) {
+    if (this.props.error) {
       errorDiv = (
         <div className={error + ' flex-row word-wrap error-container z-depth-3'}>
-          {this.state.error || ''}
+          {this.props.error || ''}
         </div>
       );
     }
@@ -98,7 +71,17 @@ export default class Board extends RxBaseComponent<Prop, State, BoardViewData> {
         </span>
       ), // \"
       [BUTTON_TYPES.URL_ENCODE]: (<span>%</span>), // %
-      'CLOSE': (<i className="material-icons">close</i>) // x
+      [BUTTON_TYPES.CLOSE]: (<i className="material-icons">close</i>) // x
+    };
+
+    const BUTTON_CLICK_ACTIONS = {
+      [BUTTON_TYPES.FORMAT]: this.props.format,
+      [BUTTON_TYPES.MINIMIZE]: this.props.minify,
+      [BUTTON_TYPES.UNESCAPE]: this.props.unescape,
+      [BUTTON_TYPES.URL_DECODE]: this.props.decode,
+      [BUTTON_TYPES.ESCAPE]: this.props.escape,
+      [BUTTON_TYPES.URL_ENCODE]: this.props.encode,
+      [BUTTON_TYPES.CLOSE]: this.props.closeBoard
     };
 
     const buttonConfig = [
@@ -110,11 +93,15 @@ export default class Board extends RxBaseComponent<Prop, State, BoardViewData> {
       BUTTON_TYPES.URL_ENCODE // %
     ];
 
+    if (this.props.boardCount > 1) {
+      buttonConfig.push(BUTTON_TYPES.CLOSE);
+    }
+
     const buttons = buttonConfig.map((buttonType) => {
       return (
         <a
           className={BUTTON_CLASS}
-          onClick={this.buttonClicked.bind(this, buttonType)}
+          onClick={BUTTON_CLICK_ACTIONS[buttonType].bind(this)}
           key={buttonType}
           data-position="right"
           data-delay="5"
@@ -125,22 +112,6 @@ export default class Board extends RxBaseComponent<Prop, State, BoardViewData> {
       );
     });
 
-    // push close button
-    if (this.props.onClose !== undefined) {
-      buttons.push((
-        <a
-          className={BUTTON_CLASS}
-          onClick={this.closeBoard.bind(this)}
-          key="close"
-          data-position="right"
-          data-delay="5"
-          data-tooltip={tranlsate('CLOSE')}
-        >
-          {BUTTON_MAP['CLOSE']}
-        </a>
-      ));
-    }
-
     return (
       <div className="board">
         <div className="vert-nav full-column">
@@ -150,20 +121,15 @@ export default class Board extends RxBaseComponent<Prop, State, BoardViewData> {
         <div className="card-container full-row">
           <div className="card-textarea row full-row">
             <div className={textBack + ' card-panel full-column z-depth-4'}>
-              <div className="full-column textarea-container" style={{color: textColor, fontSize: this.props.fontSize}}>
-                {/*<textarea
-                  style={{color: textColor, fontSize: this.props.fontSize}}
-                  className="full-row"
-                  onChange={this.textChanged.bind(this)}
-                  value={this.state.text}
-                />*/}
+              <div
+                className="full-column textarea-container"
+                style={{color: textColor, fontSize: this.props.fontSize}}
+              >
                 <FoldableTextarea
                   color={this.props.color}
-                  code={this.state.text}
-                  onCodeChange={this.textChanged.bind(this)}
-                  heightCalculation={this.calculateHeight.bind(this)}
+                  code={this.props.text}
+                  onCodeChange={this.props.updateText.bind(this)}
                 />
-                  {/*className='full-height'*/}
               </div>
               {errorDiv}
             </div>
@@ -173,4 +139,45 @@ export default class Board extends RxBaseComponent<Prop, State, BoardViewData> {
     );
   }
 }
+
+function mapStateToProps(store: State, ownProps: OwnProps): StateProps {
+  return {
+    color: store.setting.color,
+    fontSize: store.setting.fontSize,
+    text: store.board.byId[ownProps.index].text,
+    error: store.board.byId[ownProps.index].error,
+    boardCount: store.board.order.length
+  };
+}
+
+function mapDispatchToProps(dispatch: Dispatch, ownProps: OwnProps): DispatchProps {
+  const id = ownProps.index;
+  return {
+    closeBoard: () => {
+      dispatch(BoardAction.removeBoard(id));
+    },
+    updateText: (text: string) => {
+      dispatch(BoardAction.updateTextAction(id, text));
+    },
+    format: () => {
+      dispatch(BoardAction.formatAction(id));
+    },
+    minify: () => {
+      dispatch(BoardAction.minifyAction(id));
+    },
+    unescape: () => {
+      dispatch(BoardAction.unescapeAction(id));
+    },
+    escape: () => {
+      dispatch(BoardAction.escapeAction(id));
+    },
+    decode: () => {
+      dispatch(BoardAction.decodeAction(id));
+    },
+    encode: () => {
+      dispatch(BoardAction.encodeAction(id));
+    }
+  };
+}
+export default connect(mapStateToProps, mapDispatchToProps)(Board);
 
