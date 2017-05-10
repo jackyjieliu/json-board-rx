@@ -1,4 +1,5 @@
 import * as React from 'react';
+import * as ReactDOM from 'react-dom';
 import './Board.css';
 import tranlsate from '../util/translation';
 import {Color} from '../settings';
@@ -6,7 +7,7 @@ import FoldableTextarea from '../util/FoldableTextarea';
 import { connect } from 'react-redux';
 import { State } from '../redux/store';
 import * as BoardAction from '../redux/action/board-action';
-
+import * as _ from 'lodash';
 interface OwnProps {
   index: number;
 }
@@ -41,6 +42,31 @@ const BUTTON_TYPES = {
 };
 
 class Board extends React.Component<StateProps & DispatchProps & OwnProps, {}> {
+  private textareaRef: any;
+
+  shouldComponentUpdate(nextProps: StateProps) {
+    return !_.isEqual(nextProps, this.props);
+  }
+
+
+  componentDidUpdate(preProps: StateProps) {
+    if (preProps.boardCount !== this.props.boardCount) {
+      this.textareaRef.updateDimension();
+    }
+  }
+
+  calculateDimension(el: HTMLElement) {
+    const height = el.offsetHeight;
+    const dom = ReactDOM.findDOMNode(this);
+    const width = dom.clientWidth
+      - 20  // margin left
+      - 57  // padding left
+      - 12  // padding right
+      - 20; // margin right
+    return {
+      height, width
+    };
+  }
 
   render() {
     const actionBtn = this.props.color.actionBtn;
@@ -126,9 +152,11 @@ class Board extends React.Component<StateProps & DispatchProps & OwnProps, {}> {
                 style={{color: textColor, fontSize: this.props.fontSize}}
               >
                 <FoldableTextarea
+                  ref={(el: any) => { this.textareaRef = this.textareaRef || el; }}
                   color={this.props.color}
                   code={this.props.text}
                   onCodeChange={this.props.updateText.bind(this)}
+                  calculateDimension={this.calculateDimension.bind(this)}
                 />
               </div>
               {errorDiv}

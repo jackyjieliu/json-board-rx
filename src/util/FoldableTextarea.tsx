@@ -3,7 +3,6 @@ import * as ReactDOM from 'react-dom';
 import * as _ from 'lodash';
 import * as Codemirror from 'react-codemirror';
 import {Color} from '../settings';
-import * as resizeDetectorMaker from 'element-resize-detector';
 import 'codemirror/mode/javascript/javascript';
 import 'codemirror/lib/codemirror.css';
 import 'codemirror/addon/fold/foldgutter.css';
@@ -21,10 +20,7 @@ export interface Props {
   color: Color;
   code: string;
   onCodeChange?: Function;
-
-  // From the react-dimensions decorator
-  containerWidth?: number;
-  containerHeight?: number;
+  calculateDimension?: (el: HTMLElement) => { height: number; width: number; };
 }
 
 const options = {
@@ -67,14 +63,11 @@ export default class FoldableTextarea extends React.Component<Props, null> {
   currentHeight: number;
   currentWidth: number;
   debouncedResize: any;
-  private resizeDetector: any;
   private parentEl: HTMLElement;
 
   constructor(props: any) {
     super(props);
-    this.resizeDetector = resizeDetectorMaker();
   }
-
 
   updateCode(newCode: string) {
     if (_.isFunction(this.props.onCodeChange)) {
@@ -82,28 +75,37 @@ export default class FoldableTextarea extends React.Component<Props, null> {
     }
   }
 
+  updateDimension() {
+    console.log('update dimension')
+
+    let width;
+    let height;
+    if (_.isFunction(this.props.calculateDimension)) {
+      const dim = this.props.calculateDimension(this.parentEl);
+      width = dim.width;
+      height = dim.height;
+    } else {
+      width = this.parentEl.offsetWidth;
+      height = this.parentEl.offsetHeight;
+    }
+
+
+    if (this.currentHeight === undefined || this.currentWidth === undefined ||
+      this.currentHeight !== height || this.currentWidth !== width) {
+
+      this.currentHeight = height;
+      this.currentWidth = width;
+      this.codeMirror.setSize(width, height);
+    }
+  }
+
   componentDidMount() {
     this.domElem = ReactDOM.findDOMNode(this);
     this.codeMirror = this.codeMirrorRef.getCodeMirror();
-    // this.debouncedResize = _.debounce(this.updateDimension.bind(this), 100);
-    // window.addEventListener('resize', this.debouncedResize);
-    // this.updateDimension();
-
     this.parentEl = this.domElem.parentElement;
-    this.resizeDetector.listenTo(this.parentEl, (element: HTMLElement) => {
-      var width = element.offsetWidth;
-      var height = element.offsetHeight;
-
-      if (this.currentHeight !== height || this.currentWidth !== width) {
-        this.currentHeight = height;
-        this.currentWidth = width;
-        this.codeMirror.setSize(width, height);
-      }
-    });
-
-    this.currentWidth = this.parentEl.offsetWidth;
-    this.currentHeight = this.parentEl.offsetHeight;
-    this.codeMirror.setSize(this.currentWidth, this.currentHeight);
+    this.debouncedResize = _.debounce(this.updateDimension.bind(this), 100);
+    window.addEventListener('resize', this.debouncedResize);
+    this.updateDimension();
 
     // Indent Wrap https://codemirror.net/demo/indentwrap.html
     // var charWidth = this.codeMirror.defaultCharWidth(), basePadding = 4;
@@ -116,14 +118,8 @@ export default class FoldableTextarea extends React.Component<Props, null> {
 
   }
 
-  // componentDidUpdate() {
-  //   this.updateDimension();
-  // }
-
   componentWillUnmount () {
-    // window.removeEventListener('resize', this.debouncedResize);
-
-    this.resizeDetector.removeAllListeners(this.parentEl);
+    window.removeEventListener('resize', this.debouncedResize);
   }
 
   render() {
