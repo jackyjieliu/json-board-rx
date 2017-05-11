@@ -43,16 +43,33 @@ const BUTTON_TYPES = {
 
 class Board extends React.Component<StateProps & DispatchProps & OwnProps, {}> {
   private textareaRef: any;
+  private debouncedPaste: Function;
+
+  constructor(props: any) {
+    super(props);
+
+    this.debouncedPaste = _.debounce(this.onPaste, 500);
+  }
+
 
   shouldComponentUpdate(nextProps: StateProps) {
     return !_.isEqual(nextProps, this.props);
   }
 
-
   componentDidUpdate(preProps: StateProps) {
-    if (preProps.boardCount !== this.props.boardCount) {
+    if (preProps.boardCount !== this.props.boardCount ||
+      preProps.error !== this.props.error) {
+
       this.textareaRef.updateDimension();
     }
+  }
+
+  onTextUpdate(text: string) {
+    this.props.updateText(text);
+  }
+
+  onPaste() {
+    this.props.format();
   }
 
   calculateDimension(el: HTMLElement) {
@@ -155,7 +172,8 @@ class Board extends React.Component<StateProps & DispatchProps & OwnProps, {}> {
                   ref={(el: any) => { this.textareaRef = this.textareaRef || el; }}
                   color={this.props.color}
                   code={this.props.text}
-                  onCodeChange={this.props.updateText.bind(this)}
+                  onCodeChange={this.onTextUpdate.bind(this)}
+                  onPaste={this.debouncedPaste.bind(this)}
                   calculateDimension={this.calculateDimension.bind(this)}
                 />
               </div>

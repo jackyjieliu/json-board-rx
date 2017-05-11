@@ -20,6 +20,7 @@ export interface Props {
   color: Color;
   code: string;
   onCodeChange?: Function;
+  onPaste?: Function;
   calculateDimension?: (el: HTMLElement) => { height: number; width: number; };
 }
 
@@ -34,6 +35,7 @@ const options = {
   gutters: ['CodeMirror-linenumbers', 'CodeMirror-foldgutter'],
   indentationUnit: 2,
   tabSize: 2,
+  viewportMargin: Infinity,
   indentWithTabs: true,
   placeholder: '',
   smartIndent: false, // Set to false since json indentation is weird
@@ -64,6 +66,7 @@ export default class FoldableTextarea extends React.Component<Props, null> {
   currentWidth: number;
   debouncedResize: any;
   private parentEl: HTMLElement;
+  private onPasteListenerFunc?: Function;
 
   constructor(props: any) {
     super(props);
@@ -99,6 +102,12 @@ export default class FoldableTextarea extends React.Component<Props, null> {
     }
   }
 
+  onPasteListener() {
+    if (_.isFunction(this.props.onPaste)) {
+      this.props.onPaste();
+    }
+  }
+
   componentDidMount() {
     this.domElem = ReactDOM.findDOMNode(this);
     this.codeMirror = this.codeMirrorRef.getCodeMirror();
@@ -106,6 +115,14 @@ export default class FoldableTextarea extends React.Component<Props, null> {
     this.debouncedResize = _.debounce(this.updateDimension.bind(this), 100);
     window.addEventListener('resize', this.debouncedResize);
     this.updateDimension();
+
+    if (this.props.onPaste) {
+      this.onPasteListenerFunc = this.onPasteListener.bind(this);
+
+      this.codeMirror
+        .getWrapperElement()
+        .addEventListener('paste', this.onPasteListenerFunc);
+    }
 
     // Indent Wrap https://codemirror.net/demo/indentwrap.html
     // var charWidth = this.codeMirror.defaultCharWidth(), basePadding = 4;
@@ -120,6 +137,12 @@ export default class FoldableTextarea extends React.Component<Props, null> {
 
   componentWillUnmount () {
     window.removeEventListener('resize', this.debouncedResize);
+
+    if (this.onPasteListenerFunc) {
+      this.codeMirror
+        .getWrapperElement()
+        .removeEventListener('paste', this.onPasteListenerFunc);
+    }
   }
 
   render() {
