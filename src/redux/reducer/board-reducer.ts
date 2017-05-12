@@ -1,17 +1,21 @@
 import * as jsonUtil from '../../util/json-util';
 import * as _ from 'lodash';
 import {ACTION} from '../action/board-action';
+import { combineEpics, Epic } from 'redux-observable';
+import 'rxjs';
+
 export interface BoardState {
   byId: {
     [key: number]: {
       text: string;
       error?: string;
+      spinner: boolean
     }
   };
   order: number[];
 }
 
-const INITIAL_BOARD = { text: '' };
+const INITIAL_BOARD = { text: '', spinner: false };
 
 const INITIAL_STATE = {
   byId: {
@@ -27,6 +31,7 @@ function updateBoardState(state: BoardState, id: number, text: string, error?: s
     byId: {
       ...state.byId,
       [id]: {
+        spinner: false,
         text,
         error,
       }
@@ -91,7 +96,29 @@ export default function diffReducer(state: BoardState = INITIAL_STATE, action: A
         order: _.without(state.order, id)
       };
 
+    case ACTION.SHOW_SPINNER:
+      return {
+        ...state,
+        byId: {
+          ...state.byId,
+          [id]: {
+            ...state.byId[id],
+            spinner: true
+          }
+        }
+      };
+
     default:
       return state;
   }
 }
+
+const loadingEpic: Epic<Action, any> = (action$) =>
+  action$
+    .ofType(ACTION.SHOW_SPINNER)
+    .delay(0)
+    .map(({ payload }) => {
+      return payload.nextAction;
+    });
+
+export const boardEpic = combineEpics(loadingEpic);

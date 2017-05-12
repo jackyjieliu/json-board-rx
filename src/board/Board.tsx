@@ -18,6 +18,7 @@ interface StateProps {
   text: string;
   error?: string;
   boardCount: number;
+  spinner: boolean;
 }
 
 interface DispatchProps {
@@ -87,6 +88,7 @@ class Board extends React.Component<StateProps & DispatchProps & OwnProps, {}> {
 
   render() {
     const actionBtn = this.props.color.actionBtn;
+    const color = this.props.color.color;
     const textBack = this.props.color.textBack;
     const error = this.props.color.error;
     const textColor = this.props.color.textColor;
@@ -155,8 +157,29 @@ class Board extends React.Component<StateProps & DispatchProps & OwnProps, {}> {
       );
     });
 
+    let spinner;
+
+    if (this.props.spinner) {
+      spinner = (
+        <div className="spinner-wrapper">
+          <div className="preloader-wrapper big active">
+            <div className={color + '-spinner spinner-layer'}>
+              <div className="circle-clipper left">
+                <div className="circle"/>
+              </div><div className="gap-patch">
+                <div className="circle"/>
+              </div><div className="circle-clipper right">
+                <div className="circle"/>
+              </div>
+            </div>
+          </div>
+        </div>
+      );
+    }
+
     return (
       <div className="board">
+        {spinner}
         <div className="vert-nav full-column">
           {buttons}
         </div>
@@ -192,7 +215,8 @@ function mapStateToProps(store: State, ownProps: OwnProps): StateProps {
     fontSize: store.setting.fontSize,
     text: store.board.byId[ownProps.index].text,
     error: store.board.byId[ownProps.index].error,
-    boardCount: store.board.order.length
+    boardCount: store.board.order.length,
+    spinner: store.board.byId[ownProps.index].spinner
   };
 }
 

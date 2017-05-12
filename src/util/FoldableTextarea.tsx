@@ -26,7 +26,8 @@ export interface Props {
 
 const options = {
   // Reference: https://codemirror.net/doc/manual.html#api
-  mode: 'javascript',
+  // mode: 'javascript',
+  theme: 'none',
   lineNumbers: true,
   extraKeys: null,
   // keyMap: 'basic',
@@ -79,7 +80,6 @@ export default class FoldableTextarea extends React.Component<Props, null> {
   }
 
   updateDimension() {
-    console.log('update dimension')
 
     let width;
     let height;

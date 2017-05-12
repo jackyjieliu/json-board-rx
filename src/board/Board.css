@@ -1,6 +1,19 @@
 .board {
   display: flex;
   flex-grow: 1;
+  position: relative;
+}
+
+.spinner-wrapper {
+  position: absolute;
+  left: 0;
+  top: 0;
+  height: 100%;
+  width: 100%;
+  z-index: 3000;
+  display: flex;
+  justify-content: center;
+  align-items: center;
 }
 
 .card-container {

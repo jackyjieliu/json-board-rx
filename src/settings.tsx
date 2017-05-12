@@ -1,6 +1,7 @@
 import * as Rx from 'rxjs';
 
 export interface Color {
+  color: string;
   actionBtn: string;
   disp: string;
   topBack: string;
@@ -39,6 +40,7 @@ export interface Color {
 
 // export const AVAILABLE_COLORS = lightColors.concat(darkColors);
 export const AVAILABLE_COLORS = [{
+  color: 'grey',
   actionBtn: 'grey darken-2',
   disp: 'grey lighten-2',
   topBack: 'grey',

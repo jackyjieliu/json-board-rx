@@ -39,6 +39,7 @@ interface Action {
 }
 
 interface Color {
+  color: string;
   actionBtn: string;
   disp: string;
   topBack: string;

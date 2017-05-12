@@ -2,6 +2,7 @@ import * as _ from 'lodash';
 import { ACTION } from '../action/setting-action';
 
 export const AVAILABLE_COLORS = [{
+  color: 'grey',
   actionBtn: 'grey darken-2',
   disp: 'grey lighten-2',
   topBack: 'grey',

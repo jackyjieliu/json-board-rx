@@ -60,6 +60,10 @@ html {
 }
 
 
+.grey-spinner {
+  border-color: #616161; /* grey darken-2 */
+}
+
 .grey input:not([type]):focus:not([readonly])+label,
 .grey input[type=text]:focus:not([readonly])+label,
 .grey input[type=password]:focus:not([readonly])+label,
@@ -73,7 +77,7 @@ html {
 .grey input[type=number]:focus:not([readonly])+label,
 .grey input[type=search]:focus:not([readonly])+label,
 .grey textarea.materialize-textarea:focus:not([readonly])+label {
-    color: #616161;
+    color: #616161; /* grey darken-2 */
 }
 
 .grey input:not([type]):focus:not([readonly]),
@@ -89,6 +93,6 @@ html {
 .grey input[type=number]:focus:not([readonly]),
 .grey input[type=search]:focus:not([readonly]),
 .grey textarea.materialize-textarea:focus:not([readonly]) {
-  border-bottom: 1px solid #616161;
-  box-shadow: 0 1px 0 0 #616161;
+  border-bottom: 1px solid #616161; /* grey darken-2 */
+  box-shadow: 0 1px 0 0 #616161; /* grey darken-2 */
 }
