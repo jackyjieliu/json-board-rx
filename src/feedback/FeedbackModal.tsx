@@ -5,6 +5,7 @@ import {Color} from '../settings';
 // import Modal from '../modal/Modal';
 import './FeedbackModal.css';
 import '../modal/Modal.css';
+import Spinner from '../util/Spinner';
 import toast from '../util/toast';
 import { State } from '../redux/store';
 import { connect } from 'react-redux';
@@ -12,6 +13,7 @@ import * as FeedbackAction from '../redux/action/feedback-action';
 interface OwnState {
   feedback: string;
   email: string;
+  spinner: boolean;
 }
 
 interface StateProps {
@@ -31,7 +33,8 @@ class FeedbackModal extends React.Component<StateProps & DispatchProps, OwnState
     super(props);
     this.state = {
       email: '',
-      feedback: ''
+      feedback: '',
+      spinner: false
     };
 
     if (this.props.feedback) {
@@ -62,6 +65,11 @@ class FeedbackModal extends React.Component<StateProps & DispatchProps, OwnState
   }
 
   submitAction() {
+    this.setState({
+      feedback: this.state.feedback,
+      email: this.state.email,
+      spinner: true
+    });
     // const data2 = [
     //   `entry.1597674574=${this.state.feedback}`,
     //   `entry.1342041182=${this.state.email}`
@@ -97,7 +105,8 @@ class FeedbackModal extends React.Component<StateProps & DispatchProps, OwnState
     }, () => {
       this.setState({
         email: '',
-        feedback: ''
+        feedback: '',
+        spinner: false
       });
     });
     // .subscribe({
@@ -113,12 +122,14 @@ class FeedbackModal extends React.Component<StateProps & DispatchProps, OwnState
     if (type === 'EMAIL') {
       this.setState({
         email: text,
-        feedback: this.state.feedback
+        feedback: this.state.feedback,
+        spinner: this.state.spinner
       });
     } else if (type === 'FEEDBACK') {
       this.setState({
         email: this.state.email,
-        feedback: text
+        feedback: text,
+        spinner: this.state.spinner
       });
     }
 
@@ -171,6 +182,7 @@ class FeedbackModal extends React.Component<StateProps & DispatchProps, OwnState
 
     return (
         <div className={backColor + ' ' + fullClass + ' ' + openClass + ' modal'}>
+          <Spinner show={this.state.spinner} color={this.props.color.color}/>
           <div className={textBack + ' feedback-modal card-panel'}>
             <form>
               <div className="input-field">

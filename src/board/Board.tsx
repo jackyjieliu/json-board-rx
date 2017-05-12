@@ -4,6 +4,7 @@ import './Board.css';
 import tranlsate from '../util/translation';
 import {Color} from '../settings';
 import FoldableTextarea from '../util/FoldableTextarea';
+import Spinner from '../util/Spinner';
 import { connect } from 'react-redux';
 import { State } from '../redux/store';
 import * as BoardAction from '../redux/action/board-action';
@@ -88,7 +89,6 @@ class Board extends React.Component<StateProps & DispatchProps & OwnProps, {}> {
 
   render() {
     const actionBtn = this.props.color.actionBtn;
-    const color = this.props.color.color;
     const textBack = this.props.color.textBack;
     const error = this.props.color.error;
     const textColor = this.props.color.textColor;
@@ -157,29 +157,9 @@ class Board extends React.Component<StateProps & DispatchProps & OwnProps, {}> {
       );
     });
 
-    let spinner;
-
-    if (this.props.spinner) {
-      spinner = (
-        <div className="spinner-wrapper">
-          <div className="preloader-wrapper big active">
-            <div className={color + '-spinner spinner-layer'}>
-              <div className="circle-clipper left">
-                <div className="circle"/>
-              </div><div className="gap-patch">
-                <div className="circle"/>
-              </div><div className="circle-clipper right">
-                <div className="circle"/>
-              </div>
-            </div>
-          </div>
-        </div>
-      );
-    }
-
     return (
       <div className="board">
-        {spinner}
+        <Spinner show={this.props.spinner} color={this.props.color.color}/>
         <div className="vert-nav full-column">
           {buttons}
         </div>
