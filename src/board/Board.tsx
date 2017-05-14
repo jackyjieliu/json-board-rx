@@ -45,14 +45,6 @@ const BUTTON_TYPES = {
 
 class Board extends React.Component<StateProps & DispatchProps & OwnProps, {}> {
   private textareaRef: any;
-  private debouncedPaste: Function;
-
-  constructor(props: any) {
-    super(props);
-
-    this.debouncedPaste = _.debounce(this.onPaste, 500);
-  }
-
 
   shouldComponentUpdate(nextProps: StateProps) {
     return !_.isEqual(nextProps, this.props);
@@ -70,8 +62,15 @@ class Board extends React.Component<StateProps & DispatchProps & OwnProps, {}> {
     this.props.updateText(text);
   }
 
-  onPaste() {
-    this.props.format();
+  onPaste(e: any) {
+    const pastedText = e.getData('text');
+    const subStr = pastedText.slice(0, (pastedText.length) > 5 ? 5 : pastedText.length);
+    if (subStr.indexOf('{') !== -1 || subStr.indexOf('[') !== -1) {
+      // Only format if pasted string is JSON like
+      setTimeout(() => {
+        this.props.format();
+      }, 0);
+    }
   }
 
   calculateDimension(el: HTMLElement) {
@@ -176,7 +175,7 @@ class Board extends React.Component<StateProps & DispatchProps & OwnProps, {}> {
                   color={this.props.color}
                   code={this.props.text}
                   onCodeChange={this.onTextUpdate.bind(this)}
-                  onPaste={this.debouncedPaste.bind(this)}
+                  onPaste={this.onPaste.bind(this)}
                   calculateDimension={this.calculateDimension.bind(this)}
                 />
               </div>

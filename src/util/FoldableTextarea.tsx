@@ -13,6 +13,15 @@ import 'codemirror/addon/fold/xml-fold';
 import 'codemirror/addon/fold/markdown-fold';
 import 'codemirror/addon/fold/comment-fold';
 import 'codemirror/addon/display/placeholder';
+
+// import 'codemirror/addon/display/panel';
+
+// import 'codemirror/addon/search/search';
+// import 'codemirror/addon/search/searchcursor';
+// import 'codemirror/addon/dialog/dialog';
+// import 'codemirror/addon/dialog/dialog.css';
+// import 'codemirror-revisedsearch';
+
 // Diff support
 // https://codemirror.net/demo/merge.html
 
@@ -36,7 +45,7 @@ const options = {
   gutters: ['CodeMirror-linenumbers', 'CodeMirror-foldgutter'],
   indentationUnit: 2,
   tabSize: 2,
-  viewportMargin: Infinity,
+  // viewportMargin: Infinity,
   indentWithTabs: true,
   placeholder: '',
   smartIndent: false, // Set to false since json indentation is weird
@@ -57,6 +66,14 @@ const options = {
 //     n += tabSize - (n % tabSize)
 //     i = nextTab + 1
 //   }
+// }
+
+
+// var queryDialog = 'Search: <input type="text" style="width: 10em" class="CodeMirror-search-field"/>' +
+// '<span style="color: #888" class="CodeMirror-search-hint">(Use /re/ syntax for regexp search)</span>' +
+// '<button onclick="findtest()">Find<button>';
+// function findtest(){
+//   CodeMirror.commands.find = function(cm) {clearSearch(cm); doSearch(cm);};
 // }
 
 export default class FoldableTextarea extends React.Component<Props, null> {
@@ -102,9 +119,10 @@ export default class FoldableTextarea extends React.Component<Props, null> {
     }
   }
 
-  onPasteListener() {
+  onPasteListener(e: any) {
     if (_.isFunction(this.props.onPaste)) {
-      this.props.onPaste();
+      const w: any = window;
+      this.props.onPaste(e.clipboardData || w.clipboardData);
     }
   }
 
@@ -120,7 +138,7 @@ export default class FoldableTextarea extends React.Component<Props, null> {
       this.onPasteListenerFunc = this.onPasteListener.bind(this);
 
       this.codeMirror
-        .getWrapperElement()
+        .getInputField()
         .addEventListener('paste', this.onPasteListenerFunc);
     }
 
@@ -140,7 +158,7 @@ export default class FoldableTextarea extends React.Component<Props, null> {
 
     if (this.onPasteListenerFunc) {
       this.codeMirror
-        .getWrapperElement()
+        .getInputField()
         .removeEventListener('paste', this.onPasteListenerFunc);
     }
   }
