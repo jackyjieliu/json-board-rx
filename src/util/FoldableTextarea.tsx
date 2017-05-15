@@ -20,6 +20,7 @@ import 'codemirror/addon/display/placeholder';
 // import 'codemirror/addon/search/searchcursor';
 // import 'codemirror/addon/dialog/dialog';
 // import 'codemirror/addon/dialog/dialog.css';
+
 // import 'codemirror-revisedsearch';
 
 // Diff support
@@ -45,7 +46,7 @@ const options = {
   gutters: ['CodeMirror-linenumbers', 'CodeMirror-foldgutter'],
   indentationUnit: 2,
   tabSize: 2,
-  // viewportMargin: Infinity,
+  viewportMargin: Infinity,
   indentWithTabs: true,
   placeholder: '',
   smartIndent: false, // Set to false since json indentation is weird
