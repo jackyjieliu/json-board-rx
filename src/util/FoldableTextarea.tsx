@@ -3,17 +3,39 @@ import * as ReactDOM from 'react-dom';
 import * as _ from 'lodash';
 import * as Codemirror from 'react-codemirror';
 import {Color} from '../settings';
-import 'codemirror/mode/javascript/javascript';
 import 'codemirror/lib/codemirror.css';
 import 'codemirror/addon/fold/foldgutter.css';
-import 'codemirror/addon/fold/foldcode';
+// import 'codemirror/addon/fold/foldcode';
 import 'codemirror/addon/fold/foldgutter';
 import 'codemirror/addon/fold/brace-fold';
 import 'codemirror/addon/fold/xml-fold';
 import 'codemirror/addon/fold/markdown-fold';
 import 'codemirror/addon/fold/comment-fold';
+import 'codemirror/addon/fold/indent-fold';
 import 'codemirror/addon/display/placeholder';
+import 'codemirror/mode/javascript/javascript';
+import './codemirror-foldcode';
 
+// import * as CodeMirror from 'codemirror';
+
+// New-style interface
+// CodeMirror.defineExtension('foldCode', function(pos: any) {
+//   var cm: any = this;
+//   var doc = cm.getDoc();
+//   var line = doc.getLine(pos.line); // get the line contents
+//   console.log(line);
+//   var pos1 = { // create a new object to avoid mutation of the original selection
+//       line: pos.line,
+//       ch: line.length // set the character position to the end of the line
+//   };
+//   doc.replaceRange('\n', pos1); // adds a new line
+//   console.log(pos);
+// });
+// CodeMirror.on('fold', (cm: any, from: any, to: any) => {
+//   console.log(cm);
+//   console.log(from);
+//   console.log(to);
+// });
 // import 'codemirror/addon/display/panel';
 
 // import 'codemirror/addon/search/search';
@@ -152,6 +174,33 @@ export default class FoldableTextarea extends React.Component<Props, null> {
     // });
     // this.codeMirror.refresh();
 
+    this.codeMirror.on('fold', (cm: any, from: any, to: any) => {
+      const doc = cm.getDoc();
+      const pos1 = { // create a new object to avoid mutation of the original selection
+          line: to.line,
+          ch: to.ch //line.length // set the character position to the end of the line
+      };
+      doc.replaceRange('\n', pos1); // adds a new line
+    });
+
+    this.codeMirror.on('unfold', (cm: any, from: any, to: any) => {
+      const doc = cm.getDoc();
+      const line = doc.getLine(to.line); // get the line contents
+      const trimmed:string = line.trim();
+      const firstChar = (trimmed.length > 0) ? trimmed.charAt(0) : '';
+      if (firstChar === '' || firstChar === '}' || firstChar === ']') {
+        const pos1 = { // create a new object to avoid mutation of the original selection
+            line: to.line,
+            ch: 0 // set the character position to the end of the line
+        };
+
+        const pos2 = {
+          line: to.line + 1,
+          ch: 0
+        };
+        doc.replaceRange('', pos1, pos2); // adds a new line
+      }
+    });
   }
 
   componentWillUnmount () {

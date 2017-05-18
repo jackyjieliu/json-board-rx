@@ -11,6 +11,10 @@ declare module 'diff' {
   export = anyType;
 }
 
+declare module 'codemirror' {
+  export = anyType;
+}
+
 declare module 'react-codemirror' {
   export = anyType;
 }
