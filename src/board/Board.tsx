@@ -65,7 +65,17 @@ class Board extends React.Component<StateProps & DispatchProps & OwnProps, {}> {
   onPaste(e: any) {
     const pastedText = e.getData('text');
     const subStr = pastedText.slice(0, (pastedText.length) > 5 ? 5 : pastedText.length);
-    if (subStr.indexOf('{') !== -1 || subStr.indexOf('[') !== -1) {
+    const objIdx = subStr.indexOf('{');
+    const arrIdx = subStr.indexOf('[');
+    let shouldFormat = false;
+
+    if (objIdx !== -1 && pastedText.charAt(objIdx + 1) !== '\\') {
+      shouldFormat = true;
+    } else if (arrIdx !== -1 && pastedText.charAt(arrIdx + 1) !== '\\') {
+      shouldFormat = true;
+    }
+
+    if (shouldFormat) {
       // Only format if pasted string is JSON like
       setTimeout(() => {
         this.props.format();
