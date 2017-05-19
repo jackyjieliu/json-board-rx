@@ -35,13 +35,14 @@ import 'codemirror/mode/javascript/javascript';
 //   console.log(from);
 //   console.log(to);
 // });
-// import 'codemirror/addon/display/panel';
+import 'codemirror/addon/display/panel';
 
-// import 'codemirror/addon/search/search';
-// import 'codemirror/addon/search/searchcursor';
-// import 'codemirror/addon/dialog/dialog';
-// import 'codemirror/addon/dialog/dialog.css';
-
+import 'codemirror/addon/search/search';
+import 'codemirror/addon/search/searchcursor';
+import 'codemirror/addon/dialog/dialog';
+import 'codemirror/addon/dialog/dialog.css';
+import './codemirror-search';
+import './codemirror-search.css';
 // import 'codemirror-revisedsearch';
 
 // Diff support
@@ -67,7 +68,7 @@ const options = {
   gutters: ['CodeMirror-linenumbers', 'CodeMirror-foldgutter'],
   indentationUnit: 2,
   tabSize: 2,
-  viewportMargin: Infinity,
+  // viewportMargin: Infinity,
   indentWithTabs: true,
   placeholder: '',
   smartIndent: false, // Set to false since json indentation is weird
