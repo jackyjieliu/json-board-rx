@@ -187,6 +187,7 @@ let closeSearchCallback = (cm: any, state: any) => {
     state.annotate.clear();
     state.annotate = null;
   }
+  cm.closeFind = undefined;
   clearSearch(cm);
   cm.focus();
 }
@@ -308,6 +309,7 @@ CodeMirror.commands.find = (cm: any) => {
     }
   });
 
+  cm.closeFind = closeDialog.bind(this);
   cm.on('optionChange', getOnReadOnlyCallback(closeDialog));
   startSearch(cm, state, query);
   updateCount(cm);

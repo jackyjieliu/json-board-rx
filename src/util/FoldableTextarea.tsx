@@ -42,7 +42,6 @@ import 'codemirror/addon/search/searchcursor';
 import 'codemirror/addon/dialog/dialog';
 import 'codemirror/addon/dialog/dialog.css';
 import './codemirror-search';
-import './codemirror-search.css';
 // import 'codemirror-revisedsearch';
 
 // Diff support
@@ -174,33 +173,36 @@ export default class FoldableTextarea extends React.Component<Props, null> {
     // });
     // this.codeMirror.refresh();
 
-    this.codeMirror.on('fold', (cm: any, from: any, to: any) => {
-      const doc = cm.getDoc();
+    this.codeMirror.on('fold', this.onFold);
+    this.codeMirror.on('unfold', this.onUnfold);
+  }
+
+  onFold(cm: any, from: any, to: any) {
+    const doc = cm.getDoc();
+    const pos1 = { // create a new object to avoid mutation of the original selection
+        line: to.line,
+        ch: to.ch //line.length // set the character position to the end of the line
+    };
+    doc.replaceRange('\n', pos1); // adds a new line
+  }
+
+  onUnfold(cm: any, from: any, to: any) {
+    const doc = cm.getDoc();
+    const line = doc.getLine(to.line); // get the line contents
+    const trimmed: string = line.trim();
+    const firstChar = (trimmed.length > 0) ? trimmed.charAt(0) : '';
+    if (firstChar === '' || firstChar === '}' || firstChar === ']') {
       const pos1 = { // create a new object to avoid mutation of the original selection
           line: to.line,
-          ch: to.ch //line.length // set the character position to the end of the line
+          ch: 0 // set the character position to the end of the line
       };
-      doc.replaceRange('\n', pos1); // adds a new line
-    });
 
-    this.codeMirror.on('unfold', (cm: any, from: any, to: any) => {
-      const doc = cm.getDoc();
-      const line = doc.getLine(to.line); // get the line contents
-      const trimmed:string = line.trim();
-      const firstChar = (trimmed.length > 0) ? trimmed.charAt(0) : '';
-      if (firstChar === '' || firstChar === '}' || firstChar === ']') {
-        const pos1 = { // create a new object to avoid mutation of the original selection
-            line: to.line,
-            ch: 0 // set the character position to the end of the line
-        };
-
-        const pos2 = {
-          line: to.line + 1,
-          ch: 0
-        };
-        doc.replaceRange('', pos1, pos2); // adds a new line
-      }
-    });
+      const pos2 = {
+        line: to.line + 1,
+        ch: 0
+      };
+      doc.replaceRange('', pos1, pos2); // adds a new line
+    }
   }
 
   componentWillUnmount () {
@@ -211,6 +213,13 @@ export default class FoldableTextarea extends React.Component<Props, null> {
         .getInputField()
         .removeEventListener('paste', this.onPasteListenerFunc);
     }
+
+    if (_.isFunction(this.codeMirror.closeFind)) {
+      this.codeMirror.closeFind();
+    }
+
+    this.codeMirror.off('fold');
+    this.codeMirror.off('unfold');
   }
 
   render() {

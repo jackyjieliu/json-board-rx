@@ -83,8 +83,8 @@ class Board extends React.Component<StateProps & DispatchProps & OwnProps, {}> {
     }
   }
 
-  calculateDimension(el: HTMLElement) {
-    const height = el.offsetHeight;
+  calculateDimension(el: any) {
+    const height = el.children[0].offsetHeight;
     const dom = ReactDOM.findDOMNode(this);
     const width = dom.clientWidth
       - 20  // margin left
