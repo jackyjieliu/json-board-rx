@@ -178,31 +178,35 @@ export default class FoldableTextarea extends React.Component<Props, null> {
   }
 
   onFold(cm: any, from: any, to: any) {
+    // console.log('Fold', { from, to });
     const doc = cm.getDoc();
+    const line = doc.getLine(from.line); // get the line contents
+    const spacesNeeded = line.search(/\S|$/);
+    const replaceLine = '\n' + _.range(spacesNeeded).map(() => {
+      return ' ';
+    }).join('');
+
     const pos1 = { // create a new object to avoid mutation of the original selection
         line: to.line,
         ch: to.ch //line.length // set the character position to the end of the line
     };
-    doc.replaceRange('\n', pos1); // adds a new line
+    doc.replaceRange(replaceLine, pos1); // adds a new line
   }
 
   onUnfold(cm: any, from: any, to: any) {
+    // console.log('Unfold', { from, to });
     const doc = cm.getDoc();
     const line = doc.getLine(to.line); // get the line contents
-    const trimmed: string = line.trim();
-    const firstChar = (trimmed.length > 0) ? trimmed.charAt(0) : '';
-    if (firstChar === '' || firstChar === '}' || firstChar === ']') {
-      const pos1 = { // create a new object to avoid mutation of the original selection
-          line: to.line,
-          ch: 0 // set the character position to the end of the line
-      };
-
-      const pos2 = {
-        line: to.line + 1,
-        ch: 0
-      };
-      doc.replaceRange('', pos1, pos2); // adds a new line
-    }
+    const pos1 = { // create a new object to avoid mutation of the original selection
+        line: to.line,
+        ch: _.trimEnd(line).length // set the character position to the end of the line
+    };
+    const pos2 = {
+      line: to.line + 1,
+      ch: 0
+    };
+    doc.replaceRange('', pos1, pos2); // adds a new line
+    // }
   }
 
   componentWillUnmount () {
