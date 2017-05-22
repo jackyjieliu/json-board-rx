@@ -70,32 +70,18 @@ class FeedbackModal extends React.Component<StateProps & DispatchProps, OwnState
       email: this.state.email,
       spinner: true
     });
-    // const data2 = [
-    //   `entry.1597674574=${this.state.feedback}`,
-    //   `entry.1342041182=${this.state.email}`
-    // ].join('&');
     const data = {
       feedback: this.state.feedback,
       email: this.state.email
     };
-    // Observable.ajax()
-    //   .POST('http://localhost:3010', data, {'Content-type': 'application/json'})
-    // var xhr = new XMLHttpRequest();
-    // xhr.open('POST', url + '/formResponse', true);
-    // xhr.setRequestHeader('Accept', 'application/xml, text/xml, */*; q=0.01');
-    // xhr.setRequestHeader('Content-type', 'application/x-www-form-urlencoded; charset=UTF-8');
-    // xhr.send(data2);
     Observable.ajax({
-      // url: 'http://localhost:3010',
       url: 'https://json-board.herokuapp.com/feedback',
-      // crossDomain: true,
       headers: {
         'Content-Type': 'application/json'
       },
       method: 'POST',
       body: JSON.stringify(data)
     })
-    // Observable.ajax('http://localhost:3010', data, { 'Content-type': 'application/json' })
     .subscribe(() => {
       toast('Thank you for your feedback!');
       this.props.closeFeedback();
@@ -109,11 +95,6 @@ class FeedbackModal extends React.Component<StateProps & DispatchProps, OwnState
         spinner: false
       });
     });
-    // .subscribe({
-    //   complete: () => {
-    //     console.log('complete');
-    //   }
-    // });
   }
 
   textChanged(type: string, e: any) {
@@ -139,30 +120,9 @@ class FeedbackModal extends React.Component<StateProps & DispatchProps, OwnState
     return this.props.feedback || !(this.props.feedback === nextProps.feedback);
   }
 
-  // TODO: auto grow
-  // componentDidUpdate(prevProp: any, prevState: State) {
-  //   if (prevState.feedback !== this.state.feedback) {
-  //     $(this.feedbackInput).trigger('autoresize');
-  //   }
-  // }
-
   render() {
     const textBack = this.props.color.textBack;
     const textColor = this.props.color.textColor;
-
-    // const textColor = this.props.color.textColor;
-    // const theme = this.props.color.theme;
-
-    //  /* label focus color */
-    //  .input-field input[type=text]:focus + label {
-    //    color: #000;
-    //  }
-    //  /* label underline focus color */
-    //  .input-field input[type=text]:focus {
-    //    border-bottom: 1px solid #000;
-    //    box-shadow: 0 1px 0 0 #000;
-    //  }
-
     const btnColor = this.props.color.actionBtn;
     const theme = this.props.color.theme;
     const backColor = (theme === 'dark') ? this.props.color.topBack : this.props.color.botBack;

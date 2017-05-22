@@ -1,7 +1,8 @@
 import * as React from 'react';
-import * as ReactDOM from 'react-dom';
+import Textarea from './Textarea';
 import * as _ from 'lodash';
 import * as Codemirror from 'react-codemirror';
+// import Codemirror from './react-codemirror-merge';
 import {Color} from '../settings';
 import 'codemirror/lib/codemirror.css';
 import 'codemirror/addon/fold/foldgutter.css';
@@ -98,46 +99,21 @@ const options = {
 //   CodeMirror.commands.find = function(cm) {clearSearch(cm); doSearch(cm);};
 // }
 
-export default class FoldableTextarea extends React.Component<Props, null> {
+export default class FoldableTextarea extends Textarea<Props, null> {
   codeMirrorRef: any;
-  codeMirror: any;
-  domElem: any;
-  currentHeight: number;
-  currentWidth: number;
-  debouncedResize: any;
-  private parentEl: HTMLElement;
   private onPasteListenerFunc?: Function;
 
   constructor(props: any) {
     super(props);
   }
 
+  getCodeMirror() {
+    return this.codeMirrorRef.getCodeMirror();
+  }
+
   updateCode(newCode: string) {
     if (_.isFunction(this.props.onCodeChange)) {
       this.props.onCodeChange(newCode);
-    }
-  }
-
-  updateDimension() {
-
-    let width;
-    let height;
-    if (_.isFunction(this.props.calculateDimension)) {
-      const dim = this.props.calculateDimension(this.parentEl);
-      width = dim.width;
-      height = dim.height;
-    } else {
-      width = this.parentEl.offsetWidth;
-      height = this.parentEl.offsetHeight;
-    }
-
-
-    if (this.currentHeight === undefined || this.currentWidth === undefined ||
-      this.currentHeight !== height || this.currentWidth !== width) {
-
-      this.currentHeight = height;
-      this.currentWidth = width;
-      this.codeMirror.setSize(width, height);
     }
   }
 
@@ -149,12 +125,7 @@ export default class FoldableTextarea extends React.Component<Props, null> {
   }
 
   componentDidMount() {
-    this.domElem = ReactDOM.findDOMNode(this);
-    this.codeMirror = this.codeMirrorRef.getCodeMirror();
-    this.parentEl = this.domElem.parentElement;
-    this.debouncedResize = _.debounce(this.updateDimension.bind(this), 100);
-    window.addEventListener('resize', this.debouncedResize);
-    this.updateDimension();
+    super.componentDidMount();
 
     if (this.props.onPaste) {
       this.onPasteListenerFunc = this.onPasteListener.bind(this);
@@ -210,7 +181,7 @@ export default class FoldableTextarea extends React.Component<Props, null> {
   }
 
   componentWillUnmount () {
-    window.removeEventListener('resize', this.debouncedResize);
+    super.componentWillUnmount();
 
     if (this.onPasteListenerFunc) {
       this.codeMirror

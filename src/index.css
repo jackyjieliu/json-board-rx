@@ -47,6 +47,11 @@ html {
   background-color: #fafafa;
 }*/
 
+.CodeMirror-merge-scrolllock,
+.CodeMirror-merge-copy {
+    display: none;
+}
+
 .ReactCodeMirror {
   min-width: 100%;
   width: 0;

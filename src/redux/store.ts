@@ -2,12 +2,14 @@ import { createStore, combineReducers, applyMiddleware } from 'redux';
 import { createEpicMiddleware, combineEpics } from 'redux-observable';
 import boardReducer, { BoardState, boardEpic } from './reducer/board-reducer';
 import feedbackReducer from './reducer/feedback-reducer';
+import diffReducer, { DiffState } from './reducer/diff-reducer';
 import settingReducer, { SettingState } from './reducer/setting-reducer';
 
 export interface State {
   board: BoardState;
   feedback: boolean;
   setting: SettingState;
+  diff: DiffState;
 }
 
 const rootEpic = combineEpics(boardEpic);
@@ -18,7 +20,8 @@ const middleware = applyMiddleware(epicMiddleWare);
 const reducer = combineReducers<State>({
   board: boardReducer,
   feedback: feedbackReducer,
-  setting: settingReducer
+  setting: settingReducer,
+  diff: diffReducer
 });
 
 export default createStore<State>(reducer, middleware);

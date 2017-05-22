@@ -3,6 +3,7 @@ import * as React from 'react';
 import Board from '../board/Board';
 import { State } from '../redux/store';
 import { connect } from 'react-redux';
+import * as DiffAction from '../redux/action/diff-action';
 
 interface StateProps {
   color: Color;
@@ -11,7 +12,9 @@ interface StateProps {
   backdrop: boolean;
 }
 
-interface DispatchProps {}
+interface DispatchProps {
+  showDiff: (left: number, right: number) => void;
+}
 
 
 class BoardContainer extends React.Component<StateProps & DispatchProps, {}> {
@@ -34,7 +37,7 @@ class BoardContainer extends React.Component<StateProps & DispatchProps, {}> {
   }
 
   render() {
-    // const actionBtn = this.props.color.actionBtn;
+    const actionBtn = this.props.color.actionBtn;
     /*let modal;
     if (this.state.diff) {
       modal = (
@@ -53,16 +56,17 @@ class BoardContainer extends React.Component<StateProps & DispatchProps, {}> {
           this.props.boardOrder
             .map((i) => {
               let diffButton;
-              {/*if (i !== 0) {
+
+              if (i !== 0) {
                 diffButton = (
                   <a
                     className={actionBtn + ' btn-floating btn-large waves-effect waves-light diff-button'}
-                    onClick={this.diffButtonClicked.bind(this, i)}
+                    onClick={this.props.showDiff.bind(this, i - 1, i)}
                   >
                     <i className="material-icons">compare_arrows</i>
                   </a>
                 );
-              }*/}
+              }
 
               return (
                 <div className="board-wrapper" key={i}>
@@ -102,8 +106,12 @@ function mapStateToProps(store: State): StateProps {
   };
 }
 
-function mapDispatchToProps(): DispatchProps {
-  return {};
+function mapDispatchToProps(dispatch: Dispatch): DispatchProps {
+  return {
+    showDiff: (left: number, right: number) => {
+      dispatch(DiffAction.showDiff(left, right));
+    }
+  };
 }
 
 export default connect(mapStateToProps, mapDispatchToProps)(BoardContainer);
