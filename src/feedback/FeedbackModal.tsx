@@ -1,7 +1,6 @@
 import * as React from 'react';
 import { Observable } from 'rxjs/Observable';
 import 'rxjs/add/observable/dom/ajax';
-import {Color} from '../settings';
 // import Modal from '../modal/Modal';
 import './FeedbackModal.css';
 import '../modal/Modal.css';
@@ -142,7 +141,7 @@ class FeedbackModal extends React.Component<StateProps & DispatchProps, OwnState
 
     return (
         <div className={backColor + ' ' + fullClass + ' ' + openClass + ' modal'}>
-          <Spinner show={this.state.spinner} color={this.props.color.color}/>
+          <Spinner show={this.state.spinner} color={this.props.color.topBack}/>
           <div className={textBack + ' feedback-modal card-panel'}>
             <form>
               <div className="input-field">

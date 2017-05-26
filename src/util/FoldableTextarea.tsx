@@ -3,7 +3,6 @@ import Textarea from './Textarea';
 import * as _ from 'lodash';
 import * as Codemirror from 'react-codemirror';
 // import Codemirror from './react-codemirror-merge';
-import {Color} from '../settings';
 import 'codemirror/lib/codemirror.css';
 import 'codemirror/addon/fold/foldgutter.css';
 import 'codemirror/addon/fold/foldcode';

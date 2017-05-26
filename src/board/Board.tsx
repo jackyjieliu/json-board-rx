@@ -2,7 +2,6 @@ import * as React from 'react';
 import * as ReactDOM from 'react-dom';
 import './Board.css';
 import tranlsate from '../util/translation';
-import {Color} from '../settings';
 import FoldableTextarea from '../util/FoldableTextarea';
 import Spinner from '../util/Spinner';
 import { connect } from 'react-redux';
@@ -168,7 +167,7 @@ class Board extends React.Component<StateProps & DispatchProps & OwnProps, {}> {
 
     return (
       <div className="board">
-        <Spinner show={this.props.spinner} color={this.props.color.color}/>
+        <Spinner show={this.props.spinner} color={this.props.color.topBack}/>
         <div className="vert-nav full-column">
           {buttons}
         </div>

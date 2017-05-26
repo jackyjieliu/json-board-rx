@@ -5,6 +5,7 @@ import { State } from '../redux/store';
 import * as BoardAction from '../redux/action/board-action';
 import * as SettingAction from '../redux/action/setting-action';
 import * as FeedbackAction from '../redux/action/feedback-action';
+import { AVAILABLE_COLORS } from '../redux/reducer/setting-reducer';
 
 const MAX_BOARD_COUNT = 2;
 // interface Prop {
@@ -38,7 +39,7 @@ class ActionBar extends React.Component<StateProps & DispatchProps, {}> {
 
   render() {
 
-    // const disp = this.props.color.disp;
+    const disp = this.props.color.disp;
     const actionBtn = this.props.color.actionBtn;
     let addBoardButton;
     if (!this.props.feedback) {
@@ -95,22 +96,22 @@ class ActionBar extends React.Component<StateProps & DispatchProps, {}> {
               </li>
             </ul>
           </div>*/}
-          {/*<div className="fixed-action-btn horizontal">
-            <a className={disp + ' btn-floating btn-large'}>
-              <i className="material-icons">lens</i>
+          <div className="fixed-action-btn horizontal">
+            <a className={actionBtn + ' btn-floating btn-large'}>
+              <i className="material-icons" style={{ color: disp }}>lens</i>
             </a>
             <ul>
               {
                 AVAILABLE_COLORS.map((color, i) => {
                   return (
-                    <li key={color.disp}>
-                      <a className={color.disp + ' btn-floating'} onClick={this.props.changeColor.bind(this, i)}/>
+                    <li key={i}>
+                      <a className={color.disp + ' btn-floating'} onClick={this.props.changeTheme.bind(this, i)}/>
                     </li>
                   );
                 })
               }
             </ul>
-          </div>*/}
+          </div>
           {feedbackBtn}
         </div>
     );
