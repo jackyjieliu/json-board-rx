@@ -18,9 +18,6 @@ interface DispatchProps {}
 
 class App extends React.Component<StateProps & DispatchProps, {}> {
   render() {
-    const topBack = this.props.color.topBack;
-    const botBack = this.props.color.botBack;
-    // const alertColor = this.props.color.alertColor;
 
     let overlay;
     if (this.props.feedback || this.props.diff) {
@@ -30,10 +27,10 @@ class App extends React.Component<StateProps & DispatchProps, {}> {
     }
 
     return (
-      <div className="full-column">
+      <div className="full-column" id={this.props.color.name}>
         {overlay}
-        <div className={topBack + ' top'}/>
-        <div className={botBack + ' bot'}/>
+        <div className="topBack top"/>
+        <div className="botBack bot"/>
         <BoardContainer/>
         <ActionBar/>
         <FeedbackModal/>

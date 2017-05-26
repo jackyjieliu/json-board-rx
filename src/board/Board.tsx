@@ -96,18 +96,12 @@ class Board extends React.Component<StateProps & DispatchProps & OwnProps, {}> {
   }
 
   render() {
-    const actionBtn = this.props.color.actionBtn;
-    const textBack = this.props.color.textBack;
-    const error = this.props.color.error;
-    const textColor = this.props.color.textColor;
-    // const secondaryColor = this.props.color.secondaryColor;
-
-    const BUTTON_CLASS = actionBtn + ' waves-effect waves-light btn tooltipped';
+    const BUTTON_CLASS = 'actionBtn waves-effect waves-light btn tooltipped';
 
     let errorDiv;
     if (this.props.error) {
       errorDiv = (
-        <div className={error + ' flex-row word-wrap error-container z-depth-3'}>
+        <div className="errorColor flex-row word-wrap error-container z-depth-3">
           {this.props.error || ''}
         </div>
       );
@@ -167,17 +161,17 @@ class Board extends React.Component<StateProps & DispatchProps & OwnProps, {}> {
 
     return (
       <div className="board">
-        <Spinner show={this.props.spinner} color={this.props.color.topBack}/>
+        <Spinner show={this.props.spinner} colorClass="topBack"/>
         <div className="vert-nav full-column">
           {buttons}
         </div>
 
         <div className="card-container full-row">
           <div className="card-textarea row full-row">
-            <div className={textBack + ' card-panel full-column z-depth-4'}>
+            <div className="textBack card-panel full-column z-depth-4">
               <div
-                className="full-column textarea-container"
-                style={{color: textColor, fontSize: this.props.fontSize}}
+                className="full-column textarea-container textColor"
+                style={{fontSize: this.props.fontSize}}
               >
                 <FoldableTextarea
                   ref={(el: any) => { this.textareaRef = this.textareaRef || el; }}

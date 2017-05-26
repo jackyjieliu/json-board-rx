@@ -37,7 +37,6 @@ class BoardContainer extends React.Component<StateProps & DispatchProps, {}> {
   }
 
   render() {
-    const actionBtn = this.props.color.actionBtn;
     /*let modal;
     if (this.state.diff) {
       modal = (
@@ -60,7 +59,7 @@ class BoardContainer extends React.Component<StateProps & DispatchProps, {}> {
               if (i !== 0) {
                 diffButton = (
                   <a
-                    className={actionBtn + ' btn-floating btn-large waves-effect waves-light diff-button'}
+                    className="actionBtn btn-floating btn-large waves-effect waves-light diff-button"
                     onClick={this.props.showDiff.bind(this, i - 1, i)}
                   >
                     <i className="material-icons">compare_arrows</i>

@@ -2,22 +2,25 @@ import * as _ from 'lodash';
 import { ACTION } from '../action/setting-action';
 
 export const AVAILABLE_COLORS = [{
-  actionBtn: 'c-373737', // 373737
-  disp: 'c-303030', // 303030
-  topBack: 'c-303030',  // 303030
-  botBack: 'c-212126',   // #212126
-  textBack: 'c-272c33', // #272c33
-  error: 'pink lighten-5',
-  textColor: 'c-a8b2c6',
-  theme: 'dark'
-}, {
-  actionBtn: 'grey darken-2',
-  disp: 'grey lighten-1',
-  topBack: 'grey',
-  botBack: 'grey lighten-1',
-  textBack: 'grey lighten-3',
-  error: 'pink lighten-5',
-  textColor: '#000',
+//   actionBtn: 'c-373737', // 373737
+//   disp: 'c-303030', // 303030
+//   topBack: 'c-303030',  // 303030
+//   botBack: 'c-212126',   // #212126
+//   textBack: 'c-272c33', // #272c33
+//   error: 'pink lighten-5',
+//   errorColor: 'pink lighten-5',
+//   textColor: 'c-a8b2c6',
+//   theme: 'dark'
+// }, {
+  // actionBtn: 'grey darken-2',
+  // disp: 'grey lighten-1',
+  // topBack: 'grey',
+  // botBack: 'grey lighten-1',
+  // textBack: 'grey lighten-3',
+  // error: 'pink lighten-5',
+  // errorColor: 'pink lighten-5',
+  // textColor: '#000',
+  name: 'grey-theme',
   theme: 'light'
 }];
 

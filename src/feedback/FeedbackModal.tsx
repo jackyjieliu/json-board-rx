@@ -120,16 +120,13 @@ class FeedbackModal extends React.Component<StateProps & DispatchProps, OwnState
   }
 
   render() {
-    const textBack = this.props.color.textBack;
-    const textColor = this.props.color.textColor;
-    const btnColor = this.props.color.actionBtn;
     const theme = this.props.color.theme;
-    const backColor = (theme === 'dark') ? this.props.color.topBack : this.props.color.botBack;
+    const backColor = (theme === 'dark') ? 'topBack' : 'botBack';
     const fullClass = 'small';
 
     const submitBtn = (
       <a
-        className={btnColor + ' waves-effect waves-light btn'}
+        className="actionBtn waves-effect waves-light btn"
         style={{ marginLeft: '26px' }}
         onClick={this.submitAction.bind(this)}
       >
@@ -141,12 +138,12 @@ class FeedbackModal extends React.Component<StateProps & DispatchProps, OwnState
 
     return (
         <div className={backColor + ' ' + fullClass + ' ' + openClass + ' modal'}>
-          <Spinner show={this.state.spinner} color={this.props.color.topBack}/>
-          <div className={textBack + ' feedback-modal card-panel'}>
+          <Spinner show={this.state.spinner} colorClass="topBack"/>
+          <div className="textBack feedback-modal card-panel">
             <form>
               <div className="input-field">
                 <input
-                  style={{color: textColor}}
+                  className="textColor"
                   id="email"
                   type="email"
                   value={this.state.email}
@@ -157,10 +154,9 @@ class FeedbackModal extends React.Component<StateProps & DispatchProps, OwnState
               </div>
               <div className="input-field">
                 <textarea
-                  style={{color: textColor}}
                   ref={(input) => { this.feedbackInput = input; }}
                   id="textarea1"
-                  className="materialize-textarea"
+                  className="materialize-textarea textColor"
                   onChange={this.textChanged.bind(this, 'FEEDBACK')}
                   value={this.state.feedback}
                 />
@@ -170,7 +166,7 @@ class FeedbackModal extends React.Component<StateProps & DispatchProps, OwnState
           </div>
           <div className="btn-row">
             <a
-              className={btnColor + ' waves-effect waves-light btn'}
+              className="actionBtn waves-effect waves-light btn"
               onClick={this.props.closeFeedback.bind(this)}
             >
               Close

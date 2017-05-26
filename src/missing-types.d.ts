@@ -43,12 +43,13 @@ interface Action {
 }
 
 interface Color {
-  actionBtn: string;
-  disp: string;
-  topBack: string;
-  botBack: string;
-  textBack: string;
-  error: string;
-  textColor: string;
+  // actionBtn: string;
+  // disp: string;
+  // topBack: string;
+  // botBack: string;
+  // textBack: string;
+  // error: string;
+  // textColor: string;
+  name: string;
   theme: string;
 }

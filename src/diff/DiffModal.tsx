@@ -35,10 +35,8 @@ class DiffModal extends React.Component<StateProps & DispatchProps, {}> {
     };
   }
   render() {
-    const textBack = this.props.color.textBack;
-    const btnColor = this.props.color.actionBtn;
     const theme = this.props.color.theme;
-    const backColor = (theme === 'dark') ? this.props.color.topBack : this.props.color.botBack;
+    const backColor = (theme === 'dark') ? 'topBack' : 'botBack';
     const fullClass = 'full';
 
     const openClass = (this.props.show) ? 'open full-column' : '';
@@ -55,12 +53,12 @@ class DiffModal extends React.Component<StateProps & DispatchProps, {}> {
 
     return (
         <div className={backColor + ' ' + fullClass + ' ' + openClass + ' modal'}>
-          <div className={textBack + ' diff-modal full-column card-panel'}>
+          <div className="textBack diff-modal full-column card-panel">
           {diffArea}
           </div>
           <div className="btn-row">
             <a
-              className={btnColor + ' waves-effect waves-light btn'}
+              className="actionBtn waves-effect waves-light btn"
               onClick={this.props.closeDiff.bind(this)}
             >
               Close

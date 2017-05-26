@@ -47,24 +47,6 @@ html {
   background-color: #fafafa;
 }*/
 
-.c-373737 {
-  background-color: #373737;
-}
-
-.c-303030 {
-  background-color: #303030;
-}
-.c-212126 {
-  background-color: #212126;
-}
-.c-272c33 {
-  background-color: #272c33;
-}
-.c-a8b2c6 {
-  background-color: #a8b2c6;
-}
-
-
 .CodeMirror-merge-scrolllock,
 .CodeMirror-merge-copy {
     display: none;
@@ -73,64 +55,4 @@ html {
 .ReactCodeMirror {
   min-width: 100%;
   width: 0;
-}
-
-
-.c-272c33 .CodeMirror {
-  background-color: #272c33 !important;
-  color: #a8b2c6 !important;
-}
-
-.c-272c33 .CodeMirror .CodeMirror-cursor {
-  border-color: #a8b2c6;
-}
-
-.c-272c33 .CodeMirror-gutters {
-  background-color: #272c33 !important;
-}
-
-.grey.lighten-3 .CodeMirror {
-  background-color: #eee !important;
-}
-.grey.lighten-3 .CodeMirror-gutters {
-  background-color: #eee !important;
-}
-
-
-.grey-spinner {
-  border-color: #616161; /* grey darken-2 */
-}
-
-
-.grey input:not([type]):focus:not([readonly])+label,
-.grey input[type=text]:focus:not([readonly])+label,
-.grey input[type=password]:focus:not([readonly])+label,
-.grey input[type=email]:focus:not([readonly])+label,
-.grey input[type=url]:focus:not([readonly])+label,
-.grey input[type=time]:focus:not([readonly])+label,
-.grey input[type=date]:focus:not([readonly])+label,
-.grey input[type=datetime]:focus:not([readonly])+label,
-.grey input[type=datetime-local]:focus:not([readonly])+label,
-.grey input[type=tel]:focus:not([readonly])+label,
-.grey input[type=number]:focus:not([readonly])+label,
-.grey input[type=search]:focus:not([readonly])+label,
-.grey textarea.materialize-textarea:focus:not([readonly])+label {
-    color: #616161; /* grey darken-2 */
-}
-
-.grey input:not([type]):focus:not([readonly]),
-.grey input[type=text]:focus:not([readonly]),
-.grey input[type=password]:focus:not([readonly]),
-.grey input[type=email]:focus:not([readonly]),
-.grey input[type=url]:focus:not([readonly]),
-.grey input[type=time]:focus:not([readonly]),
-.grey input[type=date]:focus:not([readonly]),
-.grey input[type=datetime]:focus:not([readonly]),
-.grey input[type=datetime-local]:focus:not([readonly]),
-.grey input[type=tel]:focus:not([readonly]),
-.grey input[type=number]:focus:not([readonly]),
-.grey input[type=search]:focus:not([readonly]),
-.grey textarea.materialize-textarea:focus:not([readonly]) {
-  border-bottom: 1px solid #616161; /* grey darken-2 */
-  box-shadow: 0 1px 0 0 #616161; /* grey darken-2 */
 }

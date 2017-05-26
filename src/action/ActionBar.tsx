@@ -38,15 +38,12 @@ interface DispatchProps {
 class ActionBar extends React.Component<StateProps & DispatchProps, {}> {
 
   render() {
-
-    const disp = this.props.color.disp;
-    const actionBtn = this.props.color.actionBtn;
     let addBoardButton;
     if (!this.props.feedback) {
       if (this.props.boardCount < MAX_BOARD_COUNT) {
         addBoardButton = (
           <a
-            className={actionBtn + ' btn-floating btn-large waves-effect waves-light'}
+            className="actionBtn btn-floating btn-large waves-effect waves-light"
             onClick={this.props.addBoard.bind(this)}
           >
             <i className="material-icons">add</i>
@@ -60,7 +57,7 @@ class ActionBar extends React.Component<StateProps & DispatchProps, {}> {
     if (!this.props.feedback) {
       feedbackBtn = (
         <a
-          className={actionBtn + ' btn-floating btn-large waves-effect waves-light'}
+          className="actionBtn btn-floating btn-large waves-effect waves-light"
           onClick={this.props.showFeedback.bind(this)}
         >
           <i className="material-icons">feedback</i>
@@ -97,15 +94,15 @@ class ActionBar extends React.Component<StateProps & DispatchProps, {}> {
             </ul>
           </div>*/}
           <div className="fixed-action-btn horizontal">
-            <a className={actionBtn + ' btn-floating btn-large'}>
-              <i className="material-icons" style={{ color: disp }}>lens</i>
+            <a className="actionBtn btn-floating btn-large">
+              <i className="material-icons disp-text-color">lens</i>
             </a>
             <ul>
               {
                 AVAILABLE_COLORS.map((color, i) => {
                   return (
                     <li key={i}>
-                      <a className={color.disp + ' btn-floating'} onClick={this.props.changeTheme.bind(this, i)}/>
+                      <a className="disp btn-floating" onClick={this.props.changeTheme.bind(this, i)}/>
                     </li>
                   );
                 })
