@@ -169,12 +169,10 @@ class Board extends React.Component<StateProps & DispatchProps & OwnProps, {}> {
         <div className="card-container full-row">
           <div className="card-textarea row full-row">
             <div className="textBack card-panel full-column z-depth-4">
-              <div
-                className="full-column textarea-container textColor"
-                style={{fontSize: this.props.fontSize}}
-              >
+              <div className="full-column textarea-container textColor">
                 <FoldableTextarea
                   ref={(el: any) => { this.textareaRef = this.textareaRef || el; }}
+                  fontSize={this.props.fontSize}
                   color={this.props.color}
                   code={this.props.text}
                   onCodeChange={this.onTextUpdate.bind(this)}

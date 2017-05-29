@@ -2,7 +2,11 @@ import * as React from 'react';
 import * as ReactDOM from 'react-dom';
 import * as _ from 'lodash';
 
-abstract class Textarea<P, S> extends React.Component<P & { calculateDimension?: Function }, S> {
+interface Prop {
+  calculateDimension?: Function;
+  fontSize?: number;
+}
+abstract class Textarea<P, S> extends React.Component<P & Prop, S> {
   protected parentEl: any;
   protected currentHeight: number;
   protected currentWidth: number;
@@ -39,6 +43,12 @@ abstract class Textarea<P, S> extends React.Component<P & { calculateDimension?:
     window.removeEventListener('resize', this.debouncedResize);
   }
 
+  componentDidUpdate(prevProps: Prop) {
+    if (this.props.fontSize &&
+      (this.props.fontSize !== prevProps.fontSize)) {
+        this.codeMirror.refresh();
+      }
+  }
 
   componentDidMount() {
     this.domElem = ReactDOM.findDOMNode(this);

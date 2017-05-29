@@ -1,5 +1,5 @@
 
-@mixin generateTheme($actionBtn, $topBack, $botBack, $errorColor, $textColor, $textBack, $gutterColor) {
+@mixin generateTheme($actionBtn, $topBack, $botBack, $errorColor, $textColor, $textBack, $gutterColor, $diffBack) {
   .topBack-spinner {
     border-color: $actionBtn;
   }
@@ -38,10 +38,13 @@
     color: $textColor !important;
   }
 
-
   // Gutter line and line number style
   .textColor .CodeMirror-gutters {
     border-color: $gutterColor !important;
+  }
+
+  .textColor .CodeMirror-merge-gap {
+    background-color: $textBack !important;
   }
 
   .textColor .CodeMirror-guttermarker-subtle,
@@ -61,6 +64,15 @@
     }
   }
 
+  .CodeMirror-merge-r-chunk-end,
+  .CodeMirror-merge-r-chunk-start {
+    border-color: $diffBack !important;
+  }
+
+  .CodeMirror-merge-r-chunk {
+    background-color: $diffBack !important;
+  }
+
   input:not([type]):focus:not([readonly])+label,
   input[type=text]:focus:not([readonly])+label,
   input[type=password]:focus:not([readonly])+label,
@@ -74,7 +86,8 @@
   input[type=number]:focus:not([readonly])+label,
   input[type=search]:focus:not([readonly])+label,
   textarea.materialize-textarea:focus:not([readonly])+label {
-      color: $actionBtn;
+      // color: $actionBtn;
+      color: $textColor;
   }
 
   input:not([type]):focus:not([readonly]),
@@ -90,7 +103,9 @@
   input[type=number]:focus:not([readonly]),
   input[type=search]:focus:not([readonly]),
   textarea.materialize-textarea:focus:not([readonly]) {
-    border-bottom: 1px solid $actionBtn;
-    box-shadow: 0 1px 0 0 $actionBtn;
+    // border-bottom: 1px solid $actionBtn;
+    // box-shadow: 0 1px 0 0 $actionBtn;
+    border-bottom: 1px solid $textColor;
+    box-shadow: 0 1px 0 0 $textColor;
   }
 }

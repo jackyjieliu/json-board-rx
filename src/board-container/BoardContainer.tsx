@@ -7,7 +7,6 @@ import * as DiffAction from '../redux/action/diff-action';
 
 interface StateProps {
   color: Color;
-  fontSize: number;
   boardOrder: number[];
   backdrop: boolean;
 }
@@ -37,17 +36,6 @@ class BoardContainer extends React.Component<StateProps & DispatchProps, {}> {
   }
 
   render() {
-    /*let modal;
-    if (this.state.diff) {
-      modal = (
-        <DiffModal
-          fontSize={this.props.fontSize}
-          color={this.props.color}
-          onClose={this.hideDiff.bind(this)}
-          diffObject={this.state.diff}
-        />
-      );
-    }*/
 
     return (
       <div className="boards-container" >
@@ -77,20 +65,6 @@ class BoardContainer extends React.Component<StateProps & DispatchProps, {}> {
               );
             })
         }
-        {/*{modal}*/}
-{/*
-          <a className="waves-effect waves-light btn" href="#modal1">Modal</a>
-
-          <div id="modal1" className="modal">
-            <div className="modal-content">
-              <h4>Modal Header</h4>
-              <p>A bunch of text</p>
-            </div>
-            <div className="modal-footer">
-              <a href="#!" className="modal-action modal-close waves-effect waves-green btn-flat">Agree</a>
-            </div>
-          </div>*/}
-
       </div>
     );
   }
@@ -99,7 +73,6 @@ class BoardContainer extends React.Component<StateProps & DispatchProps, {}> {
 function mapStateToProps(store: State): StateProps {
   return {
     color: store.setting.color,
-    fontSize: store.setting.fontSize,
     boardOrder: store.board.order,
     backdrop: store.feedback
   };

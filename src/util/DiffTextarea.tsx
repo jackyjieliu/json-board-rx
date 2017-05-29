@@ -112,14 +112,20 @@ export default class DiffTextarea extends Textarea<Props, null> {
 
   render() {
     // Reference: https://github.com/JedWatson/react-codemirror
+    let style: any = {};
+    if (this.props.fontSize) {
+      style.fontSize = this.props.fontSize + 'px';
+    }
     return (
-      <CodemirrorMerge
-        ref={(el: any) => { this.codeMirrorRef = this.codeMirrorRef || el; }}
-        className="full-column"
-        options={options}
-        leftText={this.props.leftText}
-        rightText={this.props.rightText}
-      />
+      <div className="full-column" style={style}>
+        <CodemirrorMerge
+          ref={(el: any) => { this.codeMirrorRef = this.codeMirrorRef || el; }}
+          className="full-column"
+          options={options}
+          leftText={this.props.leftText}
+          rightText={this.props.rightText}
+        />
+      </div>
     );
   }
 }

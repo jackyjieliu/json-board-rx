@@ -23,11 +23,12 @@ const DEFAULT_STATE = {
   settingDialogOpened: false
 };
 
-let initState = {};
+let initState: any = {};
 try {
   const storedSetting = localStorage.getItem('jsonparse');
   if (storedSetting) {
     initState = JSON.parse(storedSetting);
+    delete initState.settingDialogOpened;
   }
 } catch (e) {
   initState = {};

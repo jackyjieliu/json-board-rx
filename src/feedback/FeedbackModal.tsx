@@ -17,7 +17,6 @@ interface OwnState {
 
 interface StateProps {
   color: Color;
-  fontSize: number;
   feedback: boolean;
 }
 
@@ -120,8 +119,8 @@ class FeedbackModal extends React.Component<StateProps & DispatchProps, OwnState
   }
 
   render() {
-    const theme = this.props.color.theme;
-    const backColor = (theme === 'dark') ? 'topBack' : 'botBack';
+    // const theme = this.props.color.theme;
+    const backColor = 'botBack'; //(theme === 'dark') ? 'topBack' : 'botBack';
     const fullClass = 'small';
 
     const submitBtn = (
@@ -182,7 +181,6 @@ class FeedbackModal extends React.Component<StateProps & DispatchProps, OwnState
 function mapStateToProps(store: State): StateProps {
   return {
     color: store.setting.color,
-    fontSize: store.setting.fontSize,
     feedback: store.feedback
   };
 }

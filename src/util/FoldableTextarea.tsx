@@ -52,6 +52,7 @@ export interface Props {
   code: string;
   onCodeChange?: Function;
   onPaste?: Function;
+  fontSize?: number;
   calculateDimension?: (el: HTMLElement) => { height: number; width: number; };
 }
 
@@ -198,14 +199,20 @@ export default class FoldableTextarea extends Textarea<Props, null> {
 
   render() {
     // Reference: https://github.com/JedWatson/react-codemirror
+    let style: any = {};
+    if (this.props.fontSize) {
+      style.fontSize = this.props.fontSize + 'px';
+    }
     return (
-      <Codemirror
-        className="full-column"
-        ref={(el: any) => { this.codeMirrorRef = this.codeMirrorRef || el; }}
-        value={this.props.code}
-        onChange={this.updateCode.bind(this)}
-        options={options}
-      />
+      <div className="full-column" style={style}>
+        <Codemirror
+          className="full-column"
+          ref={(el: any) => { this.codeMirrorRef = this.codeMirrorRef || el; }}
+          value={this.props.code}
+          onChange={this.updateCode.bind(this)}
+          options={options}
+        />
+      </div>
     );
   }
 }

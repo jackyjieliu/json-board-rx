@@ -1,27 +1,34 @@
 @import "./theme-mixin.scss";
 
 $greyActionBtn: #616161;
-$greyTopBack: #9e9e9e;
+// $greyTopBack: #9e9e9e;
+$greyTopBack: #616161;
 $greyBotBack: #bdbdbd;
 $greyErrorColor: #fce4ec;
 $greyTextColor: #000;
 $greyTextBack: #eeeeee;
 $greyGutterColor: #999;
+$greyDiffBack: #ffffe0;
 
 #grey-theme {
-  @include generateTheme($greyActionBtn, $greyTopBack, $greyBotBack, $greyErrorColor, $greyTextColor, $greyTextBack, $greyGutterColor)
+  @include generateTheme($greyActionBtn, $greyTopBack, $greyBotBack, $greyErrorColor, $greyTextColor, $greyTextBack, $greyGutterColor, $greyDiffBack)
 }
 
 
 
-$darkActionBtn: #373737;
-$darkTopBack: #303030;
-$darkBotBack: #212126;
+// $darkActionBtn: #373737;
+// $darkTopBack: #303030;
+// $darkBotBack: #212126;
+// $darkActionBtn: #333333;
+$darkActionBtn: #212126;
+$darkTopBack: #212126;
+$darkBotBack: #303030;
 $darkErrorColor: #fce4ec;
 $darkTextColor: #a8b2c6;
 $darkTextBack: #272c33;
 $darkGutterColor: #a8b2c6;
+$darkDiffBack: #1e1a30;
 
 #dark-theme {
-  @include generateTheme($darkActionBtn, $darkTopBack, $darkBotBack, $darkErrorColor, $darkTextColor, $darkTextBack, $darkGutterColor)
+  @include generateTheme($darkActionBtn, $darkTopBack, $darkBotBack, $darkErrorColor, $darkTextColor, $darkTextBack, $darkGutterColor, $darkDiffBack)
 }

@@ -151,8 +151,8 @@ class SettingModal extends React.Component<StateProps & DispatchProps, {}> {
   }
 
   render() {
-    const theme = this.props.color.theme;
-    const backColor = (theme === 'dark') ? 'topBack' : 'botBack';
+    // const theme = this.props.color.theme;
+    const backColor = 'botBack'; // (theme === 'dark') ? 'topBack' : 'botBack';
     // const fullClass = 'small';
 
     const openClass = (this.props.settingDialogOpened) ? 'open full-column' : '';

@@ -10,7 +10,6 @@ import { State } from '../redux/store';
 
 interface StateProps {
   color: Color;
-  fontSize: number;
   feedback: boolean;
   diff: boolean;
 }
@@ -45,7 +44,6 @@ class App extends React.Component<StateProps & DispatchProps, {}> {
 function mapStateToProps(store: State): StateProps {
   return {
     color: store.setting.color,
-    fontSize: store.setting.fontSize,
     feedback: store.feedback,
     diff: store.diff.show
   };

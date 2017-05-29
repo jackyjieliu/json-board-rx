@@ -47,6 +47,12 @@ html {
   background-color: #fafafa;
 }*/
 
+
+.textColor .CodeMirror-merge-gap,
+.textColor .CodeMirror-merge {
+  border: 0;
+}
+
 .CodeMirror-merge-scrolllock,
 .CodeMirror-merge-copy {
     display: none;

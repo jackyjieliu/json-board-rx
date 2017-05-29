@@ -8,10 +8,10 @@ import './DiffModal.css';
 
 interface StateProps {
   color: Color;
-  fontSize: number;
   leftText: string;
   rightText: string;
   show: boolean;
+  fontSize: number;
 }
 
 interface DispatchProps {
@@ -35,8 +35,7 @@ class DiffModal extends React.Component<StateProps & DispatchProps, {}> {
     };
   }
   render() {
-    const theme = this.props.color.theme;
-    const backColor = (theme === 'dark') ? 'topBack' : 'botBack';
+    const backColor = 'botBack';
     const fullClass = 'full';
 
     const openClass = (this.props.show) ? 'open full-column' : '';
@@ -44,6 +43,7 @@ class DiffModal extends React.Component<StateProps & DispatchProps, {}> {
     if (this.props.show) {
       diffArea = (
         <DiffTextArea
+          fontSize={this.props.fontSize}
           leftText={this.props.leftText}
           rightText={this.props.rightText}
           calculateDimension={this.calculateDimension.bind(this)}
@@ -53,7 +53,7 @@ class DiffModal extends React.Component<StateProps & DispatchProps, {}> {
 
     return (
         <div className={backColor + ' ' + fullClass + ' ' + openClass + ' modal'}>
-          <div className="textBack diff-modal full-column card-panel">
+          <div className="textBack diff-modal full-column card-panel textColor">
           {diffArea}
           </div>
           <div className="btn-row">
@@ -74,10 +74,10 @@ class DiffModal extends React.Component<StateProps & DispatchProps, {}> {
 function mapStateToProps(store: State): StateProps {
   return {
     color: store.setting.color,
-    fontSize: store.setting.fontSize,
     leftText: store.board.byId[store.diff.leftIdx].text,
     rightText: store.board.byId[store.diff.rightIdx].text,
-    show: store.diff.show
+    show: store.diff.show,
+    fontSize: store.setting.fontSize
   };
 }
 
