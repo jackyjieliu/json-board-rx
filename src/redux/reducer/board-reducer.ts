@@ -15,7 +15,10 @@ export interface BoardState {
   order: number[];
 }
 
-const INITIAL_BOARD = { text: '{"asd":{"asd":true}}', spinner: false };
+const initText = '';
+// const initText = '{"asd":{"asd":true}}';
+
+const INITIAL_BOARD = { text: initText, spinner: false };
 
 const INITIAL_STATE = {
   byId: {

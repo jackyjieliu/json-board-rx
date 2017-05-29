@@ -63,15 +63,20 @@ class Board extends React.Component<StateProps & DispatchProps & OwnProps, {}> {
 
   onPaste(e: any) {
     const pastedText = e.getData('text');
-    const subStr = pastedText.slice(0, (pastedText.length) > 5 ? 5 : pastedText.length);
-    const objIdx = subStr.indexOf('{');
-    const arrIdx = subStr.indexOf('[');
+    const subStr = pastedText.slice(0, (pastedText.length) > 10 ? 10 : pastedText.length).trim();
     let shouldFormat = false;
 
-    if (objIdx !== -1 && pastedText.charAt(objIdx + 1) !== '\\') {
-      shouldFormat = true;
-    } else if (arrIdx !== -1 && pastedText.charAt(arrIdx + 1) !== '\\') {
-      shouldFormat = true;
+    // Dont format Strings
+    if (subStr.charAt(0) !== '"') {
+      const objIdx = subStr.indexOf('{');
+      const arrIdx = subStr.indexOf('[');
+
+      // Format if contains { or [ and the next char is not escape
+      if (objIdx !== -1 && pastedText.charAt(objIdx + 1) !== '\\') {
+        shouldFormat = true;
+      } else if (arrIdx !== -1 && pastedText.charAt(arrIdx + 1) !== '\\') {
+        shouldFormat = true;
+      }
     }
 
     if (shouldFormat) {

@@ -149,9 +149,23 @@ export default class FoldableTextarea extends Textarea<Props, null> {
   }
 
   onFold(cm: any, from: any, to: any) {
+    // function countSpaces(l: string, at: number) {
+    //   let count = 0;
+    //   for (var i = at - 1; i > -1; i--) {
+    //     if (l.charAt(i) === ' ') {
+    //       count ++;
+    //     } else {
+    //       break;
+    //     }
+    //   }
+    //   return count;
+    // }
+
+
     // console.log('Fold', { from, to });
     const doc = cm.getDoc();
-    const line = doc.getLine(from.line); // get the line contents
+    const line = doc.getLine(to.line); // get the line contents
+
     const spacesNeeded = line.search(/\S|$/);
     const replaceLine = '\n' + _.range(spacesNeeded).map(() => {
       return ' ';
@@ -165,19 +179,35 @@ export default class FoldableTextarea extends Textarea<Props, null> {
   }
 
   onUnfold(cm: any, from: any, to: any) {
-    // console.log('Unfold', { from, to });
+    // console.log('Unfold', {from, to});
     const doc = cm.getDoc();
-    const line = doc.getLine(to.line); // get the line contents
-    const pos1 = { // create a new object to avoid mutation of the original selection
-        line: to.line,
-        ch: _.trimEnd(line).length // set the character position to the end of the line
-    };
-    const pos2 = {
-      line: to.line + 1,
-      ch: 0
-    };
-    doc.replaceRange('', pos1, pos2); // adds a new line
-    // }
+
+    if (from.line === to.line) {
+      const pos1 = {
+        line: to.line ,
+        ch: doc.getLine(to.line).length // set the character position to the end of the line
+      };
+
+      // Newly added line
+      const pos2 = { // create a new object to avoid mutation of the original selection
+          line: to.line + 1,
+          ch: doc.getLine(to.line + 1).search(/\S|$/)
+      };
+      doc.replaceRange('', pos1, pos2); // adds a new line
+    } else {
+      // Original line
+      const pos1 = {
+        line: to.line - 1,
+        ch: _.trimEnd(doc.getLine(to.line - 1)).length // set the character position to the end of the line
+      };
+
+      // Newly added line
+      const pos2 = { // create a new object to avoid mutation of the original selection
+          line: to.line,
+          ch: doc.getLine(to.line).search(/\S|$/)
+      };
+      doc.replaceRange('', pos1, pos2); // adds a new line
+    }
   }
 
   componentWillUnmount () {

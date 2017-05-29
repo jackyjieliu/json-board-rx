@@ -21,9 +21,6 @@ interface DispatchProps {
   setToDefault: (i: number) => void;
 }
 
-
-
-
 class SettingModal extends React.Component<StateProps & DispatchProps, {}> {
 
   settings() {
