@@ -2,12 +2,12 @@ import * as _ from 'lodash';
 import { ACTION } from '../action/setting-action';
 
 export const AVAILABLE_COLORS = [{
-  name: 'dark-theme',
-  theme: 'dark'
+    name: 'grey-theme',
+    theme: 'light'
   }, {
-  name: 'grey-theme',
-  theme: 'light'
-}];
+    name: 'dark-theme',
+    theme: 'dark'
+  }];
 
 const DEFAULT_FONT_SIZE = 16;
 
