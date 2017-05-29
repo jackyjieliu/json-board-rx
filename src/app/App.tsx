@@ -3,6 +3,7 @@ import './App.css';
 import BoardContainer from '../board-container/BoardContainer';
 import ActionBar from '../action/ActionBar';
 import FeedbackModal from '../feedback/FeedbackModal';
+import SettingModal from '../setting/SettingModal';
 import DiffModal from '../diff/DiffModal';
 import { connect } from 'react-redux';
 import { State } from '../redux/store';
@@ -34,6 +35,7 @@ class App extends React.Component<StateProps & DispatchProps, {}> {
         <BoardContainer/>
         <ActionBar/>
         <FeedbackModal/>
+        <SettingModal/>
         <DiffModal />
       </div>
     );

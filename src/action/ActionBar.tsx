@@ -5,7 +5,7 @@ import { State } from '../redux/store';
 import * as BoardAction from '../redux/action/board-action';
 import * as SettingAction from '../redux/action/setting-action';
 import * as FeedbackAction from '../redux/action/feedback-action';
-import { AVAILABLE_COLORS } from '../redux/reducer/setting-reducer';
+// import { AVAILABLE_COLORS } from '../redux/reducer/setting-reducer';
 
 const MAX_BOARD_COUNT = 2;
 // interface Prop {
@@ -33,6 +33,7 @@ interface DispatchProps {
   changeTheme: (idx: number) => void;
   addBoard: () => void;
   showFeedback: () => void;
+  openSetting: () => void;
 }
 
 class ActionBar extends React.Component<StateProps & DispatchProps, {}> {
@@ -93,7 +94,7 @@ class ActionBar extends React.Component<StateProps & DispatchProps, {}> {
               </li>
             </ul>
           </div>*/}
-          <div className="fixed-action-btn horizontal">
+          {/*<div className="fixed-action-btn horizontal">
             <a className="actionBtn btn-floating btn-large">
               <i className="material-icons disp-text-color">lens</i>
             </a>
@@ -108,7 +109,13 @@ class ActionBar extends React.Component<StateProps & DispatchProps, {}> {
                 })
               }
             </ul>
-          </div>
+          </div>*/}
+          <a
+            className="actionBtn btn-floating btn-large waves-effect waves-light"
+            onClick={this.props.openSetting.bind(this)}
+          >
+            <i className="material-icons">settings</i>
+          </a>
           {feedbackBtn}
         </div>
     );
@@ -141,6 +148,9 @@ function mapDispatchToProps(dispatch: Dispatch): DispatchProps {
     },
     showFeedback: () => {
       dispatch(FeedbackAction.showFeedback());
+    },
+    openSetting: () => {
+      dispatch(SettingAction.openSetting());
     }
   };
 }

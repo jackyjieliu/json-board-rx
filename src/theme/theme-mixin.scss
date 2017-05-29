@@ -1,0 +1,96 @@
+
+@mixin generateTheme($actionBtn, $topBack, $botBack, $errorColor, $textColor, $textBack, $gutterColor) {
+  .topBack-spinner {
+    border-color: $actionBtn;
+  }
+
+  .actionBtn {
+    background-color: $actionBtn;
+  }
+
+  .topBack {
+    background-color: $topBack;
+  }
+
+  .disp-text-color {
+    color: $botBack;
+  }
+
+  .botBack {
+    background-color: $botBack;
+  }
+
+  &.theme-picker .botBack {
+    background-color: $actionBtn !important;
+  }
+
+  .errorColor {
+    background-color: $errorColor;
+  }
+
+
+  .textColor .CodeMirror-cursor {
+    border-color: $textColor !important;
+  }
+
+  .textColor .CodeMirror,
+  .textColor {
+    color: $textColor !important;
+  }
+
+
+  // Gutter line and line number style
+  .textColor .CodeMirror-gutters {
+    border-color: $gutterColor !important;
+  }
+
+  .textColor .CodeMirror-guttermarker-subtle,
+  .textColor .CodeMirror-linenumber {
+    color: $gutterColor !important;
+  }
+
+  .textBack {
+    background-color: $textBack;
+
+    .CodeMirror {
+      background-color: $textBack !important;
+    }
+
+    .CodeMirror-gutters {
+      background-color: $textBack !important;
+    }
+  }
+
+  input:not([type]):focus:not([readonly])+label,
+  input[type=text]:focus:not([readonly])+label,
+  input[type=password]:focus:not([readonly])+label,
+  input[type=email]:focus:not([readonly])+label,
+  input[type=url]:focus:not([readonly])+label,
+  input[type=time]:focus:not([readonly])+label,
+  input[type=date]:focus:not([readonly])+label,
+  input[type=datetime]:focus:not([readonly])+label,
+  input[type=datetime-local]:focus:not([readonly])+label,
+  input[type=tel]:focus:not([readonly])+label,
+  input[type=number]:focus:not([readonly])+label,
+  input[type=search]:focus:not([readonly])+label,
+  textarea.materialize-textarea:focus:not([readonly])+label {
+      color: $actionBtn;
+  }
+
+  input:not([type]):focus:not([readonly]),
+  input[type=text]:focus:not([readonly]),
+  input[type=password]:focus:not([readonly]),
+  input[type=email]:focus:not([readonly]),
+  input[type=url]:focus:not([readonly]),
+  input[type=time]:focus:not([readonly]),
+  input[type=date]:focus:not([readonly]),
+  input[type=datetime]:focus:not([readonly]),
+  input[type=datetime-local]:focus:not([readonly]),
+  input[type=tel]:focus:not([readonly]),
+  input[type=number]:focus:not([readonly]),
+  input[type=search]:focus:not([readonly]),
+  textarea.materialize-textarea:focus:not([readonly]) {
+    border-bottom: 1px solid $actionBtn;
+    box-shadow: 0 1px 0 0 $actionBtn;
+  }
+}
