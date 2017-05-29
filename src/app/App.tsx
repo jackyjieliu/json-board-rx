@@ -7,22 +7,38 @@ import SettingModal from '../setting/SettingModal';
 import DiffModal from '../diff/DiffModal';
 import { connect } from 'react-redux';
 import { State } from '../redux/store';
+import { hideDiff } from '../redux/action/diff-action';
+import { hideFeedback } from '../redux/action/feedback-action';
+import { closeSetting } from '../redux/action/setting-action';
 
 interface StateProps {
   color: Color;
   feedback: boolean;
   diff: boolean;
+  settingOpened: boolean;
 }
 
-interface DispatchProps {}
+interface DispatchProps {
+  closeFeedback: () => void;
+  closeDiff: () => void;
+  closeSetting: () => void;
+}
 
 class App extends React.Component<StateProps & DispatchProps, {}> {
   render() {
 
     let overlay;
-    if (this.props.feedback || this.props.diff) {
+    if (this.props.feedback) {
       overlay = (
-        <div className="modal-overlay"/>
+        <div className="modal-overlay" onClick={this.props.closeFeedback.bind(this)}/>
+      );
+    } else if (this.props.diff) {
+      overlay = (
+        <div className="modal-overlay" onClick={this.props.closeDiff.bind(this)}/>
+      );
+    } else if (this.props.settingOpened) {
+      overlay = (
+        <div className="modal-overlay" onClick={this.props.closeSetting.bind(this)}/>
       );
     }
 
@@ -45,12 +61,23 @@ function mapStateToProps(store: State): StateProps {
   return {
     color: store.setting.color,
     feedback: store.feedback,
-    diff: store.diff.show
+    diff: store.diff.show,
+    settingOpened: store.setting.settingDialogOpened
   };
 }
 
-function mapDispatchToProps(): DispatchProps {
-  return {};
+function mapDispatchToProps(dispatch: Dispatch): DispatchProps {
+  return {
+    closeFeedback: () => {
+      dispatch(hideFeedback());
+    },
+    closeDiff: () => {
+      dispatch(hideDiff());
+    },
+    closeSetting: () => {
+      dispatch(closeSetting());
+    }
+  };
 }
 
 export default connect(mapStateToProps, mapDispatchToProps)(App);

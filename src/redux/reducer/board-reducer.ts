@@ -25,7 +25,7 @@ const INITIAL_STATE = {
 };
 
 function updateBoardState(state: BoardState, id: number, text: string, error?: string) {
-  error = error || state.byId[id].error;
+  error = _.isString(error) ? error : state.byId[id].error;
   return {
     ...state,
     byId: {
