@@ -1,5 +1,6 @@
 /// <reference path="./missing-types.d.ts" />
 
+import './lib/diff-match-patch';
 // import 'materialize-css/dist/js/materialize.js';
 // import 'materialize-css/dist/css/materialize.css';
 import * as React from 'react';
