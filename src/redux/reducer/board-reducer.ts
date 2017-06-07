@@ -15,7 +15,7 @@ export interface BoardState {
   order: number[];
 }
 
-const initText = '';
+let initText = '';
 // const initText = '{"asd":{"asd":true}}';
 
 const INITIAL_BOARD = { text: initText, spinner: false };
@@ -42,20 +42,32 @@ function updateBoardState(state: BoardState, id: number, text: string, error?: s
   };
 }
 
+function format(text: string) {
+  const trimmedText = jsonUtil.removeNewLines(text);
+  const beautified = jsonUtil.beautify(trimmedText, {
+    'indent_size': 2,
+    'indent_char': ' ',
+    'indent_with_tabs': false
+  });
+  const linted = jsonUtil.lint(beautified);
+  return linted;
+}
+
 export default function diffReducer(state: BoardState = INITIAL_STATE, action: Action): BoardState {
   const id = action.payload && action.payload.id;
   switch (action.type) {
     case ACTION.UPDATE_TEXT:
       return updateBoardState(state, id, action.payload.text);
+    case ACTION.INIT_STRING:
+      return updateBoardState(state, id, action.payload.text);
+
+    case ACTION.URL_DECODE_AND_FORMAT:
+      const decodeAndlinted = format(jsonUtil.urlDecode(state.byId[id].text));
+      return updateBoardState(state, id, decodeAndlinted.json, decodeAndlinted.error || '');
 
     case ACTION.FORMAT_TEXT:
-      const trimmedText = jsonUtil.removeNewLines(state.byId[id].text);
-      const beautified = jsonUtil.beautify(trimmedText, {
-        'indent_size': 2,
-        'indent_char': ' ',
-        'indent_with_tabs': false
-      });
-      const linted = jsonUtil.lint(beautified);
+
+      const linted = format(state.byId[id].text);
       return updateBoardState(state, id, linted.json, linted.error || '');
 
     case ACTION.MINIFY_TEXT:
@@ -124,4 +136,22 @@ const loadingEpic: Epic<Action, any> = (action$) =>
       return payload.nextAction;
     });
 
-export const boardEpic = combineEpics(loadingEpic);
+const initStringEpic: Epic<Action, any> = (action$) =>
+  action$
+    .ofType(ACTION.INIT_STRING)
+    .delay(0)
+    .map(({ payload }) => {
+      console.log('pay', payload);
+      return {
+        type: ACTION.SHOW_SPINNER,
+        payload: {
+          id: payload.id,
+          nextAction: {
+            type: ACTION.URL_DECODE_AND_FORMAT,
+            payload: { id: payload.id }
+          }
+        }
+      };
+    });
+
+export const boardEpic = combineEpics(loadingEpic, initStringEpic);

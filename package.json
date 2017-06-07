@@ -17,6 +17,7 @@
     "json-lint": "^0.1.0",
     "lodash": "^4.17.4",
     "materialize-css": "^0.98.2",
+    "query-string": "^4.3.4",
     "react": "^15.5.4",
     "react-codemirror": "^0.3.0",
     "react-dom": "^15.5.4",

@@ -28,6 +28,10 @@ declare module 'element-resize-detector' {
   export = anyType
 }
 
+declare module 'query-string' {
+  export = anyType
+}
+
 declare function $(el: any): any;
 declare var Materialize: {
   toast: (s: string, n: number) => null;

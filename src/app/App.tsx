@@ -10,6 +10,10 @@ import { State } from '../redux/store';
 import { hideDiff } from '../redux/action/diff-action';
 import { hideFeedback } from '../redux/action/feedback-action';
 import { closeSetting } from '../redux/action/setting-action';
+import { initString } from '../redux/action/board-action';
+import * as queryStringUtil from 'query-string';
+
+const queryString = queryStringUtil.parse(location.search);
 
 interface StateProps {
   color: Color;
@@ -22,9 +26,21 @@ interface DispatchProps {
   closeFeedback: () => void;
   closeDiff: () => void;
   closeSetting: () => void;
+  initString: (text: string) => void;
 }
 
-class App extends React.Component<StateProps & DispatchProps, {}> {
+interface OwnProps {
+  initObj: any;
+}
+
+class App extends React.Component<StateProps & DispatchProps & OwnProps, {}> {
+
+  componentDidMount() {
+    if (queryString.j) {
+      this.props.initString(queryString.j);
+    }
+  }
+
   render() {
 
     let overlay;
@@ -76,6 +92,9 @@ function mapDispatchToProps(dispatch: Dispatch): DispatchProps {
     },
     closeSetting: () => {
       dispatch(closeSetting());
+    },
+    initString: (str: string) => {
+      dispatch(initString(str));
     }
   };
 }

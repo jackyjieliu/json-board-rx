@@ -9,7 +9,9 @@ export const ACTION = {
   ENCODE_TEXT: 'ENCODE_TEXT',
   ADD_BOARD: 'ADD_BOARD',
   REMOVE_BOARD: 'REMOVE_BOARD',
-  SHOW_SPINNER: 'SHOW_SPINNER'
+  SHOW_SPINNER: 'SHOW_SPINNER',
+  INIT_STRING: 'INIT_STRING',
+  URL_DECODE_AND_FORMAT: 'URL_DECODE_AND_FORMAT'
 };
 
 export const ASYNC_ACTIONS = [
@@ -98,3 +100,11 @@ export function removeBoard(id: number): Action {
     payload: { id }
   });
 }
+
+export function initString(text: string): Action {
+  return packageAsyncAction({
+    type: ACTION.INIT_STRING,
+    payload: { id: 0, text }
+  });
+}
+
