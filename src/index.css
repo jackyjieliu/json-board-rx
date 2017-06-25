@@ -58,6 +58,14 @@ html {
     display: none;
 }
 
+.CodeMirror-merge-2pane .CodeMirror-merge-pane {
+  width: 49%;
+}
+
+.CodeMirror-merge-2pane .CodeMirror-merge-gap {
+  width: 2%;
+}
+
 .ReactCodeMirror {
   min-width: 100%;
   width: 0;
