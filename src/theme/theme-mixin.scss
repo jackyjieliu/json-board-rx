@@ -8,6 +8,10 @@
     background-color: $actionBtn;
   }
 
+  .secondBtn {
+    background-color: $botBack;
+  }
+
   .topBack {
     background-color: $topBack;
   }
@@ -18,10 +22,6 @@
 
   .botBack {
     background-color: $botBack;
-  }
-
-  &.theme-picker .botBack {
-    background-color: $actionBtn !important;
   }
 
   .errorColor {

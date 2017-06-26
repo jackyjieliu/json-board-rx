@@ -7,6 +7,7 @@ import Spinner from '../util/Spinner';
 import { connect } from 'react-redux';
 import { State } from '../redux/store';
 import * as BoardAction from '../redux/action/board-action';
+import * as SettingAction from '../redux/action/setting-action';
 import * as _ from 'lodash';
 interface OwnProps {
   index: number;
@@ -19,27 +20,34 @@ interface StateProps {
   error?: string;
   boardCount: number;
   spinner: boolean;
+  buttonsExpanded: boolean;
+  onPasteAction: string;
 }
 
 interface DispatchProps {
   closeBoard: () =>  void;
   updateText: (text: string) =>  void;
+  smartFormat: () => void;
   format: () => void;
   minify: () => void;
   unescape: () => void;
   escape: () => void;
   decode: () => void;
   encode: () => void;
+  toggleActionButtons: () => void;
 }
 
 const BUTTON_TYPES = {
+  SMART_FORMAT: 'SMART_FORMAT',
   FORMAT: 'FORMAT',
   MINIMIZE: 'MINIMIZE',
   UNESCAPE: 'UNESCAPE',
   ESCAPE: 'ESCAPE',
   URL_DECODE: 'URL_DECODE',
   URL_ENCODE: 'URL_ENCODE',
-  CLOSE: 'CLOSE'
+  CLOSE: 'CLOSE',
+  MORE: 'MORE',
+  LESS: 'LESS'
 };
 
 class Board extends React.Component<StateProps & DispatchProps & OwnProps, {}> {
@@ -62,27 +70,44 @@ class Board extends React.Component<StateProps & DispatchProps & OwnProps, {}> {
   }
 
   onPaste(e: any) {
+
+    const isSmartFormat = this.props.onPasteAction === BUTTON_TYPES.SMART_FORMAT;
+    const isFormat = this.props.onPasteAction === BUTTON_TYPES.FORMAT;
+    if (!(isSmartFormat || isFormat)) {
+
+      return;
+    }
+
     const pastedText = e.getData('text');
     const subStr = pastedText.slice(0, (pastedText.length) > 10 ? 10 : pastedText.length).trim();
     let shouldFormat = false;
 
     // Dont format Strings
-    if (subStr.charAt(0) !== '"') {
+    if (isSmartFormat || subStr.charAt(0) !== '"') {
       const objIdx = subStr.indexOf('{');
       const arrIdx = subStr.indexOf('[');
 
       // Format if contains { or [ and the next char is not escape
-      if (objIdx !== -1 && pastedText.charAt(objIdx + 1) !== '\\') {
+      if (objIdx !== -1 &&
+        (isSmartFormat || pastedText.charAt(objIdx + 1) !== '\\')) {
+
         shouldFormat = true;
-      } else if (arrIdx !== -1 && pastedText.charAt(arrIdx + 1) !== '\\') {
+      } else if (arrIdx !== -1 &&
+        (isSmartFormat || pastedText.charAt(arrIdx + 1) !== '\\')) {
+
         shouldFormat = true;
       }
     }
 
     if (shouldFormat) {
       // Only format if pasted string is JSON like
+      // TODO: make configurable
       setTimeout(() => {
-        this.props.format();
+        if (this.props.onPasteAction === BUTTON_TYPES.SMART_FORMAT) {
+          this.props.smartFormat();
+        } else if (this.props.onPasteAction === BUTTON_TYPES.FORMAT) {
+          this.props.format();
+        }
       }, 0);
     }
   }
@@ -101,7 +126,7 @@ class Board extends React.Component<StateProps & DispatchProps & OwnProps, {}> {
   }
 
   render() {
-    const BUTTON_CLASS = 'actionBtn waves-effect waves-light btn tooltipped';
+    const BUTTON_CLASS = 'boardButton waves-effect waves-light btn';
 
     let errorDiv;
     if (this.props.error) {
@@ -113,6 +138,7 @@ class Board extends React.Component<StateProps & DispatchProps & OwnProps, {}> {
     }
 
     const BUTTON_MAP = {
+      [BUTTON_TYPES.SMART_FORMAT]: (<i className="material-icons">check</i>), // check
       [BUTTON_TYPES.FORMAT]: (<i className="material-icons">code</i>), // check
       [BUTTON_TYPES.MINIMIZE]: (<i className="material-icons">fullscreen_exit</i>), // min
       [BUTTON_TYPES.UNESCAPE]: (<i className="material-icons">format_quote</i>), // "
@@ -123,21 +149,27 @@ class Board extends React.Component<StateProps & DispatchProps & OwnProps, {}> {
         </span>
       ), // \"
       [BUTTON_TYPES.URL_ENCODE]: (<span>%</span>), // %
-      [BUTTON_TYPES.CLOSE]: (<i className="material-icons">close</i>) // x
+      [BUTTON_TYPES.CLOSE]: (<i className="material-icons">close</i>), // x
+      [BUTTON_TYPES.MORE]: (<i className="material-icons">expand_more</i>),
+      [BUTTON_TYPES.LESS]: (<i className="material-icons">expand_less</i>)
     };
 
     const BUTTON_CLICK_ACTIONS = {
+      [BUTTON_TYPES.SMART_FORMAT]: this.props.smartFormat,
       [BUTTON_TYPES.FORMAT]: this.props.format,
       [BUTTON_TYPES.MINIMIZE]: this.props.minify,
       [BUTTON_TYPES.UNESCAPE]: this.props.unescape,
       [BUTTON_TYPES.URL_DECODE]: this.props.decode,
       [BUTTON_TYPES.ESCAPE]: this.props.escape,
       [BUTTON_TYPES.URL_ENCODE]: this.props.encode,
-      [BUTTON_TYPES.CLOSE]: this.props.closeBoard
+      [BUTTON_TYPES.CLOSE]: this.props.closeBoard,
+      [BUTTON_TYPES.MORE]: this.props.toggleActionButtons,
+      [BUTTON_TYPES.LESS]: this.props.toggleActionButtons
     };
 
     const buttonConfig = [
-      BUTTON_TYPES.FORMAT, // check
+      BUTTON_TYPES.SMART_FORMAT, // check
+      BUTTON_TYPES.FORMAT, // <>
       BUTTON_TYPES.MINIMIZE, // min
       BUTTON_TYPES.UNESCAPE, // "
       BUTTON_TYPES.URL_DECODE, // &
@@ -145,14 +177,46 @@ class Board extends React.Component<StateProps & DispatchProps & OwnProps, {}> {
       BUTTON_TYPES.URL_ENCODE // %
     ];
 
+    const NO_TOOLTIP_BUTTONS = [
+      BUTTON_TYPES.MORE,
+      BUTTON_TYPES.LESS
+    ];
+
+    const FLAT_BUTTONS = [
+      BUTTON_TYPES.MORE,
+      BUTTON_TYPES.LESS
+    ];
+
     if (this.props.boardCount > 1) {
       buttonConfig.push(BUTTON_TYPES.CLOSE);
     }
 
+    if (!this.props.buttonsExpanded) {
+      const removeButtons = [BUTTON_TYPES.UNESCAPE, BUTTON_TYPES.URL_DECODE,
+        BUTTON_TYPES.ESCAPE, BUTTON_TYPES.URL_ENCODE];
+
+      _.pullAll(buttonConfig, removeButtons);
+      buttonConfig.push(BUTTON_TYPES.MORE);
+    } else {
+      buttonConfig.push(BUTTON_TYPES.LESS);
+    }
+
     const buttons = buttonConfig.map((buttonType) => {
+      const hasTooltip = NO_TOOLTIP_BUTTONS.indexOf(buttonType) === -1;
+      let className = BUTTON_CLASS;
+      if (hasTooltip) {
+        className += ' tooltipped';
+      }
+
+      const isFlat = FLAT_BUTTONS.indexOf(buttonType) !== -1;
+      if (isFlat) {
+        className += ' btn-flat';
+      } else {
+        className += ' actionBtn';
+      }
       return (
         <a
-          className={BUTTON_CLASS}
+          className={className}
           onClick={BUTTON_CLICK_ACTIONS[buttonType].bind(this)}
           key={buttonType}
           data-position="right"
@@ -201,7 +265,9 @@ function mapStateToProps(store: State, ownProps: OwnProps): StateProps {
     text: store.board.byId[ownProps.index].text,
     error: store.board.byId[ownProps.index].error,
     boardCount: store.board.order.length,
-    spinner: store.board.byId[ownProps.index].spinner
+    spinner: store.board.byId[ownProps.index].spinner,
+    buttonsExpanded: store.setting.actionButtonExpanded,
+    onPasteAction: store.setting.onPasteAction
   };
 }
 
@@ -213,6 +279,9 @@ function mapDispatchToProps(dispatch: Dispatch, ownProps: OwnProps): DispatchPro
     },
     updateText: (text: string) => {
       dispatch(BoardAction.updateTextAction(id, text));
+    },
+    smartFormat: () => {
+      dispatch(BoardAction.smartFormatAction(id));
     },
     format: () => {
       dispatch(BoardAction.formatAction(id));
@@ -231,6 +300,9 @@ function mapDispatchToProps(dispatch: Dispatch, ownProps: OwnProps): DispatchPro
     },
     encode: () => {
       dispatch(BoardAction.encodeAction(id));
+    },
+    toggleActionButtons: () => {
+      dispatch(SettingAction.toggleActionButton());
     }
   };
 }

@@ -9,8 +9,13 @@ export function lint(str: string): {
   return jsonlint(str);
 }
 
-export function beautify(str: string, conf: any): string {
-  return jsBeautify(str, conf);
+export function beautify(str: string, conf?: any): string {
+
+  return jsBeautify(str, conf || {
+    'indent_size': 2,
+    'indent_char': ' ',
+    'indent_with_tabs': false
+  });
 }
 
 export function minify(str: string): string {
@@ -74,12 +79,13 @@ export  function urlDecode(str: string) {
 }
 
 function minifyLib (json: string): string {
-  return json.replace(/([^"]+)|("[^"]+")/g, function($0, $1, $2) {
-      if ($1) {
-          return $1.replace(/\s/g, '');
-      } else {
-          return $2;
-      }
-  });
+  return json.replace(/\s+(?=((\\[\\"]|[^\\"])*"(\\[\\"]|[^\\"])*")*(\\[\\"]|[^\\"])*$)/g, '');
+  // return json.replace(/([^"]+)|("[^"]+")/g, function($0, $1, $2) {
+  //   if ($1) {
+  //       return $1.replace(/\s/g, '');
+  //   } else {
+  //       return $2;
+  //   }
+  // });
 };
 

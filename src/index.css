@@ -70,3 +70,7 @@ html {
   min-width: 100%;
   width: 0;
 }
+
+.CodeMirror-wrap pre {
+  word-break: break-all;
+}

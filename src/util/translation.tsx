@@ -1,4 +1,8 @@
 const translations = {
+  DARK: 'Dark',
+  LIGHT: 'Light',
+  NONE: 'None',
+  SMART_FORMAT: 'Smart Format',
   FORMAT: 'Format',
   MINIMIZE: 'Minimize',
   UNESCAPE: 'Unescape',

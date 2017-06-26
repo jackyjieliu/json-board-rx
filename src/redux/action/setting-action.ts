@@ -5,7 +5,9 @@ export const ACTION = {
   INCREMENT_FONT_SIZE: 'INCREMENT_FONT_SIZE',
   DECREMENT_FONT_SIZE: 'DECREMENT_FONT_SIZE',
   CLOSE_SETTINGS: 'CLOSE_SETTINGS',
-  OPEN_SETTINGS: 'OPEN_SETTINGS'
+  OPEN_SETTINGS: 'OPEN_SETTINGS',
+  CHANGE_ON_PASTE: 'CHANGE_ON_PASTE',
+  TOGGLE_EXPAND_ACTION_BUTTONS: 'TOGGLE_EXPAND_ACTION_BUTTONS'
 };
 
 export function changeTheme(id: number): Action {
@@ -13,6 +15,22 @@ export function changeTheme(id: number): Action {
     type: ACTION.CHANGE_THEME,
     payload: {
       id
+    }
+  };
+}
+
+export function toggleActionButton(): Action  {
+  return {
+    type: ACTION.TOGGLE_EXPAND_ACTION_BUTTONS,
+    payload: {}
+  };
+}
+
+export function changeOnPasteSmartFormat(option: string): Action {
+  return {
+    type: ACTION.CHANGE_ON_PASTE,
+    payload: {
+      onPasteAction: option
     }
   };
 }

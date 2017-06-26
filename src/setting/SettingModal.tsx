@@ -1,6 +1,7 @@
 import * as React from 'react';
 // import Modal from '../modal/Modal';
 import '../modal/Modal.css';
+import translate from '../util/translation';
 import { State } from '../redux/store';
 import { connect } from 'react-redux';
 import * as SettingAction from '../redux/action/setting-action';
@@ -10,6 +11,7 @@ interface StateProps {
   color: Color;
   fontSize: number;
   settingDialogOpened: boolean;
+  onPasteAction: string;
 }
 
 interface DispatchProps {
@@ -18,6 +20,7 @@ interface DispatchProps {
   increaseFontSize: () => void;
   decreaseFontSize: () => void;
   changeTheme: (i: number) => void;
+  changeOnPaste: (option: string) => void;
   setToDefault: (i: number) => void;
 }
 
@@ -28,7 +31,10 @@ class SettingModal extends React.Component<StateProps & DispatchProps, {}> {
       display: 'flex',
       'flexGrow': 1,
       'align-items': 'center',
-      marginBottom: '10px'
+      marginBottom: '20px'
+    };
+    const b = {
+      marginBottom: '20px'
     };
     const pad = {
       padding: '0 10px',
@@ -41,6 +47,7 @@ class SettingModal extends React.Component<StateProps & DispatchProps, {}> {
           'justifyContent': 'center'
         }}
       >
+        {/*TITLE*/}
         <div
           style={{
             display: 'flex',
@@ -50,42 +57,39 @@ class SettingModal extends React.Component<StateProps & DispatchProps, {}> {
         >
           <div style={a}>Theme:</div>
           <div style={a}>Font Size:</div>
+          <div style={a}>On Paste:</div>
         </div>
+
+        {/*OPTIONS*/}
         <div>
-          <div style={{marginBottom: '10px'}}>
+          {/*Theme*/}
+          <div style={b}>
             {
               AVAILABLE_COLORS.map((color, i) => {
-                if (this.props.color.name === color.name) {
-                  return (
-                    <span className="selected-theme" key={i}>
-                      <a
-                        className="botBack waves-effect waves-light btn"
-                        style={{
-                          marginRight: '3px',
-                          borderRadius: '20px',
-                          padding: '20px'
-                        }}
-                      />
-                    </span>
-                  );
+                let className = 'waves-effect waves-light btn';
+                const isSelected = this.props.color.name === color.name;
+                if (isSelected) {
+                  className += ' actionBtn';
+                } else {
+                  className += ' secondBtn';
                 }
                 return (
-                  <span id={color.name} className="theme-picker" key={i}>
+                  <span className="theme-picker" key={i}>
                     <a
-                      className="botBack waves-effect waves-light btn"
+                      style={pad}
+                      className={className}
+                      key={i}
                       onClick={this.props.changeTheme.bind(this, i)}
-                      style={{
-                        marginRight: '3px',
-                        borderRadius: '20px',
-                        padding: '20px'
-                      }}
-                    />
+                    >
+                      {translate(color.theme.toUpperCase())}
+                    </a>
                   </span>
                 );
               })
             }
           </div>
-          <div style={{marginBottom: '10px'}}>
+          {/*Font Size*/}
+          <div style={b}>
             <a
               style={pad}
               className="actionBtn waves-effect waves-light btn"
@@ -101,50 +105,36 @@ class SettingModal extends React.Component<StateProps & DispatchProps, {}> {
               <i className="material-icons">add</i>
             </a>
           </div>
+
+          {/*On Paste*/}
+          <div style={b}>
+            {
+              ['SMART_FORMAT', 'FORMAT', 'NONE'].map((option) => {
+                const isSelected = option === this.props.onPasteAction;
+                let className = 'waves-effect waves-light btn';
+                if (isSelected) {
+                  className += ' actionBtn';
+                } else {
+                  className += ' secondBtn';
+                }
+                return (
+                  <a
+                    style={pad}
+                    className={className}
+                    key={option}
+                    onClick={this.props.changeOnPaste.bind(this, option)}
+                  >
+                    {translate(option)}
+                  </a>
+                );
+              })
+            }
+
+          </div>
         </div>
       </div>
     );
 
-    /*return (
-      <div>
-        <div style={{ display: 'flex' }}>
-          <div>Theme:</div>
-          <div>Font Size: {this.props.fontSize}</div>
-        </div>
-        <div style={{ display: 'flex' }}>
-          <div style={{ display: 'flex' }}>
-
-            {
-              AVAILABLE_COLORS.map((color, i) => {
-                if (this.props.color.name === color.name) {
-                  return (
-                    <span className="selected-theme">
-                      <a className="botBack waves-effect waves-light btn" />
-                    </span>
-                  );
-                }
-                return (
-                  <span id={color.name} className="theme-picker">
-                    <a
-                      className="botBack waves-effect waves-light btn"
-                      onClick={this.props.changeTheme.bind(this, i)}
-                    />
-                  </span>
-                );
-              })
-            }
-          </div>
-          <div>
-            <a className="actionBtn waves-effect waves-light btn" onClick={this.props.decreaseFontSize.bind(this)}>
-              <i className="material-icons">remove</i>
-            </a>
-            <a className="actionBtn waves-effect waves-light btn" onClick={this.props.increaseFontSize.bind(this)} >
-              <i className="material-icons">add</i>
-            </a>
-          </div>
-        </div>
-      </div>
-    );*/
   }
 
   render() {
@@ -156,7 +146,7 @@ class SettingModal extends React.Component<StateProps & DispatchProps, {}> {
 
 
     return (
-        <div className={backColor + ' ' + ' ' + openClass + ' modal'} style={{width: '450px'}}>
+        <div className={backColor + ' ' + ' ' + openClass + ' modal'} style={{width: '480px'}}>
           <div className="textBack card-panel textColor">
             {this.settings()}
           </div>
@@ -185,6 +175,7 @@ function mapStateToProps(store: State): StateProps {
   return {
     color: store.setting.color,
     fontSize: store.setting.fontSize,
+    onPasteAction: store.setting.onPasteAction,
     settingDialogOpened: store.setting.settingDialogOpened
   };
 }
@@ -208,6 +199,9 @@ function mapDispatchToProps(dispatch: Dispatch): DispatchProps {
     },
     setToDefault: () => {
       dispatch(SettingAction.setToDefault());
+    },
+    changeOnPaste: (option: string) => {
+      dispatch(SettingAction.changeOnPasteSmartFormat(option));
     }
   };
 }

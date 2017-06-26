@@ -1,4 +1,5 @@
 import * as jsonUtil from '../../util/json-util';
+import { smartFormat } from '../../util/smart-format';
 import * as _ from 'lodash';
 import {ACTION} from '../action/board-action';
 import { combineEpics, Epic } from 'redux-observable';
@@ -44,11 +45,7 @@ function updateBoardState(state: BoardState, id: number, text: string, error?: s
 
 function format(text: string) {
   const trimmedText = jsonUtil.removeNewLines(text);
-  const beautified = jsonUtil.beautify(trimmedText, {
-    'indent_size': 2,
-    'indent_char': ' ',
-    'indent_with_tabs': false
-  });
+  const beautified = jsonUtil.beautify(trimmedText);
   const linted = jsonUtil.lint(beautified);
   return linted;
 }
@@ -64,6 +61,10 @@ export default function diffReducer(state: BoardState = INITIAL_STATE, action: A
     case ACTION.URL_DECODE_AND_FORMAT:
       const decodeAndlinted = format(jsonUtil.urlDecode(state.byId[id].text));
       return updateBoardState(state, id, decodeAndlinted.json, decodeAndlinted.error || '');
+
+    case ACTION.SMART_FORMAT:
+      const smartFormatted = smartFormat(state.byId[id].text);
+      return updateBoardState(state, id, smartFormatted.json, smartFormatted.error || '');
 
     case ACTION.FORMAT_TEXT:
 

@@ -1,5 +1,6 @@
 
 export const ACTION = {
+  SMART_FORMAT: 'SMART_FORMAT',
   UPDATE_TEXT: 'UPDATE_TEXT',
   FORMAT_TEXT: 'FORMAT_TEXT',
   MINIFY_TEXT: 'MINIFY_TEXT',
@@ -36,6 +37,13 @@ function packageAsyncAction(action: Action): Action {
     };
   }
   return action;
+}
+
+export function smartFormatAction(id: number): Action {
+  return packageAsyncAction({
+    type: ACTION.SMART_FORMAT,
+    payload: { id }
+  });
 }
 
 export function updateTextAction(id: number, text: string): Action {
