@@ -8,8 +8,17 @@
     background-color: $actionBtn;
   }
 
+  .setting-modal .actionBtn.disabled {
+    background-color: $actionBtn !important;
+    color: #fff !important;
+  }
   .secondBtn {
     background-color: $botBack;
+  }
+
+  .setting-modal .secondBtn.disabled {
+    background-color: $botBack !important;
+    color: #fff !important;
   }
 
   .topBack {

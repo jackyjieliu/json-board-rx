@@ -69,7 +69,7 @@ class SettingModal extends React.Component<StateProps & DispatchProps, {}> {
                 let className = 'waves-effect waves-light btn';
                 const isSelected = this.props.color.name === color.name;
                 if (isSelected) {
-                  className += ' actionBtn';
+                  className += ' actionBtn disabled';
                 } else {
                   className += ' secondBtn';
                 }
@@ -113,7 +113,7 @@ class SettingModal extends React.Component<StateProps & DispatchProps, {}> {
                 const isSelected = option === this.props.onPasteAction;
                 let className = 'waves-effect waves-light btn';
                 if (isSelected) {
-                  className += ' actionBtn';
+                  className += ' actionBtn disabled';
                 } else {
                   className += ' secondBtn';
                 }
@@ -146,7 +146,7 @@ class SettingModal extends React.Component<StateProps & DispatchProps, {}> {
 
 
     return (
-        <div className={backColor + ' ' + ' ' + openClass + ' modal'} style={{width: '480px'}}>
+        <div className={backColor + ' setting-modal ' + openClass + ' modal'} style={{width: '490px'}}>
           <div className="textBack card-panel textColor">
             {this.settings()}
           </div>

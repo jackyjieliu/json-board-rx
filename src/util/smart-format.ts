@@ -2,7 +2,7 @@ import * as jsonUtil from './json-util';
 
 
 function shouldUnescape(text: string) {
-  const shouldUnescape = text.search(/[{\[]\s*\\".*\\"\s*[}\]]/g) !== -1;
+  const shouldUnescape = text.search(/[{\[]\s*\\".*[}\]]/g) !== -1;
   return shouldUnescape;
 }
 
@@ -42,7 +42,7 @@ function findQuotedStr(text: string, i: number) {
   let end = undefined;
 
   if (begin !== undefined) {
-    end = findMatchAfter('\\\\"\s*[}]\s*"', text, begin, true);
+    end = findMatchAfter('[}]\s*"', text, begin, true);
     if (end === undefined) {
       begin = undefined;
       end = undefined;
@@ -54,7 +54,7 @@ function findQuotedStr(text: string, i: number) {
     begin = findMatchAfter('"\s*[\[]]\s*\\\\"', text, i, false);
 
     if (begin !== undefined) {
-      end = findMatchAfter('\\\\"\s*[\]]\s*"', text, begin, true);
+      end = findMatchAfter('[\]]\s*"', text, begin, true);
       if (end === undefined) {
         begin = undefined;
         end = undefined;
@@ -88,10 +88,10 @@ function removeQuote(text: string, i: number): string {
 }
 
 function unescape(text: string) {
-  text = removeQuote(text, 0);
+  const quoteRemoved = removeQuote(text, 0);
 
   // console.log(text);
-  return { json: jsonUtil.unescape(text), altered: true };
+  return { json: jsonUtil.unescape(quoteRemoved), altered: quoteRemoved.length !== text.length };
 }
 
 function decode(text: string) {
