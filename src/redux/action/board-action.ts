@@ -12,6 +12,7 @@ export const ACTION = {
   REMOVE_BOARD: 'REMOVE_BOARD',
   SHOW_SPINNER: 'SHOW_SPINNER',
   INIT_STRING: 'INIT_STRING',
+  INIT_JSON: 'INIT_JSON',
   URL_DECODE_AND_FORMAT: 'URL_DECODE_AND_FORMAT'
 };
 
@@ -22,6 +23,7 @@ export const ASYNC_ACTIONS = [
   ACTION.ESCAPE_TEXT,
   ACTION.DECODE_TEXT,
   ACTION.ENCODE_TEXT,
+  ACTION.INIT_JSON,
 ];
 
 function packageAsyncAction(action: Action): Action {
@@ -116,3 +118,10 @@ export function initString(text: string): Action {
   });
 }
 
+
+export function initJson(storedId: string): Action {
+  return packageAsyncAction({
+    type: ACTION.INIT_JSON,
+    payload: { id: 0, storedId }
+  });
+}

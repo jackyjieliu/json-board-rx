@@ -9,6 +9,8 @@ import toast from '../util/toast';
 import { State } from '../redux/store';
 import { connect } from 'react-redux';
 import * as FeedbackAction from '../redux/action/feedback-action';
+import { CONFIG } from '../config';
+
 interface OwnState {
   feedback: string;
   email: string;
@@ -48,15 +50,12 @@ class FeedbackModal extends React.Component<StateProps & DispatchProps, OwnState
 
   healthCheck() {
     Observable.ajax({
-      // url: 'http://localhost:3010',
-      url: 'https://json-board.herokuapp.com/health',
-      // crossDomain: true,
+      url: CONFIG.URL + '/health',
       headers: {
         'Content-Type': 'application/json'
       },
       method: 'GET'
     })
-    // Observable.ajax('http://localhost:3010', data, { 'Content-type': 'application/json' })
     .subscribe(() => {
       ;
     });
@@ -73,7 +72,7 @@ class FeedbackModal extends React.Component<StateProps & DispatchProps, OwnState
       email: this.state.email
     };
     Observable.ajax({
-      url: 'https://json-board.herokuapp.com/feedback',
+      url: CONFIG.URL + '/feedback',
       headers: {
         'Content-Type': 'application/json'
       },

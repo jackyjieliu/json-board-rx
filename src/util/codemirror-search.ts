@@ -256,7 +256,11 @@ let getFindBehaviour = (cm: any, defaultText: any, callback: any) => {
         clearSearch(cm);
         return;
       };
-      doSearch(cm, query, !!e.shiftKey, false);
+
+      // Auto find on search
+      doSearch(cm, query, !!e.shiftKey, undefined);
+      // Original
+      // doSearch(cm, query, !!e.shiftKey, false);
     }
   };
   if (!!callback) {

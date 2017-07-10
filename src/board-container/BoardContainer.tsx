@@ -22,9 +22,9 @@ class BoardContainer extends React.Component<StateProps & DispatchProps, {}> {
     $('.board textarea').last().focus();
   }
 
-  componentWillUpdate() {
-    $('.tooltipped').tooltip('remove');
-  }
+  // componentWillUpdate() {
+  //   $('.tooltipped').tooltip('remove');
+  // }
 
   componentDidUpdate() {
     if (this.props.backdrop) {
@@ -32,7 +32,7 @@ class BoardContainer extends React.Component<StateProps & DispatchProps, {}> {
     } else {
       $('.board textarea').attr('tabindex', 0);
     }
-    $('.tooltipped').tooltip();
+    // $('.tooltipped').tooltip();
   }
 
   render() {

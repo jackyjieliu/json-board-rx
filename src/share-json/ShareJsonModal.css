@@ -1,0 +1,11 @@
+.share-json-modal-card-content {
+  display: flex;
+  justify-content: center;
+}
+
+.last-generated-url {
+  margin-top: 20px;
+  display: flex;
+  align-items: center;
+  flex-direction: column;
+}

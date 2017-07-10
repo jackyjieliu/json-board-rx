@@ -1,8 +1,11 @@
 import * as jsonUtil from '../../util/json-util';
 import { smartFormat } from '../../util/smart-format';
 import * as _ from 'lodash';
-import {ACTION} from '../action/board-action';
+import { ACTION, updateTextAction } from '../action/board-action';
 import { combineEpics, Epic } from 'redux-observable';
+import { CONFIG } from '../../config';
+import { Observable } from 'rxjs/Observable';
+
 import 'rxjs';
 
 export interface BoardState {
@@ -142,7 +145,6 @@ const initStringEpic: Epic<Action, any> = (action$) =>
     .ofType(ACTION.INIT_STRING)
     .delay(0)
     .map(({ payload }) => {
-      console.log('pay', payload);
       return {
         type: ACTION.SHOW_SPINNER,
         payload: {
@@ -155,4 +157,43 @@ const initStringEpic: Epic<Action, any> = (action$) =>
       };
     });
 
-export const boardEpic = combineEpics(loadingEpic, initStringEpic);
+const initJsonEpic: Epic<Action, any> = ((action$) => {
+
+  const filteredAction$ = action$
+    .ofType(ACTION.INIT_JSON)
+    .take(1);
+
+  const data$ = filteredAction$
+    .map(({ payload }) => {
+      if (payload.storedId) {
+        return CONFIG.URL + '/data/' + payload.storedId;
+      }
+      return;
+    })
+    .filter(url => url !== undefined)
+    .switchMap(url =>
+      Observable.ajax.getJSON((url as string))
+        .catch(err => Observable.empty())
+    );
+
+  return Observable.zip<{payload: any; ret: {json?: string}} >(
+    filteredAction$,
+    data$,
+    ({ payload }, ret: { json?: string } ) => {
+      return {
+        payload,
+        ret
+      };
+    }
+  ).map(({ payload, ret }) => {
+    if (ret && ret.json !== undefined) {
+      const jsonStr = ret.json;
+      return updateTextAction(payload.id, jsonStr);
+    }
+    return;
+  });
+
+});
+
+
+export const boardEpic = combineEpics(loadingEpic, initStringEpic, initJsonEpic);

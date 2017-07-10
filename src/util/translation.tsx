@@ -2,6 +2,7 @@ const translations = {
   DARK: 'Dark',
   LIGHT: 'Light',
   NONE: 'None',
+  SHARE_JSON: 'Share This JSON',
   SMART_FORMAT: 'Smart Format',
   FORMAT: 'Format',
   MINIMIZE: 'Minimize',

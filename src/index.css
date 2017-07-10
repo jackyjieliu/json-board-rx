@@ -73,4 +73,5 @@ html {
 
 .CodeMirror-wrap pre {
   word-break: break-all;
+  white-space: nowrap;
 }

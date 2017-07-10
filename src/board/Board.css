@@ -74,3 +74,7 @@
   width: 44px;
 }
 
+.boardButton.btn i {
+  font-size: 19px;
+}
+

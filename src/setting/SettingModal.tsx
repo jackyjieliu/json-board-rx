@@ -16,7 +16,6 @@ interface StateProps {
 
 interface DispatchProps {
   closeSetting: () => void;
-  openSetting: () => void;
   increaseFontSize: () => void;
   decreaseFontSize: () => void;
   changeTheme: (i: number) => void;
@@ -184,9 +183,6 @@ function mapDispatchToProps(dispatch: Dispatch): DispatchProps {
   return {
     closeSetting: () => {
       dispatch(SettingAction.closeSetting());
-    },
-    openSetting: () => {
-      dispatch(SettingAction.openSetting());
     },
     increaseFontSize: () => {
       dispatch(SettingAction.increaseFontSize());

@@ -3,6 +3,10 @@ declare module 'json-lint' {
   export = anyType;
 }
 
+declare module 'react-copy-to-clipboard' {
+  export = anyType;
+}
+
 declare module 'jsonminify' {
   export = anyType;
 }

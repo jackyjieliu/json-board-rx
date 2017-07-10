@@ -4,13 +4,15 @@ import BoardContainer from '../board-container/BoardContainer';
 import ActionBar from '../action/ActionBar';
 import FeedbackModal from '../feedback/FeedbackModal';
 import SettingModal from '../setting/SettingModal';
+import ShareJsonModal from '../share-json/ShareJsonModal';
 import DiffModal from '../diff/DiffModal';
 import { connect } from 'react-redux';
 import { State } from '../redux/store';
 import { hideDiff } from '../redux/action/diff-action';
 import { hideFeedback } from '../redux/action/feedback-action';
 import { closeSetting } from '../redux/action/setting-action';
-import { initString } from '../redux/action/board-action';
+import { closeShareJson } from '../redux/action/share-json-action';
+import { initString, initJson } from '../redux/action/board-action';
 import * as queryStringUtil from 'query-string';
 
 const queryString = queryStringUtil.parse(location.search);
@@ -20,12 +22,15 @@ interface StateProps {
   feedback: boolean;
   diff: boolean;
   settingOpened: boolean;
+  shareJsonOpened: boolean;
 }
 
 interface DispatchProps {
   closeFeedback: () => void;
   closeDiff: () => void;
   closeSetting: () => void;
+  closeShareJson: () => void;
+  initJson: (storedId: string) => void;
   initString: (text: string) => void;
 }
 
@@ -36,7 +41,10 @@ interface OwnProps {
 class App extends React.Component<StateProps & DispatchProps & OwnProps, {}> {
 
   componentDidMount() {
-    if (queryString.j) {
+    const storedId = location.pathname.split('/')[1];
+    if (storedId) {
+      this.props.initJson(storedId);
+    } else if (queryString.j) {
       this.props.initString(queryString.j);
     }
   }
@@ -56,6 +64,10 @@ class App extends React.Component<StateProps & DispatchProps & OwnProps, {}> {
       overlay = (
         <div className="modal-overlay" onClick={this.props.closeSetting.bind(this)}/>
       );
+    } else if (this.props.shareJsonOpened) {
+      overlay = (
+        <div className="modal-overlay" onClick={this.props.closeShareJson.bind(this)}/>
+      );
     }
 
     return (
@@ -68,6 +80,7 @@ class App extends React.Component<StateProps & DispatchProps & OwnProps, {}> {
         <FeedbackModal/>
         <SettingModal/>
         <DiffModal />
+        <ShareJsonModal />
       </div>
     );
   }
@@ -78,7 +91,8 @@ function mapStateToProps(store: State): StateProps {
     color: store.setting.color,
     feedback: store.feedback,
     diff: store.diff.show,
-    settingOpened: store.setting.settingDialogOpened
+    settingOpened: store.setting.settingDialogOpened,
+    shareJsonOpened: store.shareJson.dialogOpened
   };
 }
 
@@ -95,6 +109,12 @@ function mapDispatchToProps(dispatch: Dispatch): DispatchProps {
     },
     initString: (str: string) => {
       dispatch(initString(str));
+    },
+    initJson: (str: string) => {
+      dispatch(initJson(str));
+    },
+    closeShareJson: () => {
+      dispatch(closeShareJson());
     }
   };
 }

@@ -8,7 +8,9 @@ import { connect } from 'react-redux';
 import { State } from '../redux/store';
 import * as BoardAction from '../redux/action/board-action';
 import * as SettingAction from '../redux/action/setting-action';
+import * as ShareJsonAction from '../redux/action/share-json-action';
 import * as _ from 'lodash';
+
 interface OwnProps {
   index: number;
 }
@@ -35,6 +37,7 @@ interface DispatchProps {
   decode: () => void;
   encode: () => void;
   toggleActionButtons: () => void;
+  openShareJson: () => void;
 }
 
 const BUTTON_TYPES = {
@@ -47,7 +50,8 @@ const BUTTON_TYPES = {
   URL_ENCODE: 'URL_ENCODE',
   CLOSE: 'CLOSE',
   MORE: 'MORE',
-  LESS: 'LESS'
+  LESS: 'LESS',
+  SHARE_JSON: 'SHARE_JSON'
 };
 
 class Board extends React.Component<StateProps & DispatchProps & OwnProps, {}> {
@@ -57,12 +61,17 @@ class Board extends React.Component<StateProps & DispatchProps & OwnProps, {}> {
     return !_.isEqual(nextProps, this.props);
   }
 
+  componentWillUpdate() {
+    $('.board .tooltipped').tooltip('remove');
+  }
+
   componentDidUpdate(preProps: StateProps) {
     if (preProps.boardCount !== this.props.boardCount ||
       preProps.error !== this.props.error) {
 
       this.textareaRef.updateDimension();
     }
+    $('.board .tooltipped').tooltip();
   }
 
   onTextUpdate(text: string) {
@@ -151,7 +160,8 @@ class Board extends React.Component<StateProps & DispatchProps & OwnProps, {}> {
       [BUTTON_TYPES.URL_ENCODE]: (<span>%</span>), // %
       [BUTTON_TYPES.CLOSE]: (<i className="material-icons">close</i>), // x
       [BUTTON_TYPES.MORE]: (<i className="material-icons">expand_more</i>),
-      [BUTTON_TYPES.LESS]: (<i className="material-icons">expand_less</i>)
+      [BUTTON_TYPES.LESS]: (<i className="material-icons">expand_less</i>),
+      [BUTTON_TYPES.SHARE_JSON]: (<i className="material-icons">reply</i>)
     };
 
     const BUTTON_CLICK_ACTIONS = {
@@ -164,7 +174,8 @@ class Board extends React.Component<StateProps & DispatchProps & OwnProps, {}> {
       [BUTTON_TYPES.URL_ENCODE]: this.props.encode,
       [BUTTON_TYPES.CLOSE]: this.props.closeBoard,
       [BUTTON_TYPES.MORE]: this.props.toggleActionButtons,
-      [BUTTON_TYPES.LESS]: this.props.toggleActionButtons
+      [BUTTON_TYPES.LESS]: this.props.toggleActionButtons,
+      [BUTTON_TYPES.SHARE_JSON]: this.props.openShareJson
     };
 
     const buttonConfig = [
@@ -174,7 +185,8 @@ class Board extends React.Component<StateProps & DispatchProps & OwnProps, {}> {
       BUTTON_TYPES.UNESCAPE, // "
       BUTTON_TYPES.URL_DECODE, // &
       BUTTON_TYPES.ESCAPE, // \"
-      BUTTON_TYPES.URL_ENCODE // %
+      BUTTON_TYPES.URL_ENCODE, // %
+      BUTTON_TYPES.SHARE_JSON // %
     ];
 
     const NO_TOOLTIP_BUTTONS = [
@@ -303,6 +315,9 @@ function mapDispatchToProps(dispatch: Dispatch, ownProps: OwnProps): DispatchPro
     },
     toggleActionButtons: () => {
       dispatch(SettingAction.toggleActionButton());
+    },
+    openShareJson: () => {
+      dispatch(ShareJsonAction.openShareJson(id));
     }
   };
 }
