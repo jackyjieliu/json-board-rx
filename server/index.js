@@ -86,8 +86,12 @@ app.post('/feedback', accepts('application/json'), function (req, res) {
 
 // var alphabet = "1234567890abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ";
 var ALPHABET = "PoeHi71W9m2KwSIDzVYac6hrk3CGOM0j5tnlvugXfNdyRbBpJAQLETUZsxF84q";
-
+var ENCODE_OFFSET = 5000;
 function encode(num){
+  if (num === undefined) {
+    return;
+  }
+  num = num + ENCODE_OFFSET;
   var encoded = '';
   var base = ALPHABET.length;
   while (num){
@@ -99,6 +103,9 @@ function encode(num){
 }
 
 function decode(str){
+  if (str === undefined || str === '') {
+    return;
+  }
   var decoded = 0;
   var base = ALPHABET.length;
   while (str){
@@ -107,7 +114,7 @@ function decode(str){
     decoded += index * (Math.pow(base, power));
     str = str.substring(1);
   }
-  return decoded;
+  return decoded - ENCODE_OFFSET;
 }
 
 app.get('/data/:id', function(req, res) {
@@ -142,7 +149,6 @@ app.post('/data', function(req, res) {
   var q = req.body.q;
   var now = Date.now();
 
-  encode();
   jsonParsePool.query(
     'INSERT INTO json_data (json, time, type) VALUES ($1, $2, $3) RETURNING id',
     [q, now, 'JSON'],
