@@ -116,7 +116,7 @@ function decode(str){
   }
   return decoded - ENCODE_OFFSET;
 }
-
+console.log(decode('oYE'));
 app.get('/data/:id', function(req, res) {
   var id = req.params.id;
 
@@ -134,7 +134,7 @@ app.get('/data/:id', function(req, res) {
       res.status(400).send({ error: true });
     } else {
       var json = _.get(results, 'rows[0].json');
-      if (json) {
+      if (json || json === '') {
         res.status(200).send({ json });
       } else {
         // log
