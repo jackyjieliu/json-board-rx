@@ -2,18 +2,43 @@ var express = require('express')
 var request = require('request');
 var bodyParser = require('body-parser');
 var accepts = require('express-accepts');
-var mysql = require('mysql');
+// var mysql = require('mysql');
+var pg = require('pg');
 var _ = require('lodash');
 var app = express();
+var url = require('url')
 var port = process.env.PORT || 5000;
 
-var jsonParsePool  = mysql.createPool({
-  connectionLimit : 10,
+var config = {
+  max : 10,
   host: 'localhost',
-  port: 8889,
-  user: 'root',
-  password: 'root',
-  database: 'json_parse'
+  port: 5432,
+  user: 'jackyjieliu',
+  password: '',
+  database: 'jackyjieliu'
+};
+
+if (process.env.DATABASE_URL) {
+
+  var dbParams = url.parse(process.env.DATABASE_URL);
+  var dbAuth = params.auth.split(':');
+
+  config = {
+    max : 10,
+    host: dbParams.hostname,
+    port: dbParams.port,
+    user: dbAuth[0],
+    password: dbAuth[1],
+    database: dbParams.pathname.split('/')[1],
+    ssl: true
+  };
+}
+
+
+var jsonParsePool = new pg.Pool(config);
+
+jsonParsePool.on('error', function (err, client) {
+  console.error('idle client error', err.message, err.stack);
 });
 
 app.use(function(req, res, next) {
@@ -95,13 +120,13 @@ app.get('/data/:id', function(req, res) {
     return;
   }
 
-  jsonParsePool.query('SELECT * FROM json_data WHERE id = ?', [numId], function (error, results, fields) {
+  jsonParsePool.query('SELECT * FROM json_data WHERE id = $1', [numId], function (error, results) {
     if (error) {
       // log
       console.log('Get data error', { error, id, numId });
       res.status(400).send({ error: true });
     } else {
-      var json = _.get(results, '[0].json');
+      var json = _.get(results, 'rows[0].json');
       if (json) {
         res.status(200).send({ json });
       } else {
@@ -119,16 +144,23 @@ app.post('/data', function(req, res) {
 
   encode();
   jsonParsePool.query(
-    'INSERT INTO json_data (json, time, type) VALUES (?, ?, ?)',
+    'INSERT INTO json_data (json, time, type) VALUES ($1, $2, $3) RETURNING id',
     [q, now, 'JSON'],
-    (error, results, fields) => {
+    (error, results) => {
 
       if (error) {
         console.log('Set data error', { error, now });
         res.status(400).send({ error: true });
       } else {
-        const id = encode(results.insertId)
-        res.status(200).send({ id });
+        // const id = encode(results.insertId)
+
+        const rawId = _.get(results, 'rows[0].id');
+        if (!rawId) {
+          res.status(400).send({ error: true });
+        } else {
+          const id = encode(Number(rawId));
+          res.status(200).send({ id });
+        }
       }
     }
   );
@@ -141,3 +173,12 @@ app.get('/cleanup', function(req, res) {
 app.listen(port, function () {
   console.log('App listening on port ' + port)
 });
+
+
+// CREATE TABLE json_data (
+//   id bigserial,
+//   type VARCHAR DEFAULT NULL,
+//   json text,
+//   TIME BIGINT DEFAULT NULL,
+//   PRIMARY KEY (id)
+// );

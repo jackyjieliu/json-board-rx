@@ -10,6 +10,7 @@ import * as ShareJsonAction from '../redux/action/share-json-action';
 import { CONFIG } from '../config';
 import Spinner from '../util/Spinner';
 import URL from '../util/URL';
+import toast from '../util/toast';
 
 interface StateProps {
   color: Color;
@@ -62,6 +63,13 @@ class ShareJsonModal extends React.Component<StateProps & DispatchProps,
         loading: false,
         showAddButton: false
       });
+    }, (err) => {
+      toast('An error occurred. Please try again later.');
+      this.setState({
+        ...this.state,
+        loading: false,
+        showAddButton: true
+      });
     });
   }
 
@@ -111,7 +119,10 @@ class ShareJsonModal extends React.Component<StateProps & DispatchProps,
     let urls;
     if (this.state.urls.length > 0) {
       urls = (
-        <URL url={this.state.urls[0]}/>
+        <div className="this-generated-url">
+          <div style={{ fontWeight: 500, marginBottom: '10px' }}>Short URL</div>
+          <URL url={this.state.urls[0]}/>
+        </div>
       );
     }
 

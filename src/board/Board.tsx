@@ -186,9 +186,7 @@ class Board extends React.Component<StateProps & DispatchProps & OwnProps, {}> {
       BUTTON_TYPES.URL_DECODE, // &
       BUTTON_TYPES.ESCAPE, // \"
       BUTTON_TYPES.URL_ENCODE, // %
-
-      // Dont show share yet
-      // BUTTON_TYPES.SHARE_JSON // %
+      BUTTON_TYPES.SHARE_JSON // %
     ];
 
     const NO_TOOLTIP_BUTTONS = [

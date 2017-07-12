@@ -5,6 +5,10 @@
 
 .last-generated-url {
   margin-top: 20px;
+}
+
+.last-generated-url,
+.this-generated-url {
   display: flex;
   align-items: center;
   flex-direction: column;

@@ -15,7 +15,9 @@
     "express-accepts": "^0.1.0",
     "lodash": "^4.17.4",
     "mysql": "^2.13.0",
+    "pg": "^6.4.0",
     "react-copy-to-clipboard": "^5.0.0",
-    "request": "^2.81.0"
+    "request": "^2.81.0",
+    "url": "^0.11.0"
   }
 }

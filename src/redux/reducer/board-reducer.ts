@@ -5,6 +5,7 @@ import { ACTION, updateTextAction } from '../action/board-action';
 import { combineEpics, Epic } from 'redux-observable';
 import { CONFIG } from '../../config';
 import { Observable } from 'rxjs/Observable';
+import toast from '../../util/toast';
 
 import 'rxjs';
 
@@ -173,7 +174,10 @@ const initJsonEpic: Epic<Action, any> = ((action$) => {
     .filter(url => url !== undefined)
     .switchMap(url =>
       Observable.ajax.getJSON((url as string))
-        .catch(err => Observable.empty())
+        .catch((err) => {
+          toast('An error occurred reading your saved JSON.');
+          return Observable.of({ json: '' });
+        })
     );
 
   return Observable.zip<{payload: any; ret: {json?: string}} >(
