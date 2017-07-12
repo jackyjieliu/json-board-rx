@@ -21,7 +21,7 @@ var config = {
 if (process.env.DATABASE_URL) {
 
   var dbParams = url.parse(process.env.DATABASE_URL);
-  var dbAuth = params.auth.split(':');
+  var dbAuth = dbParams.auth.split(':');
 
   config = {
     max : 10,
