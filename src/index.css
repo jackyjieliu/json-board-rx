@@ -75,3 +75,7 @@ html {
   word-break: break-all;
   white-space: nowrap;
 }
+
+.material-tooltip {
+  max-width: 300px;
+}

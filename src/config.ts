@@ -3,13 +3,19 @@ export const MODE = {
   PROD: 'prod'
 };
 
-export const CONFIG = {
+// const M = MODE.DEV;
+const M = MODE.PROD;
+
+let config = {
   URL: 'https://json-board.herokuapp.com',
   MODE: MODE.PROD
 };
 
-// export const CONFIG = {
-//   URL: 'http://localhost:5000',
-//   MODE: MODE.DEV
-// };
+if (M === MODE.DEV) {
+  config = {
+    URL: 'http://localhost:5000',
+    MODE: MODE.DEV
+  };
+}
 
+export const CONFIG = config;

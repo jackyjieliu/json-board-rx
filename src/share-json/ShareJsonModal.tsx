@@ -2,7 +2,7 @@ import * as React from 'react';
 // import Modal from '../modal/Modal';
 import '../modal/Modal.css';
 import './ShareJsonModal.css';
-// import translate from '../util/translation';
+import tranlsate from '../util/translation';
 import { State } from '../redux/store';
 import { Observable } from 'rxjs/Observable';
 import { connect } from 'react-redux';
@@ -27,6 +27,7 @@ interface DispatchProps {
 class ShareJsonModal extends React.Component<StateProps & DispatchProps,
   { urls: string[]; prevUrls: string[], loading: boolean, showAddButton: boolean }> {
 
+
   constructor(props: any) {
     super(props);
     this.state = {
@@ -36,6 +37,15 @@ class ShareJsonModal extends React.Component<StateProps & DispatchProps,
       prevUrls: []
     };
   }
+
+  componentWillUpdate() {
+    $('.share-json-modal .tooltipped').tooltip('remove');
+  }
+
+  componentDidUpdate(preProps: StateProps) {
+    $('.share-json-modal .tooltipped').tooltip();
+  }
+
   storeJson(json: string) {
     this.setState({
       ...this.state,
@@ -140,11 +150,21 @@ class ShareJsonModal extends React.Component<StateProps & DispatchProps,
           >
             Generate short url
           </a>
+          <span style={{ display: 'flex', alignItems: 'center', paddingLeft: '5px' }}>
+            <i
+              style={{ cursor: 'pointer' }}
+              className="material-icons tooltipped topBackColor"
+              data-position="right"
+              data-tooltip={tranlsate('SHARE_JSON_EXPLAIN')}
+            >
+              help
+            </i>
+          </span>
         </div>
       );
     }
     return (
-        <div className={backColor + ' setting-modal ' + openClass + ' modal'} style={{width: '490px'}}>
+        <div className={backColor + ' share-json-modal ' + openClass + ' modal'} style={{width: '490px'}}>
           <Spinner show={this.state.loading} colorClass="topBack"/>
 
           <div className="textBack card-panel textColor">
