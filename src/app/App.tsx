@@ -5,6 +5,7 @@ import ActionBar from '../action/ActionBar';
 import FeedbackModal from '../feedback/FeedbackModal';
 import SettingModal from '../setting/SettingModal';
 import ShareJsonModal from '../share-json/ShareJsonModal';
+import InfoModal from '../info/InfoModal';
 import DiffModal from '../diff/DiffModal';
 import { connect } from 'react-redux';
 import { State } from '../redux/store';
@@ -12,6 +13,7 @@ import { hideDiff } from '../redux/action/diff-action';
 import { hideFeedback } from '../redux/action/feedback-action';
 import { closeSetting } from '../redux/action/setting-action';
 import { closeShareJson } from '../redux/action/share-json-action';
+import { closeInfo } from '../redux/action/dialog-action';
 import { initString, initJson } from '../redux/action/board-action';
 import * as queryStringUtil from 'query-string';
 
@@ -30,6 +32,7 @@ interface DispatchProps {
   closeDiff: () => void;
   closeSetting: () => void;
   closeShareJson: () => void;
+  closeInfo: () => void;
   initJson: (storedId: string) => void;
   initString: (text: string) => void;
 }
@@ -81,6 +84,7 @@ class App extends React.Component<StateProps & DispatchProps & OwnProps, {}> {
         <SettingModal/>
         <DiffModal />
         <ShareJsonModal />
+        <InfoModal />
       </div>
     );
   }
@@ -115,6 +119,9 @@ function mapDispatchToProps(dispatch: Dispatch): DispatchProps {
     },
     closeShareJson: () => {
       dispatch(closeShareJson());
+    },
+    closeInfo: () => {
+      dispatch(closeInfo());
     }
   };
 }

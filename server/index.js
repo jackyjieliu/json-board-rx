@@ -1,4 +1,5 @@
-var express = require('express')
+// require('newrelic');
+var express = require('express');
 var request = require('request');
 var bodyParser = require('body-parser');
 var accepts = require('express-accepts');
@@ -179,6 +180,10 @@ app.get('/cleanup', function(req, res) {
 app.listen(port, function () {
   console.log('App listening on port ' + port)
 });
+
+setInterval(function() {
+  console.debug('wake');
+}, 300000); // every 5 minutes (300000)
 
 
 // CREATE TABLE json_data (

@@ -5,6 +5,7 @@ import feedbackReducer from './reducer/feedback-reducer';
 import diffReducer, { DiffState } from './reducer/diff-reducer';
 import settingReducer, { SettingState } from './reducer/setting-reducer';
 import shareJsonReducer, { ShareJsonState } from './reducer/share-json-reducer';
+import dialogReducer, { DialogState } from './reducer/dialog-reducer';
 
 export interface State {
   board: BoardState;
@@ -12,6 +13,7 @@ export interface State {
   setting: SettingState;
   diff: DiffState;
   shareJson: ShareJsonState;
+  dialog: DialogState;
 }
 
 const rootEpic = combineEpics(boardEpic);
@@ -24,7 +26,8 @@ const reducer = combineReducers<State>({
   feedback: feedbackReducer,
   setting: settingReducer,
   diff: diffReducer,
-  shareJson: shareJsonReducer
+  shareJson: shareJsonReducer,
+  dialog: dialogReducer
 });
 
 export default createStore<State>(reducer, middleware);

@@ -11,7 +11,12 @@ import './codemirror-search.css';
 
 var findDialog = `
   <div class="find">
-    <input id="CodeMirror-find-field" type="text" class="CodeMirror-search-field" placeholder="Search" />
+    <input
+      id="CodeMirror-find-field"
+      type="text"
+      class="CodeMirror-search-field"
+      placeholder="Search"
+    />
     <button>
       <a class="grey darken-2 waves-effect waves-light btn">
         <i class="material-icons">keyboard_arrow_up</i>

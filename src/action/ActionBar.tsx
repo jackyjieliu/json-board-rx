@@ -5,6 +5,8 @@ import { State } from '../redux/store';
 import * as BoardAction from '../redux/action/board-action';
 import * as SettingAction from '../redux/action/setting-action';
 import * as FeedbackAction from '../redux/action/feedback-action';
+import * as DialogAction from '../redux/action/dialog-action';
+import { CONFIG, MODE } from '../config';
 // import { AVAILABLE_COLORS } from '../redux/reducer/setting-reducer';
 
 const MAX_BOARD_COUNT = 2;
@@ -18,6 +20,7 @@ interface DispatchProps {
   addBoard: () => void;
   showFeedback: () => void;
   openSetting: () => void;
+  openInfo: () => void;
 }
 
 class ActionBar extends React.Component<StateProps & DispatchProps, {}> {
@@ -50,6 +53,18 @@ class ActionBar extends React.Component<StateProps & DispatchProps, {}> {
       );
     }
 
+    let infoBtn;
+    if (CONFIG.MODE === MODE.DEV) {
+      infoBtn = (
+        <a
+          className="actionBtn btn-floating btn-large waves-effect waves-light"
+          onClick={this.props.openInfo.bind(this)}
+        >
+          <i className="material-icons">info</i>
+        </a>
+      );
+    }
+
     return (
        <div className="action-buttons">
           {addBoardButton}
@@ -59,6 +74,7 @@ class ActionBar extends React.Component<StateProps & DispatchProps, {}> {
           >
             <i className="material-icons">settings</i>
           </a>
+          {infoBtn}
           {feedbackBtn}
         </div>
     );
@@ -84,6 +100,9 @@ function mapDispatchToProps(dispatch: Dispatch): DispatchProps {
     },
     openSetting: () => {
       dispatch(SettingAction.openSetting());
+    },
+    openInfo: () => {
+      dispatch(DialogAction.openInfo());
     }
   };
 }

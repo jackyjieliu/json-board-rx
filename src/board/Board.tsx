@@ -10,6 +10,7 @@ import * as BoardAction from '../redux/action/board-action';
 import * as SettingAction from '../redux/action/setting-action';
 import * as ShareJsonAction from '../redux/action/share-json-action';
 import * as _ from 'lodash';
+import { CONFIG, MODE } from '../config';
 
 interface OwnProps {
   index: number;
@@ -186,8 +187,11 @@ class Board extends React.Component<StateProps & DispatchProps & OwnProps, {}> {
       BUTTON_TYPES.URL_DECODE, // &
       BUTTON_TYPES.ESCAPE, // \"
       BUTTON_TYPES.URL_ENCODE, // %
-      BUTTON_TYPES.SHARE_JSON // %
     ];
+
+    if (CONFIG.MODE === MODE.DEV) {
+      buttonConfig.push(BUTTON_TYPES.SHARE_JSON);
+    }
 
     const NO_TOOLTIP_BUTTONS = [
       BUTTON_TYPES.MORE,
