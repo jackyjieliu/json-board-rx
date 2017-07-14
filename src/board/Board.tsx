@@ -13,7 +13,7 @@ import * as ShareJsonAction from '../redux/action/share-json-action';
 import * as _ from 'lodash';
 import { CONFIG } from '../config';
 import toast from '../util/toast';
-console.log({CONFIG});
+
 interface OwnProps {
   index: number;
 }
@@ -72,7 +72,6 @@ class Board extends React.Component<StateProps & DispatchProps & OwnProps, OwnSt
   }
 
   shouldComponentUpdate(nextProps: StateProps, nextState: OwnState) {
-    console.log(nextProps, this.props, !_.isEqual(nextProps, this.props) || this.state.isView !== nextState.isView);
     return !_.isEqual(nextProps, this.props) || this.state.isView !== nextState.isView;
   }
 
@@ -170,7 +169,6 @@ class Board extends React.Component<StateProps & DispatchProps & OwnProps, OwnSt
 
   render() {
     const BUTTON_CLASS = 'boardButton waves-effect waves-light btn';
-    console.log('render', this.props);
     let errorDiv;
     if (this.props.error) {
       errorDiv = (
