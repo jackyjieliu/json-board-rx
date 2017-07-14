@@ -3,7 +3,7 @@ import { smartFormat } from '../../util/smart-format';
 import * as _ from 'lodash';
 import { ACTION, updateTextAction } from '../action/board-action';
 import { combineEpics, Epic } from 'redux-observable';
-import { CONFIG } from '../../config';
+import { CONFIG, MODE } from '../../config';
 import { Observable } from 'rxjs/Observable';
 import toast from '../../util/toast';
 
@@ -21,7 +21,10 @@ export interface BoardState {
 }
 
 let initText = '';
-// const initText = '{"asd":{"asd":true}}';
+
+if (CONFIG.MODE === MODE.DEV) {
+  initText = '{"asd":{"asd":true}}';
+}
 
 const INITIAL_BOARD = { text: initText, spinner: false };
 

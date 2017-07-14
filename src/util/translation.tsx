@@ -2,6 +2,8 @@ const translations = {
   DARK: 'Dark',
   LIGHT: 'Light',
   NONE: 'None',
+  VIEW: 'Viewer',
+  TEXT_FIELD: 'Editor',
   SHARE_JSON: 'Share This JSON',
   SMART_FORMAT: 'Smart Format',
   FORMAT: 'Format',

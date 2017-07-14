@@ -29,11 +29,11 @@ declare module 'js-beautify' {
 }
 
 declare module 'element-resize-detector' {
-  export = anyType
+  export = anyType;
 }
 
 declare module 'query-string' {
-  export = anyType
+  export = anyType;
 }
 
 declare function $(el: any): any;

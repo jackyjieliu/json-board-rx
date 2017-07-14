@@ -8,6 +8,8 @@ import * as ReactDOM from 'react-dom';
 import App from './app/App';
 import './index.css';
 import './theme/theme.css';
+import 'json-browse/json-browse/jquery.json-browse.css';
+import 'json-browse/json-browse/jquery.json-browse.js';
 
 import { Provider } from 'react-redux';
 import store from './redux/store';

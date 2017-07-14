@@ -4,14 +4,16 @@ import './Board.css';
 import tranlsate from '../util/translation';
 import FoldableTextarea from '../util/FoldableTextarea';
 import Spinner from '../util/Spinner';
+import JSONViewer from '../util/JSONViewer';
 import { connect } from 'react-redux';
 import { State } from '../redux/store';
 import * as BoardAction from '../redux/action/board-action';
 import * as SettingAction from '../redux/action/setting-action';
 import * as ShareJsonAction from '../redux/action/share-json-action';
 import * as _ from 'lodash';
-import { CONFIG, MODE } from '../config';
-
+import { CONFIG } from '../config';
+import toast from '../util/toast';
+console.log({CONFIG});
 interface OwnProps {
   index: number;
 }
@@ -41,6 +43,10 @@ interface DispatchProps {
   openShareJson: () => void;
 }
 
+interface OwnState {
+  isView: boolean;
+}
+
 const BUTTON_TYPES = {
   SMART_FORMAT: 'SMART_FORMAT',
   FORMAT: 'FORMAT',
@@ -52,14 +58,22 @@ const BUTTON_TYPES = {
   CLOSE: 'CLOSE',
   MORE: 'MORE',
   LESS: 'LESS',
+  VIEW: 'VIEW',
+  TEXT_FIELD: 'TEXT_FIELD',
   SHARE_JSON: 'SHARE_JSON'
 };
 
-class Board extends React.Component<StateProps & DispatchProps & OwnProps, {}> {
+class Board extends React.Component<StateProps & DispatchProps & OwnProps, OwnState> {
   private textareaRef: any;
 
-  shouldComponentUpdate(nextProps: StateProps) {
-    return !_.isEqual(nextProps, this.props);
+  constructor(props: any) {
+    super(props);
+    this.state = { isView: false };
+  }
+
+  shouldComponentUpdate(nextProps: StateProps, nextState: OwnState) {
+    console.log(nextProps, this.props, !_.isEqual(nextProps, this.props) || this.state.isView !== nextState.isView);
+    return !_.isEqual(nextProps, this.props) || this.state.isView !== nextState.isView;
   }
 
   componentWillUpdate() {
@@ -77,6 +91,25 @@ class Board extends React.Component<StateProps & DispatchProps & OwnProps, {}> {
 
   onTextUpdate(text: string) {
     this.props.updateText(text);
+  }
+
+  toggleIsView() {
+    if (!this.state.isView) {
+      let isValid = true;
+      try {
+        JSON.parse(this.props.text);
+      } catch (e) {
+        isValid = false;
+      }
+
+      if (!isValid) {
+        toast('Viewer is only available for valid JSON.');
+        return;
+      }
+    }
+    this.setState({
+      isView: !this.state.isView
+    });
   }
 
   onPaste(e: any) {
@@ -137,7 +170,7 @@ class Board extends React.Component<StateProps & DispatchProps & OwnProps, {}> {
 
   render() {
     const BUTTON_CLASS = 'boardButton waves-effect waves-light btn';
-
+    console.log('render', this.props);
     let errorDiv;
     if (this.props.error) {
       errorDiv = (
@@ -162,7 +195,9 @@ class Board extends React.Component<StateProps & DispatchProps & OwnProps, {}> {
       [BUTTON_TYPES.CLOSE]: (<i className="material-icons">close</i>), // x
       [BUTTON_TYPES.MORE]: (<i className="material-icons">expand_more</i>),
       [BUTTON_TYPES.LESS]: (<i className="material-icons">expand_less</i>),
-      [BUTTON_TYPES.SHARE_JSON]: (<i className="material-icons">reply</i>)
+      [BUTTON_TYPES.SHARE_JSON]: (<i className="material-icons">reply</i>),
+      [BUTTON_TYPES.TEXT_FIELD]: (<i className="material-icons">text_fields</i>),
+      [BUTTON_TYPES.VIEW]: (<i className="material-icons">search</i>)
     };
 
     const BUTTON_CLICK_ACTIONS = {
@@ -176,11 +211,14 @@ class Board extends React.Component<StateProps & DispatchProps & OwnProps, {}> {
       [BUTTON_TYPES.CLOSE]: this.props.closeBoard,
       [BUTTON_TYPES.MORE]: this.props.toggleActionButtons,
       [BUTTON_TYPES.LESS]: this.props.toggleActionButtons,
-      [BUTTON_TYPES.SHARE_JSON]: this.props.openShareJson
+      [BUTTON_TYPES.SHARE_JSON]: this.props.openShareJson,
+      [BUTTON_TYPES.VIEW]: this.toggleIsView,
+      [BUTTON_TYPES.TEXT_FIELD]: this.toggleIsView
     };
 
-    const buttonConfig = [
+    let buttonConfig = [
       BUTTON_TYPES.SMART_FORMAT, // check
+      BUTTON_TYPES.VIEW,
       BUTTON_TYPES.FORMAT, // <>
       BUTTON_TYPES.MINIMIZE, // min
       BUTTON_TYPES.UNESCAPE, // "
@@ -189,7 +227,15 @@ class Board extends React.Component<StateProps & DispatchProps & OwnProps, {}> {
       BUTTON_TYPES.URL_ENCODE, // %
     ];
 
-    if (CONFIG.MODE === MODE.DEV) {
+    if (this.state.isView) {
+      const viewBtnIdx = buttonConfig.indexOf(BUTTON_TYPES.VIEW);
+      buttonConfig.splice(viewBtnIdx, 1, BUTTON_TYPES.TEXT_FIELD);
+      buttonConfig = [
+        BUTTON_TYPES.TEXT_FIELD
+      ];
+    }
+
+    if (CONFIG.FEATURE.SHARE) {
       buttonConfig.push(BUTTON_TYPES.SHARE_JSON);
     }
 
@@ -207,14 +253,16 @@ class Board extends React.Component<StateProps & DispatchProps & OwnProps, {}> {
       buttonConfig.push(BUTTON_TYPES.CLOSE);
     }
 
-    if (!this.props.buttonsExpanded) {
-      const removeButtons = [BUTTON_TYPES.UNESCAPE, BUTTON_TYPES.URL_DECODE,
-        BUTTON_TYPES.ESCAPE, BUTTON_TYPES.URL_ENCODE];
+    if (!this.state.isView) {
+      if (!this.props.buttonsExpanded) {
+        const removeButtons = [BUTTON_TYPES.UNESCAPE, BUTTON_TYPES.URL_DECODE,
+          BUTTON_TYPES.ESCAPE, BUTTON_TYPES.URL_ENCODE];
 
-      _.pullAll(buttonConfig, removeButtons);
-      buttonConfig.push(BUTTON_TYPES.MORE);
-    } else {
-      buttonConfig.push(BUTTON_TYPES.LESS);
+        _.pullAll(buttonConfig, removeButtons);
+        buttonConfig.push(BUTTON_TYPES.MORE);
+      } else {
+        buttonConfig.push(BUTTON_TYPES.LESS);
+      }
     }
 
     const buttons = buttonConfig.map((buttonType) => {
@@ -244,6 +292,38 @@ class Board extends React.Component<StateProps & DispatchProps & OwnProps, {}> {
       );
     });
 
+
+    let mainArea = (
+      <FoldableTextarea
+        ref={(el: any) => { this.textareaRef = this.textareaRef || el; }}
+        fontSize={this.props.fontSize}
+        color={this.props.color}
+        code={this.props.text}
+        onCodeChange={this.onTextUpdate.bind(this)}
+        onPaste={this.onPaste.bind(this)}
+        calculateDimension={this.calculateDimension.bind(this)}
+      />
+    );
+
+    if (this.state.isView) {
+
+      let JSONObj;
+      try {
+        JSONObj = JSON.parse(this.props.text);
+      } catch (e) {
+        this.toggleIsView();
+        return (<div>Error</div>);
+      }
+      mainArea = (
+        <JSONViewer
+          color={this.props.color}
+          fontSize={this.props.fontSize}
+          json={JSONObj}
+          calculateDimension={this.calculateDimension.bind(this)}
+        />
+      );
+    }
+
     return (
       <div className="board">
         <Spinner show={this.props.spinner} colorClass="topBack"/>
@@ -255,15 +335,7 @@ class Board extends React.Component<StateProps & DispatchProps & OwnProps, {}> {
           <div className="card-textarea row full-row">
             <div className="textBack card-panel full-column z-depth-4">
               <div className="full-column textarea-container textColor">
-                <FoldableTextarea
-                  ref={(el: any) => { this.textareaRef = this.textareaRef || el; }}
-                  fontSize={this.props.fontSize}
-                  color={this.props.color}
-                  code={this.props.text}
-                  onCodeChange={this.onTextUpdate.bind(this)}
-                  onPaste={this.onPaste.bind(this)}
-                  calculateDimension={this.calculateDimension.bind(this)}
-                />
+                {mainArea}
               </div>
               {errorDiv}
             </div>

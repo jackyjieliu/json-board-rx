@@ -14,6 +14,7 @@
     "diff": "^3.2.0",
     "jquery": "^3.2.1",
     "js-beautify": "^1.6.12",
+    "json-browse": "^0.2.0",
     "json-lint": "^0.1.0",
     "lodash": "^4.17.4",
     "materialize-css": "^0.98.2",

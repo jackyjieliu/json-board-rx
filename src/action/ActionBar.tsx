@@ -6,7 +6,7 @@ import * as BoardAction from '../redux/action/board-action';
 import * as SettingAction from '../redux/action/setting-action';
 import * as FeedbackAction from '../redux/action/feedback-action';
 import * as DialogAction from '../redux/action/dialog-action';
-import { CONFIG, MODE } from '../config';
+import { CONFIG } from '../config';
 // import { AVAILABLE_COLORS } from '../redux/reducer/setting-reducer';
 
 const MAX_BOARD_COUNT = 2;
@@ -54,7 +54,7 @@ class ActionBar extends React.Component<StateProps & DispatchProps, {}> {
     }
 
     let infoBtn;
-    if (CONFIG.MODE === MODE.DEV) {
+    if (CONFIG.FEATURE.INFO) {
       infoBtn = (
         <a
           className="actionBtn btn-floating btn-large waves-effect waves-light"

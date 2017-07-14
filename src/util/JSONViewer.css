@@ -1,0 +1,15 @@
+.json-viewer ul.json-dict,
+.json-viewer ol.json-array {
+  font-size: inherit;
+  font-family: monospace;
+  line-height: inherit;
+}
+
+.json-viewer {
+  margin-left: 5px;
+}
+
+.json-viewer a.json-toggle.collapsed:before,
+.json-viewer a.json-toggle:before {
+  font-size: 0.7em;
+}
