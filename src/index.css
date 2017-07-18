@@ -66,6 +66,11 @@ html {
   width: 2%;
 }
 
+.ReactCodeMirror div.CodeMirror span.CodeMirror-matchingbracket {
+  color: inherit !important;
+  font-weight: 700;
+}
+
 .ReactCodeMirror {
   min-width: 100%;
   width: 0;

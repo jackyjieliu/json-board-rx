@@ -4,6 +4,8 @@ import * as _ from 'lodash';
 import * as Codemirror from 'react-codemirror';
 // import Codemirror from './react-codemirror-merge';
 import 'codemirror/lib/codemirror.css';
+import 'codemirror/addon/edit/matchbrackets.js';
+import 'codemirror/addon/edit/closebrackets.js';
 import 'codemirror/addon/fold/foldgutter.css';
 import 'codemirror/addon/fold/foldcode';
 import 'codemirror/addon/fold/foldgutter';
@@ -14,7 +16,6 @@ import 'codemirror/addon/fold/comment-fold';
 import 'codemirror/addon/fold/indent-fold';
 import 'codemirror/addon/display/placeholder';
 import 'codemirror/mode/javascript/javascript';
-
 // import * as CodeMirror from 'codemirror';
 
 // New-style interface
@@ -62,6 +63,8 @@ const options = {
   theme: 'none',
   lineNumbers: true,
   extraKeys: null,
+  matchBrackets: true,
+  autoCloseBrackets: true,
   // keyMap: 'basic',
   keyMap: 'default',
   foldGutter: true,
