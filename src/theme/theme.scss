@@ -14,7 +14,9 @@ $greyDiffBack: #ffffe0;
   @include generateTheme($greyActionBtn, $greyTopBack, $greyBotBack, $greyErrorColor, $greyTextColor, $greyTextBack, $greyGutterColor, $greyDiffBack)
 }
 
-
+#grey-theme .ReactCodeMirror div.CodeMirror span.CodeMirror-matchingbracket {
+  border: 1px solid #bdbdbd;
+}
 
 // $darkActionBtn: #373737;
 // $darkTopBack: #303030;
@@ -31,4 +33,8 @@ $darkDiffBack: #1e1a30;
 
 #dark-theme {
   @include generateTheme($darkActionBtn, $darkTopBack, $darkBotBack, $darkErrorColor, $darkTextColor, $darkTextBack, $darkGutterColor, $darkDiffBack)
+}
+
+#dark-theme .ReactCodeMirror div.CodeMirror span.CodeMirror-matchingbracket {
+  border: 1px solid #212126;
 }
