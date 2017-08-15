@@ -24,7 +24,7 @@ const DEFAULT_STATE = {
   fontSize: DEFAULT_FONT_SIZE,
   settingDialogOpened: false,
   actionButtonExpanded: false,
-  onPasteAction: 'SMART_FORMAT'
+  onPasteAction: 'FORMAT'
 };
 
 let initState: any = {};
@@ -93,7 +93,7 @@ export default function settingReducer(state: SettingState = INITIAL_STATE, acti
 
     case ACTION.CHANGE_ON_PASTE:
       const onPasteAction = action.payload.onPasteAction;
-      const options = ['SMART_FORMAT', 'FORMAT', 'NONE'];
+      const options = ['FORMAT', 'SMART_FORMAT', 'NONE'];
       if (options.indexOf(onPasteAction) !== -1) {
         newState = {
           ...state,

@@ -18,9 +18,6 @@ interface DispatchProps {
 const info = 'JSONPar.se is a tool that helps you parse, format, minify, unescape and decode JSON strings. ' +
   'It can also be used to compare different JSON strings.';
 
-const smartFormatInfo = 'Smart format formats the JSON string, url decode and ' +
-  'escapes the quoted stringified json strings';
-
 class FeedbackModal extends React.Component<StateProps & DispatchProps, {}> {
 
   render() {
@@ -30,12 +27,13 @@ class FeedbackModal extends React.Component<StateProps & DispatchProps, {}> {
 
     return (
         <div className={backColor + ' ' + fullClass + ' ' + openClass + ' modal'}>
-          <div className="textBack feedback-modal card-panel">
-            <p>JSONPar.se</p>
-            <p>{info}</p>
-            <p>Tips</p>
-            <p>Smart Format</p>
-            <p>{smartFormatInfo}</p>
+          <div className="feedback-modal">
+            <div className="card textBack">
+              <div className="card-content textColor">
+                <span className="card-title">JSONPar.se</span>
+                <p>{info}</p>
+              </div>
+            </div>
           </div>
           <div className="btn-row">
             <a

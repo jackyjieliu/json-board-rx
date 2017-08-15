@@ -25,6 +25,7 @@ interface StateProps {
   diff: boolean;
   settingOpened: boolean;
   shareJsonOpened: boolean;
+  infoOpened: boolean;
 }
 
 interface DispatchProps {
@@ -71,6 +72,10 @@ class App extends React.Component<StateProps & DispatchProps & OwnProps, {}> {
       overlay = (
         <div className="modal-overlay" onClick={this.props.closeShareJson.bind(this)}/>
       );
+    } else if (this.props.infoOpened) {
+      overlay = (
+        <div className="modal-overlay" onClick={this.props.closeInfo.bind(this)}/>
+      );
     }
 
     return (
@@ -96,7 +101,8 @@ function mapStateToProps(store: State): StateProps {
     feedback: store.feedback,
     diff: store.diff.show,
     settingOpened: store.setting.settingDialogOpened,
-    shareJsonOpened: store.shareJson.dialogOpened
+    shareJsonOpened: store.shareJson.dialogOpened,
+    infoOpened: store.dialog.infoDialogOpened
   };
 }
 

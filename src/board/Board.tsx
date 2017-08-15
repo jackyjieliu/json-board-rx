@@ -1,7 +1,7 @@
 import * as React from 'react';
 import * as ReactDOM from 'react-dom';
 import './Board.css';
-import tranlsate from '../util/translation';
+import translate from '../util/translation';
 import FoldableTextarea from '../util/FoldableTextarea';
 import Spinner from '../util/Spinner';
 import JSONViewer from '../util/JSONViewer';
@@ -178,24 +178,39 @@ class Board extends React.Component<StateProps & DispatchProps & OwnProps, OwnSt
       );
     }
 
+    // const BUTTON_MAP = {
+    //   [BUTTON_TYPES.SMART_FORMAT]: (<i className="material-icons">check</i>), // check
+    //   [BUTTON_TYPES.FORMAT]: (<i className="material-icons">code</i>), // check
+    //   [BUTTON_TYPES.MINIMIZE]: (<i className="material-icons">fullscreen_exit</i>), // min
+    //   [BUTTON_TYPES.UNESCAPE]: (<i className="material-icons">format_quote</i>), // "
+    //   [BUTTON_TYPES.URL_DECODE]: (<span>&</span>), // &
+    //   [BUTTON_TYPES.ESCAPE]: (
+    //     <span>
+    //       <span className="material-icons slash">\</span><i className="material-icons slash-quote">format_quote</i>
+    //     </span>
+    //   ), // \"
+    //   [BUTTON_TYPES.URL_ENCODE]: (<span>%</span>), // %
+    //   [BUTTON_TYPES.CLOSE]: (<i className="material-icons">close</i>), // x
+    //   [BUTTON_TYPES.MORE]: (<i className="material-icons">expand_more</i>),
+    //   [BUTTON_TYPES.LESS]: (<i className="material-icons">expand_less</i>),
+    //   [BUTTON_TYPES.SHARE_JSON]: (<i className="material-icons">reply</i>),
+    //   [BUTTON_TYPES.TEXT_FIELD]: (<i className="material-icons">text_fields</i>),
+    //   [BUTTON_TYPES.VIEW]: (<i className="material-icons">search</i>)
+    // };
+
     const BUTTON_MAP = {
-      [BUTTON_TYPES.SMART_FORMAT]: (<i className="material-icons">check</i>), // check
-      [BUTTON_TYPES.FORMAT]: (<i className="material-icons">code</i>), // check
-      [BUTTON_TYPES.MINIMIZE]: (<i className="material-icons">fullscreen_exit</i>), // min
-      [BUTTON_TYPES.UNESCAPE]: (<i className="material-icons">format_quote</i>), // "
-      [BUTTON_TYPES.URL_DECODE]: (<span>&</span>), // &
-      [BUTTON_TYPES.ESCAPE]: (
-        <span>
-          <span className="material-icons slash">\</span><i className="material-icons slash-quote">format_quote</i>
-        </span>
-      ), // \"
-      [BUTTON_TYPES.URL_ENCODE]: (<span>%</span>), // %
       [BUTTON_TYPES.CLOSE]: (<i className="material-icons">close</i>), // x
-      [BUTTON_TYPES.MORE]: (<i className="material-icons">expand_more</i>),
-      [BUTTON_TYPES.LESS]: (<i className="material-icons">expand_less</i>),
-      [BUTTON_TYPES.SHARE_JSON]: (<i className="material-icons">reply</i>),
-      [BUTTON_TYPES.TEXT_FIELD]: (<i className="material-icons">text_fields</i>),
-      [BUTTON_TYPES.VIEW]: (<i className="material-icons">search</i>)
+      // [BUTTON_TYPES.MORE]: (<i className="material-icons">expand_more</i>),
+      [BUTTON_TYPES.MORE]: (<span className="textColor">{'>'}</span>),
+      // [BUTTON_TYPES.LESS]: (<i className="material-icons">expand_less</i>),
+      [BUTTON_TYPES.LESS]: (<span className="textColor">{'<'}</span>),
+    };
+
+    const BUTTON_TOOLTIP = {
+      [BUTTON_TYPES.SMART_FORMAT]: translate('SMART_FORMAT_EXPLAIN'),
+      [BUTTON_TYPES.SHARE_JSON]: translate('SHARE_THIS_JSON'),
+      [BUTTON_TYPES.MORE]: translate('MORE'),
+      [BUTTON_TYPES.LESS]: translate('LESS')
     };
 
     const BUTTON_CLICK_ACTIONS = {
@@ -216,8 +231,8 @@ class Board extends React.Component<StateProps & DispatchProps & OwnProps, OwnSt
 
     let buttonConfig = [
       BUTTON_TYPES.SMART_FORMAT, // check
-      BUTTON_TYPES.VIEW,
       BUTTON_TYPES.FORMAT, // <>
+      BUTTON_TYPES.VIEW,
       BUTTON_TYPES.MINIMIZE, // min
       BUTTON_TYPES.UNESCAPE, // "
       BUTTON_TYPES.URL_DECODE, // &
@@ -236,11 +251,6 @@ class Board extends React.Component<StateProps & DispatchProps & OwnProps, OwnSt
     if (CONFIG.FEATURE.SHARE) {
       buttonConfig.push(BUTTON_TYPES.SHARE_JSON);
     }
-
-    const NO_TOOLTIP_BUTTONS = [
-      BUTTON_TYPES.MORE,
-      BUTTON_TYPES.LESS
-    ];
 
     const FLAT_BUTTONS = [
       BUTTON_TYPES.MORE,
@@ -264,9 +274,9 @@ class Board extends React.Component<StateProps & DispatchProps & OwnProps, OwnSt
     }
 
     const buttons = buttonConfig.map((buttonType) => {
-      const hasTooltip = NO_TOOLTIP_BUTTONS.indexOf(buttonType) === -1;
+      const tooltipStr = BUTTON_TOOLTIP[buttonType];
       let className = BUTTON_CLASS;
-      if (hasTooltip) {
+      if (tooltipStr) {
         className += ' tooltipped';
       }
 
@@ -281,15 +291,14 @@ class Board extends React.Component<StateProps & DispatchProps & OwnProps, OwnSt
           className={className}
           onClick={BUTTON_CLICK_ACTIONS[buttonType].bind(this)}
           key={buttonType}
-          data-position="right"
+          data-position="bottom"
           data-delay="5"
-          data-tooltip={tranlsate(buttonType)}
+          data-tooltip={tooltipStr}
         >
-          {BUTTON_MAP[buttonType]}
+          {BUTTON_MAP[buttonType] || translate(buttonType)}
         </a>
       );
     });
-
 
     let mainArea = (
       <FoldableTextarea
@@ -325,13 +334,13 @@ class Board extends React.Component<StateProps & DispatchProps & OwnProps, OwnSt
     return (
       <div className="board">
         <Spinner show={this.props.spinner} colorClass="topBack"/>
-        <div className="vert-nav full-column">
-          {buttons}
-        </div>
 
         <div className="card-container full-row">
-          <div className="card-textarea row full-row">
+          <div className="card-textarea row full-column" style={{ maxWidth: '100%' }}>
             <div className="textBack card-panel full-column z-depth-4">
+              <div className="vert-nav" style={{ display: 'inline-block' }}>
+                {buttons}
+              </div>
               <div className="full-column textarea-container textColor">
                 {mainArea}
               </div>
