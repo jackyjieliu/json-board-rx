@@ -17,8 +17,9 @@ const translations = {
   CLOSE: 'Close Tab',
   MORE: 'More',
   LESS: 'Less',
-  SHARE_JSON_EXPLAIN: 'this is a really long explaination about what share json does.' +
-    'it should also talk about the expiration time and blah blah blah blah blah',
+  SHARE_JSON_EXPLAIN: 'Generate a link that you can share you JSON with. Data maybe deleted after 24 hours. ' +
+    'Please refrain from storing sensitive information like password or secret keys as anyone with the link will be ' +
+    'able to access the data',
   SMART_FORMAT_EXPLAIN: 'In addition to formatting the JSON string, url decode and ' +
     'escape quoted stringified json strings'
 };

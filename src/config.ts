@@ -5,6 +5,7 @@ export const MODE = {
 
 // const M = MODE.DEV;
 const M = MODE.PROD;
+const AVAILABLE = ['INFO'];
 
 let config = {
   URL: 'https://json-board.herokuapp.com',
@@ -25,5 +26,11 @@ if (M === MODE.DEV) {
     }
   };
 }
+
+AVAILABLE.forEach((feature) => {
+  if (config.FEATURE[feature] === false) {
+    config.FEATURE[feature] = true;
+  }
+});
 
 export const CONFIG = config;
