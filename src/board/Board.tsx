@@ -199,16 +199,15 @@ class Board extends React.Component<StateProps & DispatchProps & OwnProps, OwnSt
     // };
 
     const BUTTON_MAP = {
-      [BUTTON_TYPES.CLOSE]: (<i className="material-icons">close</i>), // x
-      // [BUTTON_TYPES.MORE]: (<i className="material-icons">expand_more</i>),
+      [BUTTON_TYPES.CLOSE]: (<i className="material-icons">close</i>),
       [BUTTON_TYPES.MORE]: (<span className="textColor">{'>'}</span>),
-      // [BUTTON_TYPES.LESS]: (<i className="material-icons">expand_less</i>),
       [BUTTON_TYPES.LESS]: (<span className="textColor">{'<'}</span>),
     };
 
     const BUTTON_TOOLTIP = {
       [BUTTON_TYPES.SMART_FORMAT]: translate('SMART_FORMAT_EXPLAIN'),
       [BUTTON_TYPES.SHARE_JSON]: translate('SHARE_THIS_JSON'),
+      [BUTTON_TYPES.CLOSE]: translate('CLOSE_TAB'),
       [BUTTON_TYPES.MORE]: translate('MORE'),
       [BUTTON_TYPES.LESS]: translate('LESS')
     };

@@ -14,7 +14,7 @@ const translations = {
   URL_DECODE: 'Url Decode',
   URL_ENCODE: 'Url Encode',
   FEEDBACK: 'Feedback',
-  CLOSE: 'Close Tab',
+  CLOSE_TAB: 'Close Tab',
   MORE: 'More',
   LESS: 'Less',
   SHARE_JSON_EXPLAIN: 'Generate a link that you can share you JSON with. Data maybe deleted after 24 hours. ' +
