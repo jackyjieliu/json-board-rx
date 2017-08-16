@@ -21,6 +21,7 @@ interface DispatchProps {
   showFeedback: () => void;
   openSetting: () => void;
   openInfo: () => void;
+  openDonation: () => void;
 }
 
 class ActionBar extends React.Component<StateProps & DispatchProps, {}> {
@@ -31,7 +32,7 @@ class ActionBar extends React.Component<StateProps & DispatchProps, {}> {
       if (this.props.boardCount < MAX_BOARD_COUNT) {
         addBoardButton = (
           <a
-            className="actionBtn btn-floating btn-large waves-effect waves-light"
+            className="cyan btn-floating btn-large waves-effect waves-light"
             onClick={this.props.addBoard.bind(this)}
           >
             <i className="material-icons">add</i>
@@ -45,7 +46,7 @@ class ActionBar extends React.Component<StateProps & DispatchProps, {}> {
     if (!this.props.feedback) {
       feedbackBtn = (
         <a
-          className="actionBtn btn-floating btn-large waves-effect waves-light"
+          className="teal btn-floating btn-large waves-effect waves-light"
           onClick={this.props.showFeedback.bind(this)}
         >
           <i className="material-icons">feedback</i>
@@ -57,19 +58,32 @@ class ActionBar extends React.Component<StateProps & DispatchProps, {}> {
     if (CONFIG.FEATURE.INFO) {
       infoBtn = (
         <a
-          className="actionBtn btn-floating btn-large waves-effect waves-light"
+          className="indigo btn-floating btn-large waves-effect waves-light"
           onClick={this.props.openInfo.bind(this)}
         >
-          <i className="material-icons">info</i>
+          <i className="material-icons">help</i>
         </a>
       );
+    }
+
+    let donationBtn;
+    if (CONFIG.FEATURE.DONATION) {
+      donationBtn = (
+        <a
+          className="orange btn-floating btn-large waves-effect waves-light"
+          onClick={this.props.openDonation.bind(this)}
+        >
+          <i className="material-icons">attach_money</i>
+        </a>
+      )
     }
 
     return (
        <div className="action-buttons">
           {addBoardButton}
+          {donationBtn}
           <a
-            className="actionBtn btn-floating btn-large waves-effect waves-light"
+            className="blue btn-floating btn-large waves-effect waves-light"
             onClick={this.props.openSetting.bind(this)}
           >
             <i className="material-icons">settings</i>
@@ -103,6 +117,9 @@ function mapDispatchToProps(dispatch: Dispatch): DispatchProps {
     },
     openInfo: () => {
       dispatch(DialogAction.openInfo());
+    },
+    openDonation: () => {
+      dispatch(DialogAction.openDonation());
     }
   };
 }

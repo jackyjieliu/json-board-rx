@@ -12,7 +12,8 @@ let config = {
   MODE: MODE.PROD,
   FEATURE: {
     INFO: false,
-    SHARE: false
+    SHARE: false,
+    DONATION: false,
   }
 };
 
@@ -22,7 +23,8 @@ if (M === MODE.DEV) {
     MODE: MODE.DEV,
     FEATURE: {
       INFO: true,
-      SHARE: true
+      SHARE: true,
+      DONATION: true,
     }
   };
 }

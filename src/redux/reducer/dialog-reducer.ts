@@ -25,6 +25,18 @@ export default function dialogReducer(state: DialogState = INITIAL_STATE, action
         infoDialogOpened: false
       };
       break;
+    case ACTION.OPEN_DONATION:
+      newState = {
+        ...state,
+        donationDialogOpened: true
+      };
+      break;
+    case ACTION.CLOSE_DONATION:
+      newState = {
+        ...state,
+        donationDialogOpened: false
+      };
+      break;
     default:
   }
 

@@ -6,6 +6,7 @@ import FeedbackModal from '../feedback/FeedbackModal';
 import SettingModal from '../setting/SettingModal';
 import ShareJsonModal from '../share-json/ShareJsonModal';
 import InfoModal from '../info/InfoModal';
+import DonationModal from '../donation/DonationModal';
 import DiffModal from '../diff/DiffModal';
 import { connect } from 'react-redux';
 import { State } from '../redux/store';
@@ -13,7 +14,7 @@ import { hideDiff } from '../redux/action/diff-action';
 import { hideFeedback } from '../redux/action/feedback-action';
 import { closeSetting } from '../redux/action/setting-action';
 import { closeShareJson } from '../redux/action/share-json-action';
-import { closeInfo } from '../redux/action/dialog-action';
+import { closeInfo, closeDonation } from '../redux/action/dialog-action';
 import { initString, initJson } from '../redux/action/board-action';
 import * as queryStringUtil from 'query-string';
 
@@ -26,6 +27,7 @@ interface StateProps {
   settingOpened: boolean;
   shareJsonOpened: boolean;
   infoOpened: boolean;
+  donationOpened: boolean;
 }
 
 interface DispatchProps {
@@ -34,6 +36,7 @@ interface DispatchProps {
   closeSetting: () => void;
   closeShareJson: () => void;
   closeInfo: () => void;
+  closeDonation: () => void;
   initJson: (storedId: string) => void;
   initString: (text: string) => void;
 }
@@ -76,6 +79,10 @@ class App extends React.Component<StateProps & DispatchProps & OwnProps, {}> {
       overlay = (
         <div className="modal-overlay" onClick={this.props.closeInfo.bind(this)}/>
       );
+    } else if (this.props.donationOpened) {
+      overlay = (
+        <div className="modal-overlay" onClick={this.props.closeDonation.bind(this)}/>
+      );
     }
 
     return (
@@ -90,6 +97,7 @@ class App extends React.Component<StateProps & DispatchProps & OwnProps, {}> {
         <DiffModal />
         <ShareJsonModal />
         <InfoModal />
+        <DonationModal />
       </div>
     );
   }
@@ -102,7 +110,8 @@ function mapStateToProps(store: State): StateProps {
     diff: store.diff.show,
     settingOpened: store.setting.settingDialogOpened,
     shareJsonOpened: store.shareJson.dialogOpened,
-    infoOpened: store.dialog.infoDialogOpened
+    infoOpened: store.dialog.infoDialogOpened,
+    donationOpened: store.dialog.donationDialogOpened
   };
 }
 
@@ -128,6 +137,9 @@ function mapDispatchToProps(dispatch: Dispatch): DispatchProps {
     },
     closeInfo: () => {
       dispatch(closeInfo());
+    },
+    closeDonation: () => {
+      dispatch(closeDonation());
     }
   };
 }
