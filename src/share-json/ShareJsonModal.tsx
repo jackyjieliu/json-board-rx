@@ -36,6 +36,23 @@ class ShareJsonModal extends React.Component<StateProps & DispatchProps,
       urls: [],
       prevUrls: []
     };
+
+    if (this.props.dialogOpened) {
+      this.healthCheck();
+    }
+  }
+
+  healthCheck() {
+    Observable.ajax({
+      url: CONFIG.URL + '/health',
+      headers: {
+        'Content-Type': 'application/json'
+      },
+      method: 'GET'
+    })
+    .subscribe(() => {
+      ;
+    });
   }
 
   componentWillUpdate() {
@@ -99,6 +116,10 @@ class ShareJsonModal extends React.Component<StateProps & DispatchProps,
         prevUrls,
         showAddButton: true
       });
+    }
+
+    if (nextProps.dialogOpened) {
+      this.healthCheck();
     }
   }
 

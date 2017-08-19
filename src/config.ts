@@ -5,7 +5,7 @@ export const MODE = {
 
 // const M = MODE.DEV;
 const M = MODE.PROD;
-const AVAILABLE = ['INFO'];
+const AVAILABLE = ['INFO', 'SHARE'];
 
 let config = {
   URL: 'https://json-board.herokuapp.com',

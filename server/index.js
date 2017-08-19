@@ -85,20 +85,29 @@ app.post('/feedback', accepts('application/json'), function (req, res) {
 
 ///////===== shortenening
 
+
+function rotateString(str) {
+  return str[str.length - 1] + str.substring(0, str.length - 1);
+}
+
 // var alphabet = "1234567890abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ";
 var ALPHABET = "PoeHi71W9m2KwSIDzVYac6hrk3CGOM0j5tnlvugXfNdyRbBpJAQLETUZsxF84q";
-var ENCODE_OFFSET = 5000;
+// var ENCODE_OFFSET = 10000;
+var ENCODE_OFFSET = 10000;
 function encode(num){
+  var alphabetList = ALPHABET;
   if (num === undefined) {
     return;
   }
   num = num + ENCODE_OFFSET;
   var encoded = '';
   var base = ALPHABET.length;
+
   while (num){
     var remainder = num % base;
     num = Math.floor(num / base);
-    encoded = ALPHABET[remainder].toString() + encoded;
+    encoded = alphabetList[remainder].toString() + encoded;
+    alphabetList = rotateString(alphabetList);
   }
   return encoded;
 }
@@ -107,17 +116,24 @@ function decode(str){
   if (str === undefined || str === '') {
     return;
   }
+  var alphabetList = ALPHABET;
+
   var decoded = 0;
   var base = ALPHABET.length;
-  while (str){
-    var index = ALPHABET.indexOf(str[0]);
-    var power = str.length - 1;
+
+  var power = 0;
+
+  while (str) {
+    var index = alphabetList.indexOf(str[str.length - 1]);
     decoded += index * (Math.pow(base, power));
-    str = str.substring(1);
+    str = str.substring(0, str.length - 1);
+    power++;
+    alphabetList = rotateString(alphabetList);
   }
+
   return decoded - ENCODE_OFFSET;
 }
-console.log(decode('oYE'));
+
 app.get('/data/:id', function(req, res) {
   var id = req.params.id;
 
@@ -185,6 +201,33 @@ setInterval(function() {
   console.debug('wake');
 }, 300000); // every 5 minutes (300000)
 
+
+function testEncodeDecode() {
+
+  var testSet = [
+    1, 123, 13409812903, 102984901, 12097509214, 11281798249, 1039857103150
+  ];
+
+  for (let i = 0; i < 1000000; i++) {
+    testSet.push(((Math.abs(Math.random()) * 2147483647) | 0));
+  }
+
+
+  _.each(testSet, (testVal) => {
+
+    // console.log('testing: ' +  testVal);
+    const encoded = encode(testVal);
+    const decoded = decode(encoded);
+    if (testVal !== decoded) {
+      console.log('Encode decode inconsistency', {
+        value: testVal, encoded, decoded
+      });
+    }
+  })
+  console.log('test finished');
+}
+
+// testEncodeDecode();
 
 // CREATE TABLE json_data (
 //   id bigserial,
