@@ -198,7 +198,7 @@ app.listen(port, function () {
 });
 
 setInterval(function() {
-  console.debug('wake');
+  console.log('wake');
 }, 300000); // every 5 minutes (300000)
 
 
