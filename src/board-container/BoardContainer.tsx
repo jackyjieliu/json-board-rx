@@ -41,14 +41,14 @@ class BoardContainer extends React.Component<StateProps & DispatchProps, {}> {
       <div className="boards-container" >
         {
           this.props.boardOrder
-            .map((i) => {
+            .map((i, index, arr) => {
               let diffButton;
 
-              if (i !== 0) {
+              if (index !== 0) {
                 diffButton = (
                   <a
                     className="actionBtn btn-floating btn-large waves-effect waves-light diff-button"
-                    onClick={this.props.showDiff.bind(this, i - 1, i)}
+                    onClick={this.props.showDiff.bind(this, arr[index - 1], i)}
                   >
                     <i className="material-icons">compare_arrows</i>
                   </a>

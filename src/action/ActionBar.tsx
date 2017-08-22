@@ -28,31 +28,25 @@ class ActionBar extends React.Component<StateProps & DispatchProps, {}> {
 
   render() {
     let addBoardButton;
-    if (!this.props.feedback) {
-      if (this.props.boardCount < MAX_BOARD_COUNT) {
-        addBoardButton = (
-          <a
-            className="cyan btn-floating btn-large waves-effect waves-light"
-            onClick={this.props.addBoard.bind(this)}
-          >
-            <i className="material-icons">add</i>
-          </a>
-        );
-      }
-    }
-
-
-    let feedbackBtn;
-    if (!this.props.feedback) {
-      feedbackBtn = (
+    if (this.props.boardCount < MAX_BOARD_COUNT) {
+      addBoardButton = (
         <a
-          className="teal btn-floating btn-large waves-effect waves-light"
-          onClick={this.props.showFeedback.bind(this)}
+          className="cyan btn-floating btn-large waves-effect waves-light"
+          onClick={this.props.addBoard.bind(this)}
         >
-          <i className="material-icons">feedback</i>
+          <i className="material-icons">add</i>
         </a>
       );
     }
+
+    let feedbackBtn = (
+      <a
+        className="teal btn-floating btn-large waves-effect waves-light"
+        onClick={this.props.showFeedback.bind(this)}
+      >
+        <i className="material-icons">feedback</i>
+      </a>
+    );
 
     let infoBtn;
     if (CONFIG.FEATURE.INFO) {
